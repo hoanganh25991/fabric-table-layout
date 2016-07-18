@@ -12,5 +12,5 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.browserify('main.js', "./main.js");
+    mix.browserify('main.js');
 });

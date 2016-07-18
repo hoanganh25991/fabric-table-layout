@@ -7,22 +7,19 @@
 </head>
 <body>
 <div class="container">
-	<div id="layout1">
-		<table-layout></table-layout>
-	</div>
-
 	<div id="test">
-		<p>{{ name }}</p>
-		<p>{{ age }}</p>
-		<p>{{ comment }}</p>
+		<div class="row">
+			<div class="col-md-4">
+				<table-info :activetable.sync="activetable"></table-info>
+			</div>
+			<div class="col-md-8">
+				<table-layout :activetable.sync="activetable"></table-layout>
+			</div>
+		</div>
 	</div>
 
 </div>
-<script src="jquery.min.js"></script>
-<script src="bootstrap.min.js"></script>
-<script src="vue.min.js"></script>
-<script src="fabric.min.js"></script>
-
-<script src="main.js"></script>
+<script src="public/js/fabric.min.js"></script>
+<script src="public/js/main.js"></script>
 </body>
 </html>

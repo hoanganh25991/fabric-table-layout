@@ -10,6 +10,8 @@
     "bootstrap-sass": "^3.3.0"
   },
   "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.1.0",
     "vue": "^1.0.26",
     "vue-resource": "^0.7.0"
   }
