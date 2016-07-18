@@ -10210,11 +10210,15 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: '<div><h1>table info</h1><p>{{ activetable.width * activetable.scaleX }}</p><p>{{ activetable.height * activetable.scaleY }}</p></div>',
-	props: {
-		activetable: {}
+	template: '<div><h1>table info</h1><p>{{ width }}</p><p>{{ height }}</p></div>',
+	data: function data() {
+		return {
+			width: 0,
+			height: 0,
+			scaleX: 1,
+			scaleY: 1
+		};
 	}
-
 });
 
 },{"vue":2}],4:[function(require,module,exports){
@@ -10233,15 +10237,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: '<div><h1>table layout</h1><input v-model="table.name" type="number"><button @click="createTable">+</button><div id="canvasContainer" style="box-shadow: rgba(0,0,0,0.5) 0 0 5px"><canvas id="canvas"></canvas></div></div>',
 
-	props: {
-		activetable: {}
-	},
-
 	data: function data() {
 		return {
 			layout: "",
 			table: {
-				name: "",
+				name: 0,
 				width: 100,
 				height: 100,
 				rotate: 0
@@ -10267,20 +10267,18 @@ exports.default = _vue2.default.extend({
 		this.layout.on("object:scaling", function (options) {
 			vue.updateActiveTable(options);
 		});
-
-		console.log(this.activetable);
 	},
 
 	methods: {
 		createTable: function createTable() {
 			console.log(this.table.name);
-			console.log(this.activetable);
-
-			var text = new fabric.Text(this.table.name, {
+			var text = new fabric.Text("" + this.table.name, {
 				fontSize: 30,
 				originX: "center",
 				originY: "center"
 			});
+
+			this.table.name = parseInt(this.table.name, 10) + 1;
 
 			var rect = new fabric.Rect({
 				fill: "#E5E5E5",
@@ -10307,9 +10305,10 @@ exports.default = _vue2.default.extend({
 		updateActiveTable: function updateActiveTable(options) {
 			if (options.target) {
 				var activeTable = options.target;
-				console.log(activeTable.type);
-				console.log(activeTable.scaleX);
-				this.activetable = activeTable;
+				var tableInfo = this.$parent.$refs.info;
+				// console.log(tableInfo);
+				tableInfo.width = Math.floor(activeTable.width * activeTable.scaleX);
+				tableInfo.height = Math.floor(activeTable.height * activeTable.scaleY);
 			}
 		}
 	}
@@ -10334,19 +10333,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 new _vue2.default({
 	el: "#test",
-	components: { TableInfo: _TableInfo2.default, TableLayout: _TableLayout2.default },
-
-	data: function data() {
-		return {
-			activetable: {
-				width: 0,
-				height: 0,
-				scaleX: 1,
-				scaleY: 1
-			}
-		};
-	}
+	components: { TableInfo: _TableInfo2.default, TableLayout: _TableLayout2.default }
 });
+
+console.log("hello");
 
 },{"./components/TableInfo":3,"./components/TableLayout":4,"vue":2}]},{},[5]);
 

@@ -10,10 +10,10 @@
 	<div id="test">
 		<div class="row">
 			<div class="col-md-4">
-				<table-info :activetable.sync="activetable"></table-info>
+				<table-info v-ref:info></table-info>
 			</div>
 			<div class="col-md-8">
-				<table-layout :activetable.sync="activetable"></table-layout>
+				<table-layout v-ref:layout></table-layout>
 			</div>
 		</div>
 	</div>
