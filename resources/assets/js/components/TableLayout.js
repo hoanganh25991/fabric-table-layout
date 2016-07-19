@@ -1,17 +1,28 @@
 import Vue from "vue";
 
 export default Vue.extend({
-	template: '<div><h1>table layout</h1><input v-model="table.name" type="number"><button @click="createTable">+</button><div id="canvasContainer" style="box-shadow: rgba(0,0,0,0.5) 0 0 5px"><canvas id="canvas"></canvas></div></div>',
+	template: `
+		<div>
+			<h1>{{ name }}</h1>
+			<input v-model="table.name" type="number">
+			<button @click="createTable">+</button>
+			<div id="canvasContainer" style="box-shadow: rgba(0,0,0,0.5) 0 0 5px">
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
+	`,
+
+	props: {
+		name: {
+			default: "default"
+		}
+	},
 
 	data: function(){
 		return {
-			layout: "",
 			table: {
-				name: 0,
-				width: 100,
-				height: 100,
-				rotate: 0
-			},
+				name: "0",
+			}
 		}
 	},
 
