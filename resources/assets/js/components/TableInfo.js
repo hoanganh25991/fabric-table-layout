@@ -1,5 +1,22 @@
 import Vue from "vue";
 
 export default Vue.extend({
-	template: "<h1>table info</h1>",
+	template: "#table-info-template",
+
+	props: ["selectedLayout"],
+
+	data(){
+		return {
+		}
+	},
+
+	computed: {
+		name: function(){
+			if(this.selectedLayout){
+				return this.selectedLayout.name;
+			}
+			return "";
+		}
+
+	}
 });

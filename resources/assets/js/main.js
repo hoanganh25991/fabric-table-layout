@@ -10,10 +10,12 @@ new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	data: {
-		layouts: []
-	},
+	props: ["selectedLayout"],
 
+	data: {
+		layouts: [],
+		askLayoutNameDivShowed: false,
+	},
 
 	convertToSlug(Text){
 		return Text
@@ -21,6 +23,29 @@ new Vue({
 			.replace(/[^\w ]+/g, '')
 			.replace(/ +/g, '-')
 			;
+	},
+
+	methods: {
+		askLayoutName: function(){
+			this.askLayoutNameDivShowed = true;
+		},
+		
+		createLayout: function(){
+			let inputLayutName =  $("input[name='newLayoutName']");
+			let newLayoutName = inputLayutName.val();
+			console.log(newLayoutName);
+			let layout = {name: newLayoutName, canvasId: Date.now()};
+			
+			this.layouts.push(layout);
+
+			this.selectedLayout = layout;
+			
+			//hide 
+			this.askLayoutNameDivShowed = false;
+			//clear
+			inputLayutName.val("");
+
+		}
 	}
 });
 console.log("hello");

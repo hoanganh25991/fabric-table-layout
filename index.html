@@ -3,28 +3,48 @@
 <head>
 	<title>fabric</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="">
+	<link rel="stylesheet" type="text/css" href="public/css/style.css">
 </head>
 <body>
 <div class="container">
 	<div id="tinker" class="row">
 		<div class="col-md-4">
-			<table-info></table-info>
+			<table-info 
+				:selected-layout.sync="selectedLayout"
+			>
+				
+			</table-info>
 		</div>
 		<div class="col-md-8">
 			<div class="row">
 				<div class="col-md-10">
-					<layout-info :layout="layout" v-for="layout in layouts"></layout-info>
+					<layout-info
+						:selected-layout.sync="selectedLayout"
+						:layout="layout" 
+						v-for="layout in layouts"
+					>
+						
+					</layout-info>
 				</div>
 				<div class="col-md-2">
-					<button>+</button>
+					<button @click="askLayoutName">+</button>
 				</div>
 			</div>
-			<layout-table :layout="layout" v-for="layout in layouts"></layout-table>
+			<div v-show="askLayoutNameDivShowed">
+				<input type="text" name="newLayoutName" autofocus @keyup.enter="createLayout">
+				<button @click="createLayout">ok</button>
+			</div>
+			<layout-table 
+				:selected-layout.sync="selectedLayout"
+				:layout="layout" v-for="layout in layouts"
+			>
+				
+			</layout-table>
 		</div>
 	</div>
 
 	<template id="table-info-template">
+		<p>{{ name }}</p>
 		<div class="row">
 			<div class="col-md-4">Rotation</div>
 			<div class="col-md-8">
@@ -107,11 +127,18 @@
 	</template>
 
 	<template id="layout-info-template">
-		<p>{{ layoutName }}</p>
+		<span 
+			:class='{"layout-info-active": active}'
+			@click="setSelectedLayout"
+		>{{ name }}
+		</span>
 	</template>
 
 	<template id="layout-table-template">
-		<canvas :id="id"></canvas>
+		<div :class='{"layout-table-active": active}'>
+			<h1>{{ name }}</h1>
+			<canvas :id="id"></canvas>
+		</div>
 	</template>
 
 </div>

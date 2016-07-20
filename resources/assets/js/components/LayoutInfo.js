@@ -1,9 +1,15 @@
 import Vue from "vue";
 
 export default Vue.extend({
-	template: "<span>{{ name }}</span>",
+	template: "#layout-info-template",
 	
-	props: ["layout"],
+	props: ["layout", "selectedLayout"],
+	
+	data(){
+		return {
+			active: false
+		}
+	},
 
 	computed: {
 		name: function(){
@@ -11,6 +17,27 @@ export default Vue.extend({
 				return this.layout.name;
 			}
 			return "";
+		},
+		active: function(){
+			if(!this.layout){
+				return false;
+			}
+
+			if(!this.selectedLayout){
+				return false;
+			}
+
+			return (this.layout.name == this.selectedLayout.name);
+		}
+	},
+
+	ready(){
+		// this.selected = true;
+	},
+	
+	methods: {
+		setSelectedLayout: function(){
+			this.selectedLayout = this.layout;
 		}
 	}
 });

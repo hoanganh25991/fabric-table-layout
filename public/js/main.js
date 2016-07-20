@@ -20286,9 +20286,16 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: "<span>{{ name }}</span>",
+	template: "#layout-info-template",
 
-	props: ["layout"],
+	props: ["layout", "selectedLayout"],
+
+	data: function data() {
+		return {
+			active: false
+		};
+	},
+
 
 	computed: {
 		name: function name() {
@@ -20296,6 +20303,28 @@ exports.default = _vue2.default.extend({
 				return this.layout.name;
 			}
 			return "";
+		},
+		active: function active() {
+			if (!this.layout) {
+				return false;
+			}
+
+			if (!this.selectedLayout) {
+				return false;
+			}
+
+			return this.layout.name == this.selectedLayout.name;
+		}
+	},
+
+	ready: function ready() {
+		// this.selected = true;
+	},
+
+
+	methods: {
+		setSelectedLayout: function setSelectedLayout() {
+			this.selectedLayout = this.layout;
 		}
 	}
 });
@@ -20314,10 +20343,29 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: "<h1>layout table</h1>",
+	template: "#layout-table-template",
 
-	props: ["layout"]
+	props: ["layout", "selectedLayout"],
 
+	computed: {
+		name: function name() {
+			if (this.layout) {
+				return this.layout.name;
+			}
+		},
+
+		active: function active() {
+			if (!this.layout) {
+				return false;
+			}
+
+			if (!this.selectedLayout) {
+				return false;
+			}
+
+			return this.layout.name == this.selectedLayout.name;
+		}
+	}
 });
 
 },{"vue":3}],6:[function(require,module,exports){
@@ -20334,7 +20382,24 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: "<h1>table info</h1>"
+	template: "#table-info-template",
+
+	props: ["selectedLayout"],
+
+	data: function data() {
+		return {};
+	},
+
+
+	computed: {
+		name: function name() {
+			if (this.selectedLayout) {
+				return this.selectedLayout.name;
+			}
+			return "";
+		}
+
+	}
 });
 
 },{"vue":3}],7:[function(require,module,exports){
@@ -20366,12 +20431,38 @@ new _vue2.default({
 	el: "#tinker",
 	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
+	props: ["selectedLayout"],
+
 	data: {
-		layouts: []
+		layouts: [],
+		askLayoutNameDivShowed: false
 	},
 
 	convertToSlug: function convertToSlug(Text) {
 		return Text.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+	},
+
+
+	methods: {
+		askLayoutName: function askLayoutName() {
+			this.askLayoutNameDivShowed = true;
+		},
+
+		createLayout: function createLayout() {
+			var inputLayutName = (0, _jquery2.default)("input[name='newLayoutName']");
+			var newLayoutName = inputLayutName.val();
+			console.log(newLayoutName);
+			var layout = { name: newLayoutName, canvasId: Date.now() };
+
+			this.layouts.push(layout);
+
+			this.selectedLayout = layout;
+
+			//hide 
+			this.askLayoutNameDivShowed = false;
+			//clear
+			inputLayutName.val("");
+		}
 	}
 });
 console.log("hello");
