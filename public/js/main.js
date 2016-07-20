@@ -20286,14 +20286,17 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: '<div><h1>table info</h1><p>{{ width }}</p><p>{{ height }}</p></div>',
-	data: function data() {
-		return {
-			width: 0,
-			height: 0,
-			scaleX: 1,
-			scaleY: 1
-		};
+	template: "<span>{{ name }}</span>",
+
+	props: ["layout"],
+
+	computed: {
+		name: function name() {
+			if (this.layout) {
+				return this.layout.name;
+			}
+			return "";
+		}
 	}
 });
 
@@ -20311,101 +20314,47 @@ var _vue2 = _interopRequireDefault(_vue);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-	template: "\n\t\t<div>\n\t\t\t<h1>{{ name }}</h1>\n\t\t\t<input v-model=\"table.name\" type=\"number\">\n\t\t\t<button @click=\"createTable\">+</button>\n\t\t\t<div id=\"canvasContainer\" style=\"box-shadow: rgba(0,0,0,0.5) 0 0 5px\">\n\t\t\t\t<canvas id=\"canvas\"></canvas>\n\t\t\t</div>\n\t\t</div>\n\t",
+	template: "<h1>layout table</h1>",
 
-	props: {
-		name: {
-			default: "default"
-		}
-	},
+	props: ["layout"]
 
-	data: function data() {
-		return {
-			table: {
-				name: "0"
-			}
-		};
-	},
-
-	ready: function ready() {
-		var canvas = new fabric.Canvas("canvas");
-		var canvasWidth = document.querySelector("#canvasContainer").offsetWidth;
-		canvas.setWidth(canvasWidth);
-		canvas.setHeight(500);
-		console.log(canvas);
-
-		this.layout = canvas;
-
-		var vue = this;
-
-		this.layout.on("object:selected", function (options) {
-			vue.updateActiveTable(options);
-		});
-
-		this.layout.on("object:scaling", function (options) {
-			vue.updateActiveTable(options);
-		});
-	},
-
-	methods: {
-		createTable: function createTable() {
-			console.log(this.table.name);
-			var text = new fabric.Text("" + this.table.name, {
-				fontSize: 30,
-				originX: "center",
-				originY: "center"
-			});
-
-			this.table.name = parseInt(this.table.name, 10) + 1;
-
-			var rect = new fabric.Rect({
-				fill: "#E5E5E5",
-				stroke: "#555E65",
-				strokeWidth: 4,
-				width: 100,
-				height: 100,
-				originX: "center",
-				originY: "center"
-			});
-
-			var table = new fabric.Group([rect, text], {
-				borderColor: 'gray',
-				cornerColor: 'black',
-				cornerSize: 8,
-				transparentCorners: true,
-				top: 0,
-				left: 0
-			});
-
-			this.layout.add(table);
-		},
-
-		updateActiveTable: function updateActiveTable(options) {
-			if (options.target) {
-				var activeTable = options.target;
-				var tableInfo = this.$parent.$refs.info;
-				// console.log(tableInfo);
-				tableInfo.width = Math.floor(activeTable.width * activeTable.scaleX);
-				tableInfo.height = Math.floor(activeTable.height * activeTable.scaleY);
-			}
-		}
-	}
 });
 
 },{"vue":3}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _vue = require("vue");
+
+var _vue2 = _interopRequireDefault(_vue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _vue2.default.extend({
+	template: "<h1>table info</h1>"
+});
+
+},{"vue":3}],7:[function(require,module,exports){
 "use strict";
 
 var _vue = require("vue");
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _LayoutInfo = require("./components/LayoutInfo");
+
+var _LayoutInfo2 = _interopRequireDefault(_LayoutInfo);
+
+var _LayoutTable = require("./components/LayoutTable");
+
+var _LayoutTable2 = _interopRequireDefault(_LayoutTable);
+
 var _TableInfo = require("./components/TableInfo");
 
 var _TableInfo2 = _interopRequireDefault(_TableInfo);
-
-var _TableLayout = require("./components/TableLayout");
-
-var _TableLayout2 = _interopRequireDefault(_TableLayout);
 
 var _jquery = require("jquery");
 
@@ -20414,41 +20363,19 @@ var _jquery2 = _interopRequireDefault(_jquery);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
-	el: "#test",
-	components: { TableInfo: _TableInfo2.default, TableLayout: _TableLayout2.default },
+	el: "#tinker",
+	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
-	data: function data() {
-		return {
-			layout: {
-				name: ""
-			}
-		};
+	data: {
+		layouts: []
 	},
 
-	methods: {
-		createLayout: function createLayout() {
-			console.log(this.layout.name);
-			var layoutName = this.layout.name;
-
-			//slug layout-name for id, html tag
-			this.layout.name = convertToSlug(this.layout.name);
-			console.log("after slug: " + this.layout.name);
-
-			//append <li> to tab-list
-			var li = (0, _jquery2.default)("\n\t\t\t\t<li role=\"presentation\">\n\t\t\t\t\t<a href=\"#" + this.layout.name + "\"\n\t\t\t\t\t\taria-controls=\"" + this.layout.name + "\"\n\t\t\t\t\t\trole=\"tab\" data-toggle=\"tab\"\n\t\t\t\t\t\t>" + layoutName + "\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t");
-			(0, _jquery2.default)("#layoutList").append(li);
-
-			//append <table-layout> to tab-content
-			var div = (0, _jquery2.default)("\n\t\t\t\t<div role=\"tabpanel\" class=\"tab-pane\" id=\"" + this.layout.name + "\">\n\t\t\t\t\t<table-layout :name=\"" + layoutName + "\"></table-layout>\n\t\t\t\t</div>\n\t\t\t");
-			(0, _jquery2.default)("#layoutContainer").append(div);
-		}
+	convertToSlug: function convertToSlug(Text) {
+		return Text.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
 	}
 });
-function convertToSlug(Text) {
-	return Text.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
-}
 console.log("hello");
 
-},{"./components/TableInfo":4,"./components/TableLayout":5,"jquery":1,"vue":3}]},{},[6]);
+},{"./components/LayoutInfo":4,"./components/LayoutTable":5,"./components/TableInfo":6,"jquery":1,"vue":3}]},{},[7]);
 
 //# sourceMappingURL=main.js.map

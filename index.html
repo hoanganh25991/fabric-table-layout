@@ -1,37 +1,121 @@
-<canvas id="c"></canvas>
-<canvas id="staticC"></canvas>
-<img src="giphy.gif" id="my-image">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.3/fabric.min.js"></script>
-<script>
-    var canvas = new fabric.Canvas("c");
-    var circle = new fabric.Circle({
-        radius: 100,
-        fill: '#eef',
-        scaleY: 0.5,
-        originX: 'center',
-        originY: 'center'
-    });
+<!DOCTYPE html>
+<html>
+<head>
+	<title>fabric</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="">
+</head>
+<body>
+<div class="container">
+	<div id="tinker" class="row">
+		<div class="col-md-4">
+			<table-info></table-info>
+		</div>
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-10">
+					<layout-info :layout="layout" v-for="layout in layouts"></layout-info>
+				</div>
+				<div class="col-md-2">
+					<button>+</button>
+				</div>
+			</div>
+			<layout-table :layout="layout" v-for="layout in layouts"></layout-table>
+		</div>
+	</div>
 
-    var text = new fabric.Text('hello world', {
-        fontSize: 30,
-        originX: 'center',
-        originY: 'center'
-    });
+	<template id="table-info-template">
+		<div class="row">
+			<div class="col-md-4">Rotation</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-4">-</div>
+					<div class="col-md-4">{{ rotation }}</div>
+					<div class="col-md-4">+</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Top/Y</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-4">-</div>
+					<div class="col-md-4">{{ top }}</div>
+					<div class="col-md-4">+</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Left/X</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-4">-</div>
+					<div class="col-md-4">{{ left }}</div>
+					<div class="col-md-4">+</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Width</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-4">-</div>
+					<div class="col-md-4">{{ width }}</div>
+					<div class="col-md-4">+</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Height</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-4">-</div>
+					<div class="col-md-4">{{ height }}</div>
+					<div class="col-md-4">+</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Shape</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6">Rect</div>
+					<div class="col-md-6">Circle</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Status</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6">Enable</div>
+					<div class="col-md-6">Disable</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Action</div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6">Rename</div>
+					<div class="col-md-6">Delete</div>
+				</div>
+			</div>
+		</div>
+		<button>+ add table</button>
+		<button>return</button>
+	</template>
 
-//    var group = new fabric.Group([ circle, text ], {
-//        left: 150,
-//        top: 100,
-//        angle: -10
-//    });
-//
-//    canvas.add(group);
-    canvas.add(circle, text);
+	<template id="layout-info-template">
+		<p>{{ layoutName }}</p>
+	</template>
 
-    var group = new fabric.Group([ circle, text ], {
-        left: 150,
-        top: 100,
-        angle: -10
-    });
-    canvas.add(group);
+	<template id="layout-table-template">
+		<canvas :id="id"></canvas>
+	</template>
 
-</script>
+</div>
+<script src="public/js/fabric.min.js"></script>
+<script src="public/js/main.js"></script>
+</body>
+</html>
