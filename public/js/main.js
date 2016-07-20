@@ -20409,6 +20409,17 @@ exports.default = _vue2.default.extend({
 				vm.$dispatch("broadcast-table-on-scaling", table);
 			}
 		});
+
+		this.canvas.on("object:rotating", function (options) {
+			if (options.target) {
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				var table = options.target;
+
+				console.log("layout-table [broadcast-table-on-rotating]");
+				vm.$dispatch("broadcast-table-on-rotating", table);
+			}
+		});
 	},
 
 
@@ -20519,6 +20530,7 @@ exports.default = _vue2.default.extend({
 			this.height = Math.floor(table.height * table.scaleY);
 			this.top = Math.floor(table.top);
 			this.left = Math.floor(table.left);
+			this.rotation = Math.floor(table.angle);
 		}
 	},
 
@@ -20531,7 +20543,13 @@ exports.default = _vue2.default.extend({
 		"table-on-scaling": function tableOnScaling(table) {
 			console.log("table-info handle [table-on-scaling]");
 			this.updateTableInfo(table);
+		},
+
+		"table-on-rotating": function tableOnRotating(table) {
+			console.log("table-info handle [table-on-scaling]");
+			this.updateTableInfo(table);
 		}
+
 	}
 });
 
@@ -20607,9 +20625,15 @@ new _vue2.default({
 			console.log("parent broadcast [table-on-scaling]");
 			this.$broadcast("table-on-scaling", table);
 		},
+
 		broadcastTableSelected: function broadcastTableSelected(table) {
 			console.log("parent broadcast [table-selected]");
 			this.$broadcast("table-selected", table);
+		},
+
+		broadcastTableOnRotating: function broadcastTableOnRotating(table) {
+			console.log("parent broadcast [table-on-rotating]");
+			this.$broadcast("table-on-rotating", table);
 		}
 	}
 });

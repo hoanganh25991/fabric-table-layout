@@ -51,6 +51,7 @@ export default Vue.extend({
 			this.height = Math.floor(table.height * table.scaleY);
 			this.top = Math.floor(table.top);
 			this.left =  Math.floor(table.left);
+			this.rotation = Math.floor(table.angle);
 		}
 	},
 
@@ -64,5 +65,11 @@ export default Vue.extend({
 			console.log("table-info handle [table-on-scaling]");
 			this.updateTableInfo(table);
 		},
+		
+		"table-on-rotating": function(table){
+			console.log("table-info handle [table-on-scaling]");
+			this.updateTableInfo(table);
+		},
+		
 	},
 });

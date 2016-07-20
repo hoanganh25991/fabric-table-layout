@@ -58,9 +58,15 @@ new Vue({
 			console.log("parent broadcast [table-on-scaling]");
 			this.$broadcast("table-on-scaling", table);
 		},
+		
 		broadcastTableSelected: function(table){
 			console.log("parent broadcast [table-selected]");
 			this.$broadcast("table-selected", table);
-		}
+		},
+		
+		broadcastTableOnRotating: function(table){
+			console.log("parent broadcast [table-on-rotating]");
+			this.$broadcast("table-on-rotating", table);
+		},
 	},
 });

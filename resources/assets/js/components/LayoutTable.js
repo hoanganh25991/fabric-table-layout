@@ -67,6 +67,17 @@ export default Vue.extend({
 				vm.$dispatch("broadcast-table-on-scaling", table);
 			}
 		});
+
+		this.canvas.on("object:rotating", function(options){
+			if(options.target){
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				let table = options.target;
+
+				console.log("layout-table [broadcast-table-on-rotating]");
+				vm.$dispatch("broadcast-table-on-rotating", table);
+			}
+		});
 	},
 
 	methods: {
