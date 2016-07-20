@@ -20379,10 +20379,16 @@ exports.default = _vue2.default.extend({
 
 	ready: function ready() {
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
-		console.log(canvas);
 		console.log(this.id);
 		canvas.setWidth(500);
 		canvas.setHeight(500);
+	},
+
+
+	methods: {
+		handleCreateTable: function handleCreateTable(tableName) {
+			console.log("layout-table handle create table: " + tableName);
+		}
 	}
 });
 
@@ -20397,6 +20403,10 @@ var _vue = require("vue");
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _jquery = require("jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
@@ -20405,7 +20415,9 @@ exports.default = _vue2.default.extend({
 	props: ["selectedLayout"],
 
 	data: function data() {
-		return {};
+		return {
+			askTableNameDivShowed: false
+		};
 	},
 
 
@@ -20417,10 +20429,29 @@ exports.default = _vue2.default.extend({
 			return "";
 		}
 
+	},
+
+	methods: {
+		askTableName: function askTableName() {
+			this.askTableNameDivShowed = true;
+		},
+
+		createTable: function createTable() {
+			var inputNewTableName = (0, _jquery2.default)("input[name='newTableName']");
+			var newTableName = inputNewTableName.val();
+			console.log("create table: " + newTableName);
+
+			//fire a event
+			this.$dispatch("create-table", newTableName);
+
+			//hide
+			this.askTableNameDivShowed = false;
+			inputNewTableName.val("");
+		}
 	}
 });
 
-},{"vue":3}],7:[function(require,module,exports){
+},{"jquery":1,"vue":3}],7:[function(require,module,exports){
 "use strict";
 
 var _vue = require("vue");
@@ -20480,7 +20511,14 @@ new _vue2.default({
 			this.askLayoutNameDivShowed = false;
 			//clear
 			inputLayutName.val("");
+		},
+
+		handleCreateTable: function handleCreateTable(tableName) {
+			console.log("parent handle create table: " + tableName);
+			console.log("parent broadcast to children, layout-table hanlde this event");
+			// this.$broadcast("create-table", tableName);
 		}
+
 	}
 });
 console.log("hello");

@@ -1,4 +1,5 @@
 import Vue from "vue";
+import $ from "jquery";
 
 export default Vue.extend({
 	template: "#table-info-template",
@@ -7,6 +8,7 @@ export default Vue.extend({
 
 	data(){
 		return {
+			askTableNameDivShowed: false,
 		}
 	},
 
@@ -18,5 +20,24 @@ export default Vue.extend({
 			return "";
 		}
 
+	},
+
+	methods: {
+		askTableName: function(){
+			this.askTableNameDivShowed = true;
+		},
+
+		createTable: function(){
+			let inputNewTableName = $("input[name='newTableName']");
+			let newTableName = inputNewTableName.val();
+			console.log(`create table: ${newTableName}`);
+
+			//fire a event
+			this.$dispatch("create-table", newTableName);
+
+			//hide
+			this.askTableNameDivShowed = false;
+			inputNewTableName.val("");
+		}
 	}
 });

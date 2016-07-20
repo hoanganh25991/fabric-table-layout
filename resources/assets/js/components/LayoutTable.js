@@ -37,9 +37,14 @@ export default Vue.extend({
 
 	ready(){
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
-		console.log(canvas);
 		console.log(this.id);
 		canvas.setWidth(500);
 		canvas.setHeight(500);
+	},
+
+	methods: {
+		handleCreateTable: function(tableName){
+			console.log(`layout-table handle create table: ${tableName}`);
+		}
 	}
 });

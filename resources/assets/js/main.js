@@ -45,7 +45,14 @@ new Vue({
 			//clear
 			inputLayutName.val("");
 
+		},
+
+		handleCreateTable: function(tableName){
+			console.log(`parent handle create table: ${tableName}`);
+			console.log("parent broadcast to children, layout-table hanlde this event");
+			// this.$broadcast("create-table", tableName);
 		}
+
 	}
 });
 console.log("hello");

@@ -11,6 +11,7 @@
 		<div class="col-md-4">
 			<table-info 
 				:selected-layout.sync="selectedLayout"
+				@create-table="handleCreateTable"
 			>
 				
 			</table-info>
@@ -122,8 +123,12 @@
 				</div>
 			</div>
 		</div>
-		<button>+ add table</button>
+		<button @click="askTableName">+ add table</button>
 		<button>return</button>
+		<div v-show="askTableNameDivShowed">
+			<input type="text" name="newTableName" autofocus @keyup.enter="createTable">
+			<button @click="createTable">ok</button>
+		</div>
 	</template>
 
 	<template id="layout-info-template">
