@@ -135,9 +135,9 @@
 	</template>
 
 	<template id="layout-table-template">
-		<div :class='{"layout-table-active": active}'>
+		<div v-show="active">
 			<h1>{{ name }}</h1>
-			<canvas :id="id"></canvas>
+			<canvas id="{{ id }}" v-el:canvas  class="layout-table-active"></canvas>
 		</div>
 	</template>
 

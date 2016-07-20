@@ -10,6 +10,16 @@ export default Vue.extend({
 			if(this.layout){
 				return this.layout.name;
 			}
+
+			return "";
+		},
+
+		id: function(){
+			if(this.layout){
+				return this.layout.canvasId;
+			}
+
+			return "";
 		},
 
 		active: function(){
@@ -23,5 +33,13 @@ export default Vue.extend({
 
 			return (this.layout.name == this.selectedLayout.name);
 		}
+	},
+
+	ready(){
+		let canvas = new fabric.Canvas(this.$els.canvas.id);
+		console.log(canvas);
+		console.log(this.id);
+		canvas.setWidth(500);
+		canvas.setHeight(500);
 	}
 });

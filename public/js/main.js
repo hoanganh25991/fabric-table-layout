@@ -20352,6 +20352,16 @@ exports.default = _vue2.default.extend({
 			if (this.layout) {
 				return this.layout.name;
 			}
+
+			return "";
+		},
+
+		id: function id() {
+			if (this.layout) {
+				return this.layout.canvasId;
+			}
+
+			return "";
 		},
 
 		active: function active() {
@@ -20365,6 +20375,14 @@ exports.default = _vue2.default.extend({
 
 			return this.layout.name == this.selectedLayout.name;
 		}
+	},
+
+	ready: function ready() {
+		var canvas = new fabric.Canvas(this.$els.canvas.id);
+		console.log(canvas);
+		console.log(this.id);
+		canvas.setWidth(500);
+		canvas.setHeight(500);
 	}
 });
 
