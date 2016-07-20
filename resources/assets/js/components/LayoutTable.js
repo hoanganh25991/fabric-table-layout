@@ -45,28 +45,31 @@ export default Vue.extend({
 
 		//store canvas as a ref to object
 		this.canvas = canvas;
-
+		
 		this.canvas.on("object:selected", function(options){
 			if(options.target){
-				console.log("table selected");
-				// this.selectedTable = options.target;
-				// vm.$dispatch("broadcast-table-selected");
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				let table = options.target;
+
+				console.log("layout-table [broadcast-table-selected]");
+				vm.$dispatch("broadcast-table-selected", table);
 			}
 		});
 
 		this.canvas.on("object:scaling", function(options){
 			if(options.target){
-				console.log("table scaling");
-				// this.selectedTable = options.target;
-				// vm.$dispatch("broadcast-table-on-scaling");
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				let table = options.target;
+
+				console.log("layout-table [broadcast-table-on-scaling]");
+				vm.$dispatch("broadcast-table-on-scaling", table);
 			}
 		});
 	},
 
 	methods: {
-		handleCreateTable: function(tableName){
-			console.log(`layout-table handle create table: ${tableName}`);
-		},
 	},
 	
 	events: {
@@ -103,7 +106,5 @@ export default Vue.extend({
 				this.canvas.add(table);
 			}
 		},
-
-
 	}
 });

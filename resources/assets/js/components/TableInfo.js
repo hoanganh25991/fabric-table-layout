@@ -9,6 +9,11 @@ export default Vue.extend({
 	data(){
 		return {
 			askTableNameDivShowed: false,
+			width: "-",
+			height: "-",
+			top: "-",
+			left: "-",
+			rotation: "-",
 		}
 	},
 
@@ -19,43 +24,6 @@ export default Vue.extend({
 			}
 			return "";
 		},
-
-		width: function(){
-			if(this.selectedTable){
-				console.log(this.selectedTable);
-				return Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
-			}
-			return "-";
-		},
-
-		height: function(){
-			if(this.selectedTable){
-				return Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
-			}
-			return "-";
-		},
-
-		top: function(){
-			if(this.selectedTable){
-				return Math.floor(this.selectedTable.top);
-			}
-			return "-";
-		},
-
-		left: function(){
-			if(this.selectedTable){
-				return Math.floor(this.selectedTable.left);
-			}
-			return "-";
-		},
-
-		rotation: function(){
-			if(this.selectedTable){
-				return Math.floor(this.selectedTable.scaleX);
-			}
-			return "-";
-		},
-
 	},
 
 	methods: {
@@ -64,6 +32,7 @@ export default Vue.extend({
 		},
 
 		createTable: function(){
+			console.log(this.selectedTable);
 			let inputNewTableName = $("input[name='newTableName']");
 			let newTableName = inputNewTableName.val();
 			console.log(`create table: ${newTableName}`);
@@ -74,13 +43,26 @@ export default Vue.extend({
 			//hide
 			this.askTableNameDivShowed = false;
 			inputNewTableName.val("");
+		},
+
+		updateTableInfo: function(table){
+			console.log(`log selecteTable: ${table}`);
+			this.width = Math.floor(table.width * table.scaleX);
+			this.height = Math.floor(table.height * table.scaleY);
+			this.top = Math.floor(table.top);
+			this.left =  Math.floor(table.left);
 		}
 	},
 
 	events: {
-		"table-on-scaling": function(){
-			this.width = Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
-			this.height = Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
-		}
-	}
+		"table-selected": function(table){
+			console.log("table-info handle [table-selected]");
+			this.updateTableInfo(table);
+		},
+		
+		"table-on-scaling": function(table){
+			console.log("table-info handle [table-on-scaling]");
+			this.updateTableInfo(table);
+		},
+	},
 });

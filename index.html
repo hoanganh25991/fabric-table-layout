@@ -1,152 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>fabric</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="public/css/style.css">
+    <title>fabric</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="public/css/style.css">
 </head>
 <body>
 <div class="container">
-	<div id="tinker" class="row">
-		<div class="col-md-4">
-			<table-info 
-				:selected-layout.sync="selectedLayout"
-				:selected-table.sync="selectedTable"
-				@new-table-name="handleNewTableName"
-			>
-				
-			</table-info>
-		</div>
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-10">
-					<layout-info
-						:selected-layout.sync="selectedLayout"
-						:layout="layout"
-						v-for="layout in layouts"
-					>
-						
-					</layout-info>
-				</div>
-				<div class="col-md-2">
-					<button @click="askLayoutName">+</button>
-				</div>
-			</div>
-			<div v-show="askLayoutNameDivShowed">
-				<input type="text" name="newLayoutName" autofocus @keyup.enter="createLayout">
-				<button @click="createLayout">ok</button>
-			</div>
-			<layout-table 
-				:selected-layout.sync="selectedLayout"
-				:selected-table.sync="selectedTable"
-				:layout="layout" v-for="layout in layouts"
-				@broadcast-table-on-scaling="broadcastTableOnScaling"
-			>
-			</layout-table>
-		</div>
-	</div>
+    <div id="tinker" class="row">
+        <div class="col-md-4">
+            <table-info
+                    :selected-layout.sync="selectedLayout"
+                    :selected-table.sync="selectedTable"
+                    @new-table-name="handleNewTableName"
+            >
 
-	<template id="table-info-template">
-		<p>{{ name }}</p>
-		<div class="row">
-			<div class="col-md-4">Rotation</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-4">-</div>
-					<div class="col-md-4">{{ rotation }}</div>
-					<div class="col-md-4">+</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Top/Y</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-4">-</div>
-					<div class="col-md-4">{{ top }}</div>
-					<div class="col-md-4">+</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Left/X</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-4">-</div>
-					<div class="col-md-4">{{ left }}</div>
-					<div class="col-md-4">+</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Width</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-4">-</div>
-					<div class="col-md-4">{{ width }}</div>
-					<div class="col-md-4">+</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Height</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-4">-</div>
-					<div class="col-md-4">{{ height }}</div>
-					<div class="col-md-4">+</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Shape</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-6">Rect</div>
-					<div class="col-md-6">Circle</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Status</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-6">Enable</div>
-					<div class="col-md-6">Disable</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Action</div>
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-6">Rename</div>
-					<div class="col-md-6">Delete</div>
-				</div>
-			</div>
-		</div>
-		<button @click="askTableName">+ add table</button>
-		<button>return</button>
-		<div v-show="askTableNameDivShowed">
-			<input type="text" name="newTableName" autofocus @keyup.enter="createTable">
-			<button @click="createTable">ok</button>
-		</div>
-	</template>
+            </table-info>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-10">
+                    <layout-info
+                            :selected-layout.sync="selectedLayout"
+                            :layout="layout"
+                            v-for="layout in layouts"
+                    >
 
-	<template id="layout-info-template">
-		<span 
-			:class='{"layout-info-active": active}'
-			@click="setSelectedLayout"
-		>{{ name }}
+                    </layout-info>
+                </div>
+                <div class="col-md-2">
+                    <button @click="askLayoutName">+</button>
+                </div>
+            </div>
+            <div v-show="askLayoutNameDivShowed">
+                <input type="text" name="newLayoutName" autofocus @keyup.enter="createLayout">
+                <button @click="createLayout">ok</button>
+            </div>
+            <layout-table
+                    :selected-layout.sync="selectedLayout"
+                    :selected-table.sync="selectedTable"
+                    :layout="layout" v-for="layout in layouts"
+                    @broadcast-table-on-scaling="broadcastTableOnScaling"
+                    @broadcast-table-selected="broadcastTableSelected"
+            >
+            </layout-table>
+        </div>
+    </div>
+
+    <template id="table-info-template">
+        <p>{{ name }}</p>
+        <div class="row">
+            <div class="col-md-4">Rotation</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">-</div>
+                    <div class="col-md-4">{{ rotation }}</div>
+                    <div class="col-md-4">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Top/Y</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">-</div>
+                    <div class="col-md-4">{{ top }}</div>
+                    <div class="col-md-4">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Left/X</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">-</div>
+                    <div class="col-md-4">{{ left }}</div>
+                    <div class="col-md-4">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Width</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">-</div>
+                    <div class="col-md-4">{{ width }}</div>
+                    <div class="col-md-4">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Height</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">-</div>
+                    <div class="col-md-4">{{ height }}</div>
+                    <div class="col-md-4">+</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Shape</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">Rect</div>
+                    <div class="col-md-6">Circle</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Status</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">Enable</div>
+                    <div class="col-md-6">Disable</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">Action</div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">Rename</div>
+                    <div class="col-md-6">Delete</div>
+                </div>
+            </div>
+        </div>
+        <button @click="askTableName">+ add table</button>
+        <button>return</button>
+        <div v-show="askTableNameDivShowed">
+            <input type="text" name="newTableName" autofocus @keyup.enter="createTable">
+            <button @click="createTable">ok</button>
+        </div>
+    </template>
+
+    <template id="layout-info-template">
+		<span
+                :class='{"layout-info-active": active}'
+                @click="setSelectedLayout"
+        >{{ name }}
 		</span>
-	</template>
+    </template>
 
-	<template id="layout-table-template">
-		<div v-show="active">
-			<h1>{{ name }}</h1>
-			<canvas id="{{ id }}" v-el:canvas  class="layout-table-active"></canvas>
-		</div>
-	</template>
+    <template id="layout-table-template">
+        <div v-show="active">
+            <h1>{{ name }}</h1>
+            <canvas id="{{ id }}" v-el:canvas class="layout-table-active"></canvas>
+        </div>
+    </template>
 
 </div>
 <script src="public/js/fabric.min.js"></script>

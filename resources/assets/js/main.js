@@ -54,10 +54,13 @@ new Vue({
 			this.$broadcast("create-table", tableName);
 		},
 
-		broadcastTableOnScaling: function(){
-			this.$broadcast("table-on-scaling");
+		broadcastTableOnScaling: function(table){
+			console.log("parent broadcast [table-on-scaling]");
+			this.$broadcast("table-on-scaling", table);
+		},
+		broadcastTableSelected: function(table){
+			console.log("parent broadcast [table-selected]");
+			this.$broadcast("table-selected", table);
 		}
-
-	}
+	},
 });
-console.log("hello");

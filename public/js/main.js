@@ -20390,27 +20390,29 @@ exports.default = _vue2.default.extend({
 
 		this.canvas.on("object:selected", function (options) {
 			if (options.target) {
-				console.log("table selected");
-				// this.selectedTable = options.target;
-				// vm.$dispatch("broadcast-table-selected");
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				var table = options.target;
+
+				console.log("layout-table [broadcast-table-selected]");
+				vm.$dispatch("broadcast-table-selected", table);
 			}
 		});
 
 		this.canvas.on("object:scaling", function (options) {
 			if (options.target) {
-				console.log("table scaling");
-				// this.selectedTable = options.target;
-				// vm.$dispatch("broadcast-table-on-scaling");
+				console.log("set selectedTable");
+				vm.selectedTable = options.target;
+				var table = options.target;
+
+				console.log("layout-table [broadcast-table-on-scaling]");
+				vm.$dispatch("broadcast-table-on-scaling", table);
 			}
 		});
 	},
 
 
-	methods: {
-		handleCreateTable: function handleCreateTable(tableName) {
-			console.log("layout-table handle create table: " + tableName);
-		}
-	},
+	methods: {},
 
 	events: {
 		"create-table": function createTable(tableName) {
@@ -20446,7 +20448,6 @@ exports.default = _vue2.default.extend({
 				this.canvas.add(table);
 			}
 		}
-
 	}
 });
 
@@ -20474,7 +20475,12 @@ exports.default = _vue2.default.extend({
 
 	data: function data() {
 		return {
-			askTableNameDivShowed: false
+			askTableNameDivShowed: false,
+			width: "-",
+			height: "-",
+			top: "-",
+			left: "-",
+			rotation: "-"
 		};
 	},
 
@@ -20485,44 +20491,7 @@ exports.default = _vue2.default.extend({
 				return this.selectedLayout.name;
 			}
 			return "";
-		},
-
-		width: function width() {
-			if (this.selectedTable) {
-				console.log(this.selectedTable);
-				return Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
-			}
-			return "-";
-		},
-
-		height: function height() {
-			if (this.selectedTable) {
-				return Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
-			}
-			return "-";
-		},
-
-		top: function top() {
-			if (this.selectedTable) {
-				return Math.floor(this.selectedTable.top);
-			}
-			return "-";
-		},
-
-		left: function left() {
-			if (this.selectedTable) {
-				return Math.floor(this.selectedTable.left);
-			}
-			return "-";
-		},
-
-		rotation: function rotation() {
-			if (this.selectedTable) {
-				return Math.floor(this.selectedTable.scaleX);
-			}
-			return "-";
 		}
-
 	},
 
 	methods: {
@@ -20531,6 +20500,7 @@ exports.default = _vue2.default.extend({
 		},
 
 		createTable: function createTable() {
+			console.log(this.selectedTable);
 			var inputNewTableName = (0, _jquery2.default)("input[name='newTableName']");
 			var newTableName = inputNewTableName.val();
 			console.log("create table: " + newTableName);
@@ -20541,13 +20511,26 @@ exports.default = _vue2.default.extend({
 			//hide
 			this.askTableNameDivShowed = false;
 			inputNewTableName.val("");
+		},
+
+		updateTableInfo: function updateTableInfo(table) {
+			console.log("log selecteTable: " + table);
+			this.width = Math.floor(table.width * table.scaleX);
+			this.height = Math.floor(table.height * table.scaleY);
+			this.top = Math.floor(table.top);
+			this.left = Math.floor(table.left);
 		}
 	},
 
 	events: {
-		"table-on-scaling": function tableOnScaling() {
-			this.width = Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
-			this.height = Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
+		"table-selected": function tableSelected(table) {
+			console.log("table-info handle [table-selected]");
+			this.updateTableInfo(table);
+		},
+
+		"table-on-scaling": function tableOnScaling(table) {
+			console.log("table-info handle [table-on-scaling]");
+			this.updateTableInfo(table);
 		}
 	}
 });
@@ -20620,13 +20603,16 @@ new _vue2.default({
 			this.$broadcast("create-table", tableName);
 		},
 
-		broadcastTableOnScaling: function broadcastTableOnScaling() {
-			this.$broadcast("table-on-scaling");
+		broadcastTableOnScaling: function broadcastTableOnScaling(table) {
+			console.log("parent broadcast [table-on-scaling]");
+			this.$broadcast("table-on-scaling", table);
+		},
+		broadcastTableSelected: function broadcastTableSelected(table) {
+			console.log("parent broadcast [table-selected]");
+			this.$broadcast("table-selected", table);
 		}
-
 	}
 });
-console.log("hello");
 
 },{"./components/LayoutInfo":4,"./components/LayoutTable":5,"./components/TableInfo":6,"jquery":1,"vue":3}]},{},[7]);
 
