@@ -20388,12 +20388,12 @@ exports.default = _vue2.default.extend({
 		//store ref
 		var vm = this;
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
-		console.log(this.id);
 		canvas.setWidth(500);
 		canvas.setHeight(500);
 
 		//store canvas as a ref to object
 		this.canvas = canvas;
+		this.selectedLayout = this.layout;
 
 		this.canvas.on("object:selected", function (options) {
 			if (options.target) {
@@ -20469,6 +20469,11 @@ exports.default = _vue2.default.extend({
 
 		"export-layouts": function exportLayouts() {
 			console.log("layout-table handle [export-layouts]");
+			// this.$dispatch("layout-export-success");
+			var vm = this;
+			setTimeout(function () {
+				vm.$dispatch("layout-export-success");
+			}, 1000);
 		}
 	}
 });
@@ -20502,7 +20507,8 @@ exports.default = _vue2.default.extend({
 			height: "-",
 			top: "-",
 			left: "-",
-			rotation: "-"
+			rotation: "-",
+			exportLayoutsDivShowed: false
 		};
 	},
 
@@ -20515,18 +20521,8 @@ exports.default = _vue2.default.extend({
 			return "";
 		},
 
-		exportLayoutsDivShowed: function exportLayoutsDivShowed() {
-			if (this.layouts.length) {
-				if (this.exportLayoutsCount == this.layouts.length) {
-					return false;
-				}
-			}
-
-			return false;
-		},
-
 		layoutsCount: function layoutsCount() {
-			if (this.layouts.length) {
+			if (this.layouts) {
 				return this.layouts.length;
 			}
 			return 0;
@@ -20538,7 +20534,7 @@ exports.default = _vue2.default.extend({
 			this.askTableNameDivShowed = true;
 		},
 
-		createTable: function createTable() {
+		getTableName: function getTableName() {
 			console.log(this.selectedTable);
 			var inputNewTableName = (0, _jquery2.default)("input[name='newTableName']");
 			var newTableName = inputNewTableName.val();
@@ -20581,6 +20577,11 @@ exports.default = _vue2.default.extend({
 		"table-on-rotating": function tableOnRotating(table) {
 			console.log("table-info handle [table-on-scaling]");
 			this.updateTableInfo(table);
+		},
+
+		"export-layouts-complete": function exportLayoutsComplete() {
+			console.log("export-layouts-complete");
+			this.exportLayoutsDivShowed = false;
 		}
 
 	}
@@ -20672,13 +20673,26 @@ new _vue2.default({
 			console.log("parent broadcast [export-layouts]");
 			this.exportLayoutsCount = 0;
 			this.$broadcast("export-layouts");
+		},
+
+		handleLayoutExportSuccess: function handleLayoutExportSuccess() {
+			this.exportLayoutsCount++;
+			if (this.exportLayoutsCount == this.layouts.length) {
+				this.$broadcast("export-layouts-complete");
+			}
 		}
 	},
 
 	ready: function ready() {
 		//set default value
-		this.exportLayoutsCount = 0;
 		this.layouts = [];
+		// this.layouts = [
+		// 	{name: "default", canvasId: 1, canvas:{}},
+		// 	{name: "default2", canvasId: 2, canvas:{}},
+		// ];
+
+		//
+		// this.exportLayoutsCount = 0;
 	}
 });
 

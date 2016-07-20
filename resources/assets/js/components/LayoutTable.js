@@ -45,12 +45,12 @@ export default Vue.extend({
 		//store ref
 		let vm = this;
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
-		console.log(this.id);
 		canvas.setWidth(500);
 		canvas.setHeight(500);
 
 		//store canvas as a ref to object
 		this.canvas = canvas;
+		this.selectedLayout = this.layout;
 		
 		this.canvas.on("object:selected", function(options){
 			if(options.target){
@@ -126,6 +126,12 @@ export default Vue.extend({
 
 		"export-layouts": function(){
 			console.log("layout-table handle [export-layouts]");
+			// this.$dispatch("layout-export-success");
+			let vm = this;
+			setTimeout(function(){
+				vm.$dispatch("layout-export-success");
+			}, 1000);
+
 		}
 	}
 });

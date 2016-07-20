@@ -30,15 +30,15 @@ new Vue({
 		},
 
 		getLayoutName: function(){
-			let inputLayoutName =  $("input[name='newLayoutName']");
+			let inputLayoutName = $("input[name='newLayoutName']");
 			let newLayoutName = inputLayoutName.val();
 			console.log(newLayoutName);
 			let layout = {name: newLayoutName, canvasId: Date.now()};
-			
+
 			this.layouts.push(layout);
 
 			this.selectedLayout = layout;
-			
+
 			//hide 
 			this.askLayoutNameDivShowed = false;
 			//clear
@@ -72,12 +72,26 @@ new Vue({
 			console.log("parent broadcast [export-layouts]");
 			this.exportLayoutsCount = 0;
 			this.$broadcast("export-layouts");
+		},
+
+		handleLayoutExportSuccess: function(){
+			this.exportLayoutsCount++;
+			if(this.exportLayoutsCount == this.layouts.length){
+				this.$broadcast("export-layouts-complete");
+			}
 		}
 	},
 
 	ready(){
 		//set default value
-		this.exportLayoutsCount = 0;
 		this.layouts = [];
+		// this.layouts = [
+		// 	{name: "default", canvasId: 1, canvas:{}},
+		// 	{name: "default2", canvasId: 2, canvas:{}},
+		// ];
+
+		//
+		// this.exportLayoutsCount = 0;
+
 	}
 });

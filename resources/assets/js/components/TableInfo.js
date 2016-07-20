@@ -14,6 +14,7 @@ export default Vue.extend({
 			top: "-",
 			left: "-",
 			rotation: "-",
+			exportLayoutsDivShowed: false,
 		}
 	},
 
@@ -25,18 +26,8 @@ export default Vue.extend({
 			return "";
 		},
 		
-		exportLayoutsDivShowed: function(){
-			if(this.layouts.length){
-				if(this.exportLayoutsCount == this.layouts.length){
-					return false;
-				}
-			}
-			
-			return false;
-		},
-
 		layoutsCount: function(){
-			if(this.layouts.length){
+			if(this.layouts){
 				return this.layouts.length;
 			}
 			return 0;
@@ -48,7 +39,7 @@ export default Vue.extend({
 			this.askTableNameDivShowed = true;
 		},
 
-		createTable: function(){
+		getTableName: function(){
 			console.log(this.selectedTable);
 			let inputNewTableName = $("input[name='newTableName']");
 			let newTableName = inputNewTableName.val();
@@ -92,6 +83,12 @@ export default Vue.extend({
 			console.log("table-info handle [table-on-scaling]");
 			this.updateTableInfo(table);
 		},
+
+		"export-layouts-complete": function(){
+			console.log("export-layouts-complete");
+			this.exportLayoutsDivShowed = false;
+
+		}
 		
 	},
 });

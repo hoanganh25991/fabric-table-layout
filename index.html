@@ -12,7 +12,7 @@
             <table-info
                     :selected-layout.sync="selectedLayout"
                     :selected-table.sync="selectedTable"
-                    :export-layouts-count="exportLayoutsCount"
+                    :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
                     @new-table-name="handleNewTableName"
                     @broadcast-export-layouts="broadcastExportLayouts"
@@ -42,11 +42,12 @@
                     :selected-layout.sync="selectedLayout"
                     :selected-table.sync="selectedTable"
                     :layout="layout" v-for="layout in layouts"
-                    :export-layouts-count="exportLayoutsCount"
+                    :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
                     @broadcast-table-on-scaling="broadcastTableOnScaling"
                     @broadcast-table-selected="broadcastTableSelected"
                     @broadcast-table-on-rotating="broadcastTableOnRotating"
+                    @layout-export-success="handleLayoutExportSuccess"
             >
             </layout-table>
         </div>
@@ -134,12 +135,12 @@
         <button @click="askTableName">+ add table</button>
         <button>return</button>
         <div v-show="askTableNameDivShowed">
-            <input type="text" name="newTableName" autofocus @keyup.enter="createTable">
-            <button @click="createTable">ok</button>
+            <input type="text" name="newTableName" autofocus @keyup.enter="getTableName">
+            <button @click="getTableName">ok</button>
         </div>
         <button @click="exportLayouts">share</button>
         <div v-show="exportLayoutsDivShowed">
-            {{ exportLayoutsCount }} / {{ layoutsCount }}
+            <p>{{ exportLayoutsCount }} / {{ layoutsCount }}</p>
         </div>
     </template>
 
