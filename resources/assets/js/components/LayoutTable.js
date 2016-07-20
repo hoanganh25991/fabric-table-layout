@@ -44,9 +44,16 @@ export default Vue.extend({
 	ready(){
 		//store ref
 		let vm = this;
+
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
+
 		canvas.setWidth(500);
 		canvas.setHeight(500);
+
+		if(this.layout.canvas){
+			// console.log(this.layout.canvas);
+			canvas.loadFromJSON(this.layout.canvas);
+		}
 
 		//store canvas as a ref to object
 		this.canvas = canvas;
@@ -126,11 +133,14 @@ export default Vue.extend({
 
 		"export-layouts": function(){
 			console.log("layout-table handle [export-layouts]");
-			// this.$dispatch("layout-export-success");
-			let vm = this;
-			setTimeout(function(){
-				vm.$dispatch("layout-export-success");
-			}, 1000);
+			// console.log(this.canvas.toJSON());
+			this.layout.canvas = JSON.stringify(this.canvas.toJSON());
+
+			this.$dispatch("layout-export-success");
+			// let vm = this;
+			// setTimeout(function(){
+			// 	vm.$dispatch("layout-export-success");
+			// }, 1000);
 
 		}
 	}

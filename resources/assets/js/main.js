@@ -78,13 +78,14 @@ new Vue({
 			this.exportLayoutsCount++;
 			if(this.exportLayoutsCount == this.layouts.length){
 				this.$broadcast("export-layouts-complete");
+				console.log(JSON.stringify(this.layouts));
 			}
 		}
 	},
 
 	ready(){
 		//set default value
-		this.layouts = [];
+		// this.layouts = [];
 		// this.layouts = [
 		// 	{name: "default", canvasId: 1, canvas:{}},
 		// 	{name: "default2", canvasId: 2, canvas:{}},
@@ -93,5 +94,6 @@ new Vue({
 		//
 		// this.exportLayoutsCount = 0;
 
+		this.layouts = [{"name":"hoanganh","canvasId":1469006639257,"canvas":"{\"objects\":[{\"type\":\"group\",\"originX\":\"left\",\"originY\":\"top\",\"left\":77,\"top\":72,\"width\":104,\"height\":104,\"fill\":\"rgb(0,0,0)\",\"stroke\":null,\"strokeWidth\":0,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"objects\":[{\"type\":\"rect\",\"originX\":\"center\",\"originY\":\"center\",\"left\":0,\"top\":0,\"width\":100,\"height\":100,\"fill\":\"#E5E5E5\",\"stroke\":\"#555E65\",\"strokeWidth\":4,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"rx\":0,\"ry\":0},{\"type\":\"text\",\"originX\":\"center\",\"originY\":\"center\",\"left\":0,\"top\":0,\"width\":15,\"height\":33.9,\"fill\":\"rgb(0,0,0)\",\"stroke\":null,\"strokeWidth\":1,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"text\":\"1\",\"fontSize\":30,\"fontWeight\":\"normal\",\"fontFamily\":\"Times New Roman\",\"fontStyle\":\"\",\"lineHeight\":1.16,\"textDecoration\":\"\",\"textAlign\":\"left\",\"textBackgroundColor\":\"\"}]}],\"background\":\"\"}"},{"name":"hoangminh","canvasId":1469006646832,"canvas":"{\"objects\":[{\"type\":\"group\",\"originX\":\"left\",\"originY\":\"top\",\"left\":91,\"top\":126,\"width\":104,\"height\":104,\"fill\":\"rgb(0,0,0)\",\"stroke\":null,\"strokeWidth\":0,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"objects\":[{\"type\":\"rect\",\"originX\":\"center\",\"originY\":\"center\",\"left\":0,\"top\":0,\"width\":100,\"height\":100,\"fill\":\"#E5E5E5\",\"stroke\":\"#555E65\",\"strokeWidth\":4,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"rx\":0,\"ry\":0},{\"type\":\"text\",\"originX\":\"center\",\"originY\":\"center\",\"left\":0,\"top\":0,\"width\":15,\"height\":33.9,\"fill\":\"rgb(0,0,0)\",\"stroke\":null,\"strokeWidth\":1,\"strokeDashArray\":null,\"strokeLineCap\":\"butt\",\"strokeLineJoin\":\"miter\",\"strokeMiterLimit\":10,\"scaleX\":1,\"scaleY\":1,\"angle\":0,\"flipX\":false,\"flipY\":false,\"opacity\":1,\"shadow\":null,\"visible\":true,\"clipTo\":null,\"backgroundColor\":\"\",\"fillRule\":\"nonzero\",\"globalCompositeOperation\":\"source-over\",\"transformMatrix\":null,\"skewX\":0,\"skewY\":0,\"text\":\"1\",\"fontSize\":30,\"fontWeight\":\"normal\",\"fontFamily\":\"Times New Roman\",\"fontStyle\":\"\",\"lineHeight\":1.16,\"textDecoration\":\"\",\"textAlign\":\"left\",\"textBackgroundColor\":\"\"}]}],\"background\":\"\"}"}];
 	}
 });
