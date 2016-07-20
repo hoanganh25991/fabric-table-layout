@@ -10,7 +10,7 @@ new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["selectedLayout"],
+	props: ["selectedLayout", "selectedTable"],
 
 	data: {
 		layouts: [],
@@ -31,8 +31,8 @@ new Vue({
 		},
 		
 		createLayout: function(){
-			let inputLayutName =  $("input[name='newLayoutName']");
-			let newLayoutName = inputLayutName.val();
+			let inputLayoutName =  $("input[name='newLayoutName']");
+			let newLayoutName = inputLayoutName.val();
 			console.log(newLayoutName);
 			let layout = {name: newLayoutName, canvasId: Date.now()};
 			
@@ -43,14 +43,19 @@ new Vue({
 			//hide 
 			this.askLayoutNameDivShowed = false;
 			//clear
-			inputLayutName.val("");
+			inputLayoutName.val("");
 
 		},
 
-		handleCreateTable: function(tableName){
-			console.log(`parent handle create table: ${tableName}`);
-			console.log("parent broadcast to children, layout-table hanlde this event");
-			// this.$broadcast("create-table", tableName);
+		handleNewTableName: function(tableName){
+			console.log(`parent handle [new table name]: ${tableName}`);
+			console.log(`parent broadcast [create-table] to children,
+			layout-table hanlde this event`);
+			this.$broadcast("create-table", tableName);
+		},
+
+		broadcastTableOnScaling: function(){
+			this.$broadcast("table-on-scaling");
 		}
 
 	}

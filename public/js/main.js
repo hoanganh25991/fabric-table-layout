@@ -20345,7 +20345,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#layout-table-template",
 
-	props: ["layout", "selectedLayout"],
+	props: ["layout", "selectedLayout", "selectedTable"],
 
 	computed: {
 		name: function name() {
@@ -20378,10 +20378,31 @@ exports.default = _vue2.default.extend({
 	},
 
 	ready: function ready() {
+		//store ref
+		var vm = this;
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
 		console.log(this.id);
 		canvas.setWidth(500);
 		canvas.setHeight(500);
+
+		//store canvas as a ref to object
+		this.canvas = canvas;
+
+		this.canvas.on("object:selected", function (options) {
+			if (options.target) {
+				console.log("table selected");
+				// this.selectedTable = options.target;
+				// vm.$dispatch("broadcast-table-selected");
+			}
+		});
+
+		this.canvas.on("object:scaling", function (options) {
+			if (options.target) {
+				console.log("table scaling");
+				// this.selectedTable = options.target;
+				// vm.$dispatch("broadcast-table-on-scaling");
+			}
+		});
 	},
 
 
@@ -20389,6 +20410,43 @@ exports.default = _vue2.default.extend({
 		handleCreateTable: function handleCreateTable(tableName) {
 			console.log("layout-table handle create table: " + tableName);
 		}
+	},
+
+	events: {
+		"create-table": function createTable(tableName) {
+			console.log("layout-table hanlde create-table " + tableName);
+			if (this.layout.name == this.selectedLayout.name) {
+				console.log("layout-table: " + this.layout.name + " add new table");
+
+				var text = new fabric.Text("" + tableName, {
+					fontSize: 30,
+					originX: "center",
+					originY: "center"
+				});
+
+				var rect = new fabric.Rect({
+					fill: "#E5E5E5",
+					stroke: "#555E65",
+					strokeWidth: 4,
+					width: 100,
+					height: 100,
+					originX: "center",
+					originY: "center"
+				});
+
+				var table = new fabric.Group([rect, text], {
+					borderColor: 'gray',
+					cornerColor: 'black',
+					cornerSize: 8,
+					transparentCorners: true,
+					top: 0,
+					left: 0
+				});
+
+				this.canvas.add(table);
+			}
+		}
+
 	}
 });
 
@@ -20412,7 +20470,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#table-info-template",
 
-	props: ["selectedLayout"],
+	props: ["selectedLayout", "selectedTable"],
 
 	data: function data() {
 		return {
@@ -20427,6 +20485,42 @@ exports.default = _vue2.default.extend({
 				return this.selectedLayout.name;
 			}
 			return "";
+		},
+
+		width: function width() {
+			if (this.selectedTable) {
+				console.log(this.selectedTable);
+				return Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
+			}
+			return "-";
+		},
+
+		height: function height() {
+			if (this.selectedTable) {
+				return Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
+			}
+			return "-";
+		},
+
+		top: function top() {
+			if (this.selectedTable) {
+				return Math.floor(this.selectedTable.top);
+			}
+			return "-";
+		},
+
+		left: function left() {
+			if (this.selectedTable) {
+				return Math.floor(this.selectedTable.left);
+			}
+			return "-";
+		},
+
+		rotation: function rotation() {
+			if (this.selectedTable) {
+				return Math.floor(this.selectedTable.scaleX);
+			}
+			return "-";
 		}
 
 	},
@@ -20442,11 +20536,18 @@ exports.default = _vue2.default.extend({
 			console.log("create table: " + newTableName);
 
 			//fire a event
-			this.$dispatch("create-table", newTableName);
+			this.$dispatch("new-table-name", newTableName);
 
 			//hide
 			this.askTableNameDivShowed = false;
 			inputNewTableName.val("");
+		}
+	},
+
+	events: {
+		"table-on-scaling": function tableOnScaling() {
+			this.width = Math.floor(this.selectedTable.width * this.selectedTable.scaleX);
+			this.height = Math.floor(this.selectedTable.height * this.selectedTable.scaleY);
 		}
 	}
 });
@@ -20480,7 +20581,7 @@ new _vue2.default({
 	el: "#tinker",
 	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
-	props: ["selectedLayout"],
+	props: ["selectedLayout", "selectedTable"],
 
 	data: {
 		layouts: [],
@@ -20498,8 +20599,8 @@ new _vue2.default({
 		},
 
 		createLayout: function createLayout() {
-			var inputLayutName = (0, _jquery2.default)("input[name='newLayoutName']");
-			var newLayoutName = inputLayutName.val();
+			var inputLayoutName = (0, _jquery2.default)("input[name='newLayoutName']");
+			var newLayoutName = inputLayoutName.val();
 			console.log(newLayoutName);
 			var layout = { name: newLayoutName, canvasId: Date.now() };
 
@@ -20510,13 +20611,17 @@ new _vue2.default({
 			//hide 
 			this.askLayoutNameDivShowed = false;
 			//clear
-			inputLayutName.val("");
+			inputLayoutName.val("");
 		},
 
-		handleCreateTable: function handleCreateTable(tableName) {
-			console.log("parent handle create table: " + tableName);
-			console.log("parent broadcast to children, layout-table hanlde this event");
-			// this.$broadcast("create-table", tableName);
+		handleNewTableName: function handleNewTableName(tableName) {
+			console.log("parent handle [new table name]: " + tableName);
+			console.log("parent broadcast [create-table] to children,\n\t\t\tlayout-table hanlde this event");
+			this.$broadcast("create-table", tableName);
+		},
+
+		broadcastTableOnScaling: function broadcastTableOnScaling() {
+			this.$broadcast("table-on-scaling");
 		}
 
 	}

@@ -11,7 +11,8 @@
 		<div class="col-md-4">
 			<table-info 
 				:selected-layout.sync="selectedLayout"
-				@create-table="handleCreateTable"
+				:selected-table.sync="selectedTable"
+				@new-table-name="handleNewTableName"
 			>
 				
 			</table-info>
@@ -21,7 +22,7 @@
 				<div class="col-md-10">
 					<layout-info
 						:selected-layout.sync="selectedLayout"
-						:layout="layout" 
+						:layout="layout"
 						v-for="layout in layouts"
 					>
 						
@@ -37,9 +38,10 @@
 			</div>
 			<layout-table 
 				:selected-layout.sync="selectedLayout"
+				:selected-table.sync="selectedTable"
 				:layout="layout" v-for="layout in layouts"
+				@broadcast-table-on-scaling="broadcastTableOnScaling"
 			>
-				
 			</layout-table>
 		</div>
 	</div>
