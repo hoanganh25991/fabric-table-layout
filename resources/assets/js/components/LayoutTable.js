@@ -3,7 +3,13 @@ import Vue from "vue";
 export default Vue.extend({
 	template: "#layout-table-template",
 	
-	props: ["layout", "selectedLayout", "selectedTable"],
+	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+
+	data(){
+		return {
+			canvas: {}
+		}
+	},
 
 	computed: {
 		name: function(){
@@ -117,5 +123,9 @@ export default Vue.extend({
 				this.canvas.add(table);
 			}
 		},
+
+		"export-layouts": function(){
+			console.log("layout-table handle [export-layouts]");
+		}
 	}
 });

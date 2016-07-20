@@ -20288,7 +20288,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#layout-info-template",
 
-	props: ["layout", "selectedLayout"],
+	props: ["layouts", "layout", "selectedLayout"],
 
 	data: function data() {
 		return {
@@ -20345,7 +20345,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#layout-table-template",
 
-	props: ["layout", "selectedLayout", "selectedTable"],
+	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+
+	data: function data() {
+		return {
+			canvas: {}
+		};
+	},
+
 
 	computed: {
 		name: function name() {
@@ -20458,6 +20465,10 @@ exports.default = _vue2.default.extend({
 
 				this.canvas.add(table);
 			}
+		},
+
+		"export-layouts": function exportLayouts() {
+			console.log("layout-table handle [export-layouts]");
 		}
 	}
 });
@@ -20482,7 +20493,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#table-info-template",
 
-	props: ["selectedLayout", "selectedTable"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data: function data() {
 		return {
@@ -20502,6 +20513,23 @@ exports.default = _vue2.default.extend({
 				return this.selectedLayout.name;
 			}
 			return "";
+		},
+
+		exportLayoutsDivShowed: function exportLayoutsDivShowed() {
+			if (this.layouts.length) {
+				if (this.exportLayoutsCount == this.layouts.length) {
+					return false;
+				}
+			}
+
+			return false;
+		},
+
+		layoutsCount: function layoutsCount() {
+			if (this.layouts.length) {
+				return this.layouts.length;
+			}
+			return 0;
 		}
 	},
 
@@ -20531,6 +20559,11 @@ exports.default = _vue2.default.extend({
 			this.top = Math.floor(table.top);
 			this.left = Math.floor(table.left);
 			this.rotation = Math.floor(table.angle);
+		},
+
+		exportLayouts: function exportLayouts() {
+			this.exportLayoutsDivShowed = true;
+			this.$dispatch("broadcast-export-layouts");
 		}
 	},
 
@@ -20582,10 +20615,9 @@ new _vue2.default({
 	el: "#tinker",
 	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
-	props: ["selectedLayout", "selectedTable"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data: {
-		layouts: [],
 		askLayoutNameDivShowed: false
 	},
 
@@ -20599,7 +20631,7 @@ new _vue2.default({
 			this.askLayoutNameDivShowed = true;
 		},
 
-		createLayout: function createLayout() {
+		getLayoutName: function getLayoutName() {
 			var inputLayoutName = (0, _jquery2.default)("input[name='newLayoutName']");
 			var newLayoutName = inputLayoutName.val();
 			console.log(newLayoutName);
@@ -20621,20 +20653,32 @@ new _vue2.default({
 			this.$broadcast("create-table", tableName);
 		},
 
-		broadcastTableOnScaling: function broadcastTableOnScaling(table) {
-			console.log("parent broadcast [table-on-scaling]");
-			this.$broadcast("table-on-scaling", table);
-		},
-
 		broadcastTableSelected: function broadcastTableSelected(table) {
 			console.log("parent broadcast [table-selected]");
 			this.$broadcast("table-selected", table);
 		},
 
+		broadcastTableOnScaling: function broadcastTableOnScaling(table) {
+			console.log("parent broadcast [table-on-scaling]");
+			this.$broadcast("table-on-scaling", table);
+		},
+
 		broadcastTableOnRotating: function broadcastTableOnRotating(table) {
 			console.log("parent broadcast [table-on-rotating]");
 			this.$broadcast("table-on-rotating", table);
+		},
+
+		broadcastExportLayouts: function broadcastExportLayouts() {
+			console.log("parent broadcast [export-layouts]");
+			this.exportLayoutsCount = 0;
+			this.$broadcast("export-layouts");
 		}
+	},
+
+	ready: function ready() {
+		//set default value
+		this.exportLayoutsCount = 0;
+		this.layouts = [];
 	}
 });
 

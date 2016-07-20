@@ -4,7 +4,7 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#table-info-template",
 
-	props: ["selectedLayout", "selectedTable"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data(){
 		return {
@@ -24,6 +24,23 @@ export default Vue.extend({
 			}
 			return "";
 		},
+		
+		exportLayoutsDivShowed: function(){
+			if(this.layouts.length){
+				if(this.exportLayoutsCount == this.layouts.length){
+					return false;
+				}
+			}
+			
+			return false;
+		},
+
+		layoutsCount: function(){
+			if(this.layouts.length){
+				return this.layouts.length;
+			}
+			return 0;
+		}
 	},
 
 	methods: {
@@ -52,6 +69,11 @@ export default Vue.extend({
 			this.top = Math.floor(table.top);
 			this.left =  Math.floor(table.left);
 			this.rotation = Math.floor(table.angle);
+		},
+
+		exportLayouts: function(){
+			this.exportLayoutsDivShowed = true;
+			this.$dispatch("broadcast-export-layouts");
 		}
 	},
 

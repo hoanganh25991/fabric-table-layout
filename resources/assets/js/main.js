@@ -10,10 +10,9 @@ new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["selectedLayout", "selectedTable"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data: {
-		layouts: [],
 		askLayoutNameDivShowed: false,
 	},
 
@@ -29,8 +28,8 @@ new Vue({
 		askLayoutName: function(){
 			this.askLayoutNameDivShowed = true;
 		},
-		
-		createLayout: function(){
+
+		getLayoutName: function(){
 			let inputLayoutName =  $("input[name='newLayoutName']");
 			let newLayoutName = inputLayoutName.val();
 			console.log(newLayoutName);
@@ -54,19 +53,31 @@ new Vue({
 			this.$broadcast("create-table", tableName);
 		},
 
-		broadcastTableOnScaling: function(table){
-			console.log("parent broadcast [table-on-scaling]");
-			this.$broadcast("table-on-scaling", table);
-		},
-		
 		broadcastTableSelected: function(table){
 			console.log("parent broadcast [table-selected]");
 			this.$broadcast("table-selected", table);
 		},
-		
+
+		broadcastTableOnScaling: function(table){
+			console.log("parent broadcast [table-on-scaling]");
+			this.$broadcast("table-on-scaling", table);
+		},
+
 		broadcastTableOnRotating: function(table){
 			console.log("parent broadcast [table-on-rotating]");
 			this.$broadcast("table-on-rotating", table);
 		},
+
+		broadcastExportLayouts: function(){
+			console.log("parent broadcast [export-layouts]");
+			this.exportLayoutsCount = 0;
+			this.$broadcast("export-layouts");
+		}
 	},
+
+	ready(){
+		//set default value
+		this.exportLayoutsCount = 0;
+		this.layouts = [];
+	}
 });

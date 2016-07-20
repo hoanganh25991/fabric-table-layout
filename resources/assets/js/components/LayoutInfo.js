@@ -3,7 +3,7 @@ import Vue from "vue";
 export default Vue.extend({
 	template: "#layout-info-template",
 	
-	props: ["layout", "selectedLayout"],
+	props: ["layouts", "layout", "selectedLayout"],
 	
 	data(){
 		return {
