@@ -20395,7 +20395,9 @@ exports.default = _vue2.default.extend({
 
 		if (this.layout.canvas) {
 			// console.log(this.layout.canvas);
-			canvas.loadFromJSON(this.layout.canvas);
+			canvas.loadFromJSON(this.layout.canvas, function () {
+				canvas.renderAll();
+			});
 		}
 
 		//store canvas as a ref to object
