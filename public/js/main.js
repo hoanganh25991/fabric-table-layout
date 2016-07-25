@@ -22229,6 +22229,7 @@ new _vue2.default({
 			console.log(data);
 			if (data) {
 				vm.layouts = data;
+				console.log(vm.layouts);
 			} else {
 				vm.layouts = [];
 			}

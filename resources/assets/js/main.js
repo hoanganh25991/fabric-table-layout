@@ -120,6 +120,7 @@ new Vue({
 			    console.log(data);
 			    if(data){
 				    vm.layouts = data;
+				    console.log(vm.layouts);
 			    }else{
 				    vm.layouts = [];
 			    }
