@@ -22192,6 +22192,7 @@ new _vue2.default({
 			this.exportLayoutsCount++;
 			if (this.exportLayoutsCount == this.layouts.length) {
 				this.$broadcast("export-layouts-complete");
+				console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
 			}
 		}
@@ -22200,38 +22201,19 @@ new _vue2.default({
 	ready: function ready() {
 		//set default value
 		this.layouts = [];
-		// this.layouts = [
-		// 	{name: "default", canvasId: 1, canvas:{}},
-		// 	{name: "default2", canvasId: 2, canvas:{}},
-		// ];
 
-		//
-		// this.exportLayoutsCount = 0;
-
-		// this.layouts = ;
-		var layoutsData = localStorage.getItem("dump-data");
-		// console.log(layoutsData);
-		if (layoutsData) {
-			this.layouts = JSON.parse(layoutsData);
-		}
+		// let layoutsData = localStorage.getItem("dump-data");
+		// // console.log(layoutsData);
+		// if(layoutsData){
+		// 	this.layouts = JSON.parse(layoutsData);
+		// }
 
 		var vm = this;
 		console.log(vm.url);
 		this.$http.get(vm.url).then(function (response) {
 			var data = response.data;
-
-			new Chart(ctx, {
-				type: graph.type,
-				data: {
-					labels: Object.keys(data),
-					datasets: [{
-						label: '#Spends',
-						data: Object.keys(data).map(function (key) {
-							return data[key];
-						})
-					}]
-				}
-			});
+			console.log(data);
+			vm.layouts = data;
 		});
 	}
 });
