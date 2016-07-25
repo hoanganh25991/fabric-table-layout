@@ -22195,12 +22195,11 @@ new _vue2.default({
 				console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
 				this.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
-				this.$http.post(this.url, { name: "anh" });
-				// .then(function(response){
-				//    let data = response.data;
-				//    console.log(data);
-				//    // vm.layouts = data;
-				// });
+				this.$http.post(this.url, this.layouts).then(function (response) {
+					var data = response.data;
+					console.log(data);
+					// vm.layouts = data;
+				});
 			}
 		}
 	},
