@@ -78,9 +78,7 @@ new Vue({
 			this.exportLayoutsCount++;
 			if(this.exportLayoutsCount == this.layouts.length){
 				this.$broadcast("export-layouts-complete");
-				// console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
-				// console.log(localStorage.getItem("dump-data"));
 			}
 		}
 	},

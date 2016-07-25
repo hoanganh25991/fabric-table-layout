@@ -2,7 +2,7 @@ import Vue from "vue";
 
 export default Vue.extend({
 	template: "#layout-table-template",
-	
+
 	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data(){
@@ -32,7 +32,7 @@ export default Vue.extend({
 			if(!this.layout){
 				return false;
 			}
-			
+
 			if(!this.selectedLayout){
 				return false;
 			}
@@ -42,6 +42,14 @@ export default Vue.extend({
 	},
 
 	ready(){
+		//load customize on fabric
+		fabric.Object.prototype.toObject = (function(toObject){
+			return function(){
+				let position = vm.relativePositionSerialize(this, canvas);
+				return fabric.util.object.extend(toObject.call(this), position);
+			};
+		})(fabric.Object.prototype.toObject);
+
 		//store ref
 		let vm = this;
 
@@ -51,8 +59,8 @@ export default Vue.extend({
 		canvas.setHeight(500);
 
 		if(this.layout.canvas){
-			// console.log(this.layout.canvas);
-			canvas.loadFromJSON(this.layout.canvas, function(){
+			let canvasObj = vm.relativePositionDeserialize(this.layout.canvas, canvas);
+			canvas.loadFromJSON(canvasObj, function(){
 				canvas.renderAll();
 			});
 		}
@@ -60,7 +68,7 @@ export default Vue.extend({
 		//store canvas as a ref to object
 		this.canvas = canvas;
 		this.selectedLayout = this.layout;
-		
+
 		this.canvas.on("object:selected", function(options){
 			if(options.target){
 				console.log("set selectedTable");
@@ -96,13 +104,61 @@ export default Vue.extend({
 	},
 
 	methods: {
+		relativePositionSerialize(table, canvas){
+			return {
+				width: Number((table.width / canvas.getWidth()).toFixed(2)),
+				height: Number((table.height / canvas.getHeight()).toFixed(2)),
+				left: Number((table.left / canvas.getWidth()).toFixed(2)),
+				top: Number((table.top / canvas.getHeight()).toFixed(2))
+			}
+		},
+		relativePositionDeserialize(json, canvas){
+			let canvasObj = JSON.parse(json);
+
+			let tables = canvasObj.objects;
+
+			for(let table of tables){
+				table.width = table.width * canvas.getWidth();
+				table.height = table.height * canvas.getHeight();
+				table.left = table.left * canvas.getWidth();
+				table.top = table.top * canvas.getHeight();
+				table.borderColor = 'gray';
+				table.cornerColor = 'black';
+				table.cornerSize = 8;
+				table.transparentCorners = true;
+				table.vailochua = "vailoroi";
+
+				let items = table.objects;
+
+				for(let item of items){
+					item.width = item.width * canvas.getWidth();
+					item.height = item.height * canvas.getHeight();
+					item.left = item.left * canvas.getWidth();
+					item.top = item.top * canvas.getHeight();
+					console.log(item);
+				}
+			}
+
+			console.log(canvasObj);
+
+			return canvasObj;
+		}
 	},
-	
+
 	events: {
 		"create-table": function(tableName){
 			console.log(`layout-table hanlde create-table ${tableName}`);
+
+			//when parent broadcase, ONLY LayouTable has
+			// selecteLayout.name === layout.name (layout of LayoutTable)
+			//handle create table in this layout
 			if(this.layout.name == this.selectedLayout.name){
+
 				console.log(`layout-table: ${this.layout.name} add new table`);
+
+				//hold canvas as ref to this.canvase
+				//this is ambiguous
+				let canvas = this.canvas;
 
 				let text = new fabric.Text(`${tableName}`, {
 					fontSize: 30,
@@ -129,15 +185,36 @@ export default Vue.extend({
 					left: 0
 				});
 
+				//define how to serialize for 'Group' as table here
+
+				//hold ref to vm
+				let vm = this;
+
+
+
+				table.toObject = (function(toObject){
+					return function(){
+						//compute width, height, top, left as relative
+						let position = {};
+						position.borderColor = 'gray';
+						position.cornerColor = 'black';
+						position.cornerSize = 8;
+						position.transparentCorners = true;
+						position.vailochua = "vailoroi";
+						return fabric.util.object.extend(toObject.call(this), position);
+					};
+				})(table.toObject);
+
 				this.canvas.add(table);
+
+				console.log(this.canvas.toObject());
 			}
 		},
-
 		"export-layouts": function(){
 			console.log("layout-table handle [export-layouts]");
-			// console.log(this.canvas.toJSON());
-			this.layout.canvas = JSON.stringify(this.canvas.toJSON());
 
+			console.log(JSON.stringify(this.canvas.toObject()));
+			this.layout.canvas = JSON.stringify(this.canvas.toObject());
 			this.$dispatch("layout-export-success");
 			// let vm = this;
 			// setTimeout(function(){

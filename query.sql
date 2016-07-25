@@ -1,0 +1,1 @@
+SELECT * FROM `outlet_table` WHERE table_layout_id=134231466665287415;

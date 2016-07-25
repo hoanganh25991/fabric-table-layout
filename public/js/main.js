@@ -20385,6 +20385,14 @@ exports.default = _vue2.default.extend({
 	},
 
 	ready: function ready() {
+		//load customize on fabric
+		fabric.Object.prototype.toObject = function (toObject) {
+			return function () {
+				var position = vm.relativePositionSerialize(this, canvas);
+				return fabric.util.object.extend(toObject.call(this), position);
+			};
+		}(fabric.Object.prototype.toObject);
+
 		//store ref
 		var vm = this;
 
@@ -20394,8 +20402,8 @@ exports.default = _vue2.default.extend({
 		canvas.setHeight(500);
 
 		if (this.layout.canvas) {
-			// console.log(this.layout.canvas);
-			canvas.loadFromJSON(this.layout.canvas, function () {
+			var canvasObj = vm.relativePositionDeserialize(this.layout.canvas, canvas);
+			canvas.loadFromJSON(canvasObj, function () {
 				canvas.renderAll();
 			});
 		}
@@ -20439,13 +20447,104 @@ exports.default = _vue2.default.extend({
 	},
 
 
-	methods: {},
+	methods: {
+		relativePositionSerialize: function relativePositionSerialize(table, canvas) {
+			return {
+				width: Number((table.width / canvas.getWidth()).toFixed(2)),
+				height: Number((table.height / canvas.getHeight()).toFixed(2)),
+				left: Number((table.left / canvas.getWidth()).toFixed(2)),
+				top: Number((table.top / canvas.getHeight()).toFixed(2))
+			};
+		},
+		relativePositionDeserialize: function relativePositionDeserialize(json, canvas) {
+			var canvasObj = JSON.parse(json);
+
+			var tables = canvasObj.objects;
+
+			var _iteratorNormalCompletion = true;
+			var _didIteratorError = false;
+			var _iteratorError = undefined;
+
+			try {
+				for (var _iterator = tables[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var table = _step.value;
+
+					table.width = table.width * canvas.getWidth();
+					table.height = table.height * canvas.getHeight();
+					table.left = table.left * canvas.getWidth();
+					table.top = table.top * canvas.getHeight();
+					table.borderColor = 'gray';
+					table.cornerColor = 'black';
+					table.cornerSize = 8;
+					table.transparentCorners = true;
+					table.vailochua = "vailoroi";
+
+					var items = table.objects;
+
+					var _iteratorNormalCompletion2 = true;
+					var _didIteratorError2 = false;
+					var _iteratorError2 = undefined;
+
+					try {
+						for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+							var item = _step2.value;
+
+							item.width = item.width * canvas.getWidth();
+							item.height = item.height * canvas.getHeight();
+							item.left = item.left * canvas.getWidth();
+							item.top = item.top * canvas.getHeight();
+							console.log(item);
+						}
+					} catch (err) {
+						_didIteratorError2 = true;
+						_iteratorError2 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion2 && _iterator2.return) {
+								_iterator2.return();
+							}
+						} finally {
+							if (_didIteratorError2) {
+								throw _iteratorError2;
+							}
+						}
+					}
+				}
+			} catch (err) {
+				_didIteratorError = true;
+				_iteratorError = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion && _iterator.return) {
+						_iterator.return();
+					}
+				} finally {
+					if (_didIteratorError) {
+						throw _iteratorError;
+					}
+				}
+			}
+
+			console.log(canvasObj);
+
+			return canvasObj;
+		}
+	},
 
 	events: {
 		"create-table": function createTable(tableName) {
 			console.log("layout-table hanlde create-table " + tableName);
+
+			//when parent broadcase, ONLY LayouTable has
+			// selecteLayout.name === layout.name (layout of LayoutTable)
+			//handle create table in this layout
 			if (this.layout.name == this.selectedLayout.name) {
+
 				console.log("layout-table: " + this.layout.name + " add new table");
+
+				//hold canvas as ref to this.canvase
+				//this is ambiguous
+				var _canvas = this.canvas;
 
 				var text = new fabric.Text("" + tableName, {
 					fontSize: 30,
@@ -20472,15 +20571,34 @@ exports.default = _vue2.default.extend({
 					left: 0
 				});
 
+				//define how to serialize for 'Group' as table here
+
+				//hold ref to vm
+				var _vm = this;
+
+				table.toObject = function (toObject) {
+					return function () {
+						//compute width, height, top, left as relative
+						var position = {};
+						position.borderColor = 'gray';
+						position.cornerColor = 'black';
+						position.cornerSize = 8;
+						position.transparentCorners = true;
+						position.vailochua = "vailoroi";
+						return fabric.util.object.extend(toObject.call(this), position);
+					};
+				}(table.toObject);
+
 				this.canvas.add(table);
+
+				console.log(this.canvas.toObject());
 			}
 		},
-
 		"export-layouts": function exportLayouts() {
 			console.log("layout-table handle [export-layouts]");
-			// console.log(this.canvas.toJSON());
-			this.layout.canvas = JSON.stringify(this.canvas.toJSON());
 
+			console.log(JSON.stringify(this.canvas.toObject()));
+			this.layout.canvas = JSON.stringify(this.canvas.toObject());
 			this.$dispatch("layout-export-success");
 			// let vm = this;
 			// setTimeout(function(){
@@ -20691,9 +20809,7 @@ new _vue2.default({
 			this.exportLayoutsCount++;
 			if (this.exportLayoutsCount == this.layouts.length) {
 				this.$broadcast("export-layouts-complete");
-				// console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
-				// console.log(localStorage.getItem("dump-data"));
 			}
 		}
 	},
