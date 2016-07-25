@@ -5,12 +5,15 @@ import LayoutTable from "./components/LayoutTable";
 import TableInfo from "./components/TableInfo";
 import $ from "jquery";
 
+import VueResource from 'vue-resource';
+
+Vue.use(VueResource);
 
 new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "url"],
 
 	data: {
 		askLayoutNameDivShowed: false,
@@ -100,5 +103,25 @@ new Vue({
 		if(layoutsData){
 			this.layouts = JSON.parse(layoutsData);
 		}
+		
+		let vm = this;
+		console.log(vm.url);
+		this.$http.get(vm.url)
+		    .then(function(response){
+			    const data = response.data;
+
+			    new Chart(ctx, {
+				    type: graph.type,
+				    data: {
+					    labels: Object.keys(data),
+					    datasets: [
+						    {
+							    label: '#Spends',
+							    data: Object.keys(data).map(key => data[key])
+						    }
+					    ]
+				    }
+			    });
+		    });
 	}
 });
