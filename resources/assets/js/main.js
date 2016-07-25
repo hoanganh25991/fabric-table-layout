@@ -119,7 +119,7 @@ new Vue({
 			    let data = response.data;
 			    console.log(data);
 			    if(data){
-				    vm.layouts = JSON.parse(data);
+				    vm.layouts = data;
 			    }else{
 				    vm.layouts = [];
 			    }

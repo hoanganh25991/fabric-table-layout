@@ -22228,7 +22228,7 @@ new _vue2.default({
 			var data = response.data;
 			console.log(data);
 			if (data) {
-				vm.layouts = JSON.parse(data);
+				vm.layouts = data;
 			} else {
 				vm.layouts = [];
 			}
