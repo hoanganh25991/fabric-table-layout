@@ -22151,6 +22151,8 @@ exports.default = _vue2.default.extend({
 		'tableEvent': function tableEvent(val, oldVal) {
 			var _this = this;
 
+			//bcs on ready not see the update from parent
+			//listen it here
 			if (val) {
 				console.log("table-info watch on tableEvent", val);
 				var _iteratorNormalCompletion = true;
@@ -22261,7 +22263,10 @@ exports.default = _vue2.default.extend({
 
 	},
 
-	ready: function ready() {}
+	ready: function ready() {
+		console.log(this.tableEvent); //undefined,
+		// watch is the safe place to get real val when parent set `tableEvent`
+	}
 });
 
 },{"jquery":1,"vue":4}],8:[function(require,module,exports){

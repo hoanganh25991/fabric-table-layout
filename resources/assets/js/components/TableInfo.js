@@ -37,6 +37,8 @@ export default Vue.extend({
 
 	watch: {
 		'tableEvent': function(val, oldVal){
+			//bcs on ready not see the update from parent
+			//listen it here
 			if(val){
 				console.log("table-info watch on tableEvent", val);
 				for(let eventName of this.tableEvent){
@@ -123,5 +125,7 @@ export default Vue.extend({
 	},
 	
 	ready(){
+		console.log(this.tableEvent); //undefined,
+		// watch is the safe place to get real val when parent set `tableEvent`
 	}
 });
