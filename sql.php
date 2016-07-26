@@ -19,7 +19,8 @@ try{
     $statement->execute();
     $layouts = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    
+    $canvasId = explode(" ", microtime())[1];
+
     foreach($layouts as &$layout){
         //query tables in layout
         $queryTablesInLayout =
@@ -30,9 +31,9 @@ try{
 
         unset($layout["id"]);
 
-        $milisecond = explode(" ", microtime())[1];
+        $canvasId++;
 
-        $layout["canvasId"] = $milisecond;
+        $layout["canvasId"] = $canvasId;
 
         $layout["canvas"] = $tables;
     }
