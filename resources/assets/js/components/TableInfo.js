@@ -19,14 +19,6 @@ export default Vue.extend({
 	},
 
 	computed: {
-		name: function(){
-			if(this.selectedLayout){
-				return this.selectedLayout.name;
-
-			}
-			return "";
-		},
-		
 		layoutsCount: function(){
 			if(this.layouts){
 				return this.layouts.length;
@@ -36,25 +28,8 @@ export default Vue.extend({
 	},
 
 	watch: {
-		'tableEvent': function(val, oldVal){
-			//bcs on ready not see the update from parent
-			//listen it here
-			if(val){
-				console.log("table-info watch on tableEvent", val);
-				for(let eventName of this.tableEvent){
-					this[`table-${eventName}`] = function(){
-						console.log(`table-${eventName}: broadcast success`);
-					}
-				}
-				console.log("bind method to event");
-			}
-		},
-		'selectedTable': function(val, oldVal){
-			let vm = this;
-			if(val){
-				console.log("update selected table");
-				vm.updateTableInfo(val);
-			}
+		'selectedTable': function(val){
+			this.updateTableInfo(val);
 		}
 	},
 
@@ -78,11 +53,15 @@ export default Vue.extend({
 		},
 
 		updateTableInfo: function(table){
-			this.width = Math.floor(table.width * table.scaleX);
-			this.height = Math.floor(table.height * table.scaleY);
-			this.top = Math.floor(table.top);
-			this.left =  Math.floor(table.left);
-			this.rotation = Math.floor(table.angle);
+			this.width = table.width * table.scaleX;
+			this.height = table.height * table.scaleY;
+			this.top = table.top;
+			this.left =  table.left;
+			this.rotation = table.angle;
+		},
+		
+		round(props){
+			
 		},
 
 		exportLayouts: function(){
@@ -93,39 +72,13 @@ export default Vue.extend({
 	},
 
 	events: {
-		"table-selected": function(table){
-			console.log("table-info handle [table-selected]");
-			this.updateTableInfo(table);
-		},
-		
-		"table-on-scaling": function(table){
-			console.log("table-info handle [table-on-scaling]");
-			this.updateTableInfo(table);
-		},
-		
-		"table-on-rotating": function(table){
-			console.log("table-info handle [table-on-scaling]");
-			this.updateTableInfo(table);
-		},
-
 		"export-layouts-complete": function(){
 			console.log("export-layouts-complete");
 			this.exportLayoutsDivShowed = false;
 
 		},
-
-		"table-object:scaling": function(){
-			console.log("hey, i catch it");
-		},
-
-		"hoanganh": function(){
-			console.log("hey i get you, hoanganh");
-		}
-		
 	},
 	
 	ready(){
-		console.log(this.tableEvent); //undefined,
-		// watch is the safe place to get real val when parent set `tableEvent`
 	}
 });
