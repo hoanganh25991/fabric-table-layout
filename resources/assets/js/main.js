@@ -17,7 +17,7 @@ new Vue({
 
 	data: {
 		askLayoutNameDivShowed: false,
-		url : "http://128.199.237.219/fabric-table-layout/json.php",
+		url : "http://128.199.237.219/fabric-table-layout/sql.php",
 	},
 
 	convertToSlug(Text){

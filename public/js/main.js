@@ -21770,9 +21770,6 @@ exports.default = _vue2.default.extend({
 		//store ref
 		var vm = this;
 
-		console.log(this.layout);
-		console.log(abc);
-
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
@@ -21913,8 +21910,6 @@ exports.default = _vue2.default.extend({
 						}
 					}
 				}
-
-				console.log(canvasObj);
 			}
 
 			if (Array.isArray(json)) {
@@ -22237,7 +22232,7 @@ new _vue2.default({
 
 	data: {
 		askLayoutNameDivShowed: false,
-		url: "http://128.199.237.219/fabric-table-layout/json.php"
+		url: "http://128.199.237.219/fabric-table-layout/sql.php"
 	},
 
 	convertToSlug: function convertToSlug(Text) {

@@ -48,9 +48,6 @@ export default Vue.extend({
 		//store ref
 		let vm = this;
 
-		console.log(this.layout);
-		console.log(abc);
-
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
@@ -148,8 +145,6 @@ export default Vue.extend({
 						console.log(item);
 					}
 				}
-
-				console.log(canvasObj);
 			}
 
 			if(Array.isArray(json)){
