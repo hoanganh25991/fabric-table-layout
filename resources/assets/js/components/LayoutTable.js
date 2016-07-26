@@ -182,7 +182,10 @@ export default Vue.extend({
 						originY: "center"
 					});
 
+					console.log(tableInfo.rotation);
+
 					let table = new fabric.Group([rect, text], {
+						rotation: tableInfo.rotation,
 						borderColor: 'gray',
 						cornerColor: 'black',
 						cornerSize: 8,
@@ -190,6 +193,8 @@ export default Vue.extend({
 						top: Math.floor(tableInfo.top * canvas.getHeight()),
 						left: Math.floor(tableInfo.left * canvas.getWidth())
 					});
+					
+					table.rotate(tableInfo.rotation);
 					
 					canvasTemp.add(table);
 				}

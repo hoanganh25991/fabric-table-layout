@@ -21954,7 +21954,10 @@ exports.default = _vue2.default.extend({
 							originY: "center"
 						});
 
+						console.log(tableInfo.rotation);
+
 						var _table = new fabric.Group([rect, text], {
+							rotation: tableInfo.rotation,
 							borderColor: 'gray',
 							cornerColor: 'black',
 							cornerSize: 8,
@@ -21962,6 +21965,8 @@ exports.default = _vue2.default.extend({
 							top: Math.floor(tableInfo.top * canvas.getHeight()),
 							left: Math.floor(tableInfo.left * canvas.getWidth())
 						});
+
+						_table.rotate(tableInfo.rotation);
 
 						canvasTemp.add(_table);
 					}
