@@ -13,7 +13,7 @@ new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data: {
 		askLayoutNameDivShowed: false,
@@ -94,6 +94,13 @@ new Vue({
 			}
 		}
 	},
+	
+	events: {
+		"broadcast-object:scaling": function(table){
+			//notify back to children
+			this.$broadcast('table-object:scaling', table);
+		}
+	},
 
 	ready(){
 		//set default value
@@ -105,13 +112,29 @@ new Vue({
 		// 	this.layouts = JSON.parse(layoutsData);
 		// }
 		
-		let vm = this;
-		console.log(vm.url);
-		this.$http.get(vm.url)
-		    .then(function(response){
-			    let data = response.data;
-			    console.log("data", data);
-			    vm.layouts = data;
-		    });
+		// let vm = this;
+		// console.log(vm.url);
+		// this.$http.get(vm.url)
+		//     .then(function(response){
+		// 	    let data = response.data;
+		// 	    console.log("data", data);
+		// 	    vm.layouts = data;
+		//     });
+
+		this.tableEvent = [
+			"object:selected",
+			"object:scaling",
+			"object:moving",
+			"object:rotating"
+		];
+
+		for(let eventName of this.tableEvent){
+			this[`broadcast-${eventName}`] = function(table){
+				console.log(`broadcast-${eventName}: dispatch success`);
+				this.$broadcast(`table-${eventName}`, table);
+			};
+		}
+
+		console.log(this);
 	}
 });

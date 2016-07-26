@@ -4,7 +4,7 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#table-info-template",
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data(){
 		return {
@@ -22,6 +22,7 @@ export default Vue.extend({
 		name: function(){
 			if(this.selectedLayout){
 				return this.selectedLayout.name;
+
 			}
 			return "";
 		},
@@ -31,6 +32,27 @@ export default Vue.extend({
 				return this.layouts.length;
 			}
 			return 0;
+		},
+	},
+
+	watch: {
+		'tableEvent': function(val, oldVal){
+			if(val){
+				console.log("table-info watch on tableEvent", val);
+				for(let eventName of this.tableEvent){
+					this[`table-${eventName}`] = function(){
+						console.log(`table-${eventName}: broadcast success`);
+					}
+				}
+				console.log("bind method to event");
+			}
+		},
+		'selectedTable': function(val, oldVal){
+			let vm = this;
+			if(val){
+				console.log("update selected table");
+				vm.updateTableInfo(val);
+			}
 		}
 	},
 
@@ -54,7 +76,6 @@ export default Vue.extend({
 		},
 
 		updateTableInfo: function(table){
-			console.log(`log selecteTable: ${table}`);
 			this.width = Math.floor(table.width * table.scaleX);
 			this.height = Math.floor(table.height * table.scaleY);
 			this.top = Math.floor(table.top);
@@ -64,7 +85,8 @@ export default Vue.extend({
 
 		exportLayouts: function(){
 			this.exportLayoutsDivShowed = true;
-			this.$dispatch("broadcast-export-layouts");
+			// this.$dispatch("broadcast-export-layouts");
+			console.log(JSON.stringify(this.layouts));
 		}
 	},
 
@@ -88,7 +110,18 @@ export default Vue.extend({
 			console.log("export-layouts-complete");
 			this.exportLayoutsDivShowed = false;
 
+		},
+
+		"table-object:scaling": function(){
+			console.log("hey, i catch it");
+		},
+
+		"hoanganh": function(){
+			console.log("hey i get you, hoanganh");
 		}
 		
 	},
+	
+	ready(){
+	}
 });
