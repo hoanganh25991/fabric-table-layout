@@ -9,15 +9,42 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
+
 new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
+	props: {
+		layouts: {
+			default: function(){
+				return [];
+			}
+		},
+		selectedLayout: {
+			default: function(){
+				return {};
+			}
+		},
+		selectedTable: {
+			default: function(){
+				return {};
+			}
+		},
+		tableEvent: {
+			default: function(){
+				return [
+					"object:selected",
+					"object:scaling",
+					"object:moving",
+					"object:rotating"
+				];
+			}
+		}
+	},
 
 	data: {
 		askLayoutNameDivShowed: false,
-		url : "http://128.199.237.219/fabric-table-layout/sql.php",
+		url: "http://128.199.237.219/fabric-table-layout/sql.php",
 	},
 
 	convertToSlug(Text){
@@ -94,7 +121,7 @@ new Vue({
 			}
 		}
 	},
-	
+
 	events: {
 		"broadcast-object:scaling": function(table){
 			//notify back to children
@@ -111,7 +138,7 @@ new Vue({
 		// if(layoutsData){
 		// 	this.layouts = JSON.parse(layoutsData);
 		// }
-		
+
 		// let vm = this;
 		// console.log(vm.url);
 		// this.$http.get(vm.url)
@@ -121,13 +148,6 @@ new Vue({
 		// 	    vm.layouts = data;
 		//     });
 
-		this.tableEvent = [
-			"object:selected",
-			"object:scaling",
-			"object:moving",
-			"object:rotating"
-		];
-
 		for(let eventName of this.tableEvent){
 			this[`broadcast-${eventName}`] = function(table){
 				console.log(`broadcast-${eventName}: dispatch success`);
@@ -136,5 +156,7 @@ new Vue({
 		}
 
 		console.log(this);
+
+		_f.isString("hoanganh");
 	}
 });
