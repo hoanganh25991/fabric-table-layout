@@ -4,7 +4,7 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#layout-table-template",
 
-	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data(){
 		return {
@@ -70,41 +70,10 @@ export default Vue.extend({
 		}
 
 		//store canvas as a ref to object
-		this.canvas = canvas;
+		this.layout.canvas = canvas;
 		this.selectedLayout = this.layout;
 
-		this.canvas.on("object:selected", function(options){
-			if(options.target){
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				let table = options.target;
-
-				console.log("layout-table [broadcast-table-selected]");
-				vm.$dispatch("broadcast-table-selected", table);
-			}
-		});
-
-		this.canvas.on("object:scaling", function(options){
-			if(options.target){
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				let table = options.target;
-
-				console.log("layout-table [broadcast-table-on-scaling]");
-				vm.$dispatch("broadcast-table-on-scaling", table);
-			}
-		});
-
-		this.canvas.on("object:rotating", function(options){
-			if(options.target){
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				let table = options.target;
-
-				console.log("layout-table [broadcast-table-on-rotating]");
-				vm.$dispatch("broadcast-table-on-rotating", table);
-			}
-		});
+		this.notifyTableEvent(this.tableEvent);
 	},
 
 	methods: {
@@ -214,6 +183,24 @@ export default Vue.extend({
 			console.log("canvasObj", JSON.stringify(canvasObj));
 
 			return canvasObj;
+		},
+		notifyTableEvent(eventName){
+			let vm = this;
+
+			if(typeof eventName == "string" || eventName instanceof String){
+				//eventName = "object:moving"
+				this.layout.canvas.on(eventName, function(options){
+					vm.selectedTable =Object.create(options.target);
+					console.log(`${eventName}`);
+				});
+			}
+
+			if(Array.isArray(eventName)){
+				for(let singleEventName of eventName){
+					vm.notifyTableEvent(singleEventName);
+				}
+			}
+
 		}
 	},
 
@@ -228,9 +215,9 @@ export default Vue.extend({
 
 				console.log(`layout-table: ${this.layout.name} add new table`);
 
-				//hold canvas as ref to this.canvase
+				//hold canvas as ref to this.layout.canvase
 				//this is ambiguous
-				let canvas = this.canvas;
+				let canvas = this.layout.canvas;
 
 				let text = new fabric.Text(`${tableName}`, {
 					fontSize: 30,
@@ -277,15 +264,15 @@ export default Vue.extend({
 					};
 				})(table.toObject);
 
-				this.canvas.add(table);
+				this.layout.canvas.add(table);
 
-				console.log(this.canvas.toObject());
+				console.log(this.layout.canvas.toObject());
 			}
 		},
 		"export-layouts": function(){
 			console.log("layout-table handle [export-layouts]");
 			let vm = this;
-			let canvas = this.canvas;
+			let canvas = this.layout.canvas;
 			//load customize on fabric
 			fabric.Object.prototype.toObject = (function(toObject){
 				return function(){
@@ -294,8 +281,8 @@ export default Vue.extend({
 				};
 			})(fabric.Object.prototype.toObject);
 
-			console.log(JSON.stringify(this.canvas.toObject()));
-			this.layout.canvas = JSON.stringify(this.canvas.toObject());
+			console.log(JSON.stringify(this.layout.canvas.toObject()));
+			this.layout.canvas = JSON.stringify(this.layout.canvas.toObject());
 			this.$dispatch("layout-export-success");
 			// let vm = this;
 			// setTimeout(function(){

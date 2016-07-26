@@ -21,6 +21,7 @@
                     :selected-table.sync="selectedTable"
                     :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
+                    :table-event="tableEvent"
                     @new-table-name="handleNewTableName"
                     @broadcast-export-layouts="broadcastExportLayouts"
             >
@@ -51,6 +52,7 @@
                     :layout="layout" v-for="layout in layouts"
                     :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
+                    :table-event="tableEvent"
                     @broadcast-table-on-scaling="broadcastTableOnScaling"
                     @broadcast-table-selected="broadcastTableSelected"
                     @broadcast-table-on-rotating="broadcastTableOnRotating"

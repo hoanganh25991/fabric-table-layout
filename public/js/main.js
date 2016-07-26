@@ -21726,7 +21726,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#layout-table-template",
 
-	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data: function data() {
 		return {
@@ -21792,41 +21792,10 @@ exports.default = _vue2.default.extend({
 		}
 
 		//store canvas as a ref to object
-		this.canvas = canvas;
+		this.layout.canvas = canvas;
 		this.selectedLayout = this.layout;
 
-		this.canvas.on("object:selected", function (options) {
-			if (options.target) {
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				var table = options.target;
-
-				console.log("layout-table [broadcast-table-selected]");
-				vm.$dispatch("broadcast-table-selected", table);
-			}
-		});
-
-		this.canvas.on("object:scaling", function (options) {
-			if (options.target) {
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				var table = options.target;
-
-				console.log("layout-table [broadcast-table-on-scaling]");
-				vm.$dispatch("broadcast-table-on-scaling", table);
-			}
-		});
-
-		this.canvas.on("object:rotating", function (options) {
-			if (options.target) {
-				console.log("set selectedTable");
-				vm.selectedTable = options.target;
-				var table = options.target;
-
-				console.log("layout-table [broadcast-table-on-rotating]");
-				vm.$dispatch("broadcast-table-on-rotating", table);
-			}
-		});
+		this.notifyTableEvent(this.tableEvent);
 	},
 
 
@@ -22000,6 +21969,44 @@ exports.default = _vue2.default.extend({
 			console.log("canvasObj", JSON.stringify(canvasObj));
 
 			return canvasObj;
+		},
+		notifyTableEvent: function notifyTableEvent(eventName) {
+			var vm = this;
+
+			if (typeof eventName == "string" || eventName instanceof String) {
+				//eventName = "object:moving"
+				this.layout.canvas.on(eventName, function (options) {
+					vm.selectedTable = Object.create(options.target);
+					console.log("" + eventName);
+				});
+			}
+
+			if (Array.isArray(eventName)) {
+				var _iteratorNormalCompletion4 = true;
+				var _didIteratorError4 = false;
+				var _iteratorError4 = undefined;
+
+				try {
+					for (var _iterator4 = eventName[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+						var singleEventName = _step4.value;
+
+						vm.notifyTableEvent(singleEventName);
+					}
+				} catch (err) {
+					_didIteratorError4 = true;
+					_iteratorError4 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion4 && _iterator4.return) {
+							_iterator4.return();
+						}
+					} finally {
+						if (_didIteratorError4) {
+							throw _iteratorError4;
+						}
+					}
+				}
+			}
 		}
 	},
 
@@ -22014,9 +22021,9 @@ exports.default = _vue2.default.extend({
 
 				console.log("layout-table: " + this.layout.name + " add new table");
 
-				//hold canvas as ref to this.canvase
+				//hold canvas as ref to this.layout.canvase
 				//this is ambiguous
-				var canvas = this.canvas;
+				var canvas = this.layout.canvas;
 
 				var text = new fabric.Text("" + tableName, {
 					fontSize: 30,
@@ -22061,15 +22068,15 @@ exports.default = _vue2.default.extend({
 					};
 				}(table.toObject);
 
-				this.canvas.add(table);
+				this.layout.canvas.add(table);
 
-				console.log(this.canvas.toObject());
+				console.log(this.layout.canvas.toObject());
 			}
 		},
 		"export-layouts": function exportLayouts() {
 			console.log("layout-table handle [export-layouts]");
 			var vm = this;
-			var canvas = this.canvas;
+			var canvas = this.layout.canvas;
 			//load customize on fabric
 			fabric.Object.prototype.toObject = function (toObject) {
 				return function () {
@@ -22078,8 +22085,8 @@ exports.default = _vue2.default.extend({
 				};
 			}(fabric.Object.prototype.toObject);
 
-			console.log(JSON.stringify(this.canvas.toObject()));
-			this.layout.canvas = JSON.stringify(this.canvas.toObject());
+			console.log(JSON.stringify(this.layout.canvas.toObject()));
+			this.layout.canvas = JSON.stringify(this.layout.canvas.toObject());
 			this.$dispatch("layout-export-success");
 			// let vm = this;
 			// setTimeout(function(){
@@ -22109,7 +22116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = _vue2.default.extend({
 	template: "#table-info-template",
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data: function data() {
 		return {
@@ -22140,6 +22147,55 @@ exports.default = _vue2.default.extend({
 		}
 	},
 
+	watch: {
+		'tableEvent': function tableEvent(val, oldVal) {
+			var _this = this;
+
+			if (val) {
+				console.log("table-info watch on tableEvent", val);
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					var _loop = function _loop() {
+						var eventName = _step.value;
+
+						_this["table-" + eventName] = function () {
+							console.log("table-" + eventName + ": broadcast success");
+						};
+					};
+
+					for (var _iterator = this.tableEvent[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						_loop();
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				console.log("bind method to event");
+			}
+		},
+		'selectedTable': function selectedTable(val, oldVal) {
+			var vm = this;
+			if (val) {
+				console.log("update selected table");
+				vm.updateTableInfo(val);
+			}
+		}
+	},
+
 	methods: {
 		askTableName: function askTableName() {
 			this.askTableNameDivShowed = true;
@@ -22160,7 +22216,6 @@ exports.default = _vue2.default.extend({
 		},
 
 		updateTableInfo: function updateTableInfo(table) {
-			console.log("log selecteTable: " + table);
 			this.width = Math.floor(table.width * table.scaleX);
 			this.height = Math.floor(table.height * table.scaleY);
 			this.top = Math.floor(table.top);
@@ -22170,7 +22225,8 @@ exports.default = _vue2.default.extend({
 
 		exportLayouts: function exportLayouts() {
 			this.exportLayoutsDivShowed = true;
-			this.$dispatch("broadcast-export-layouts");
+			// this.$dispatch("broadcast-export-layouts");
+			console.log(JSON.stringify(this.layouts));
 		}
 	},
 
@@ -22193,9 +22249,19 @@ exports.default = _vue2.default.extend({
 		"export-layouts-complete": function exportLayoutsComplete() {
 			console.log("export-layouts-complete");
 			this.exportLayoutsDivShowed = false;
+		},
+
+		"table-object:scaling": function tableObjectScaling() {
+			console.log("hey, i catch it");
+		},
+
+		"hoanganh": function hoanganh() {
+			console.log("hey i get you, hoanganh");
 		}
 
-	}
+	},
+
+	ready: function ready() {}
 });
 
 },{"jquery":1,"vue":4}],8:[function(require,module,exports){
@@ -22233,7 +22299,7 @@ new _vue2.default({
 	el: "#tinker",
 	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
 
 	data: {
 		askLayoutNameDivShowed: false,
@@ -22309,7 +22375,16 @@ new _vue2.default({
 		}
 	},
 
+	events: {
+		"broadcast-object:scaling": function broadcastObjectScaling(table) {
+			//notify back to children
+			this.$broadcast('table-object:scaling', table);
+		}
+	},
+
 	ready: function ready() {
+		var _this = this;
+
 		//set default value
 		this.layouts = [];
 
@@ -22319,13 +22394,50 @@ new _vue2.default({
 		// 	this.layouts = JSON.parse(layoutsData);
 		// }
 
-		var vm = this;
-		console.log(vm.url);
-		this.$http.get(vm.url).then(function (response) {
-			var data = response.data;
-			console.log("data", data);
-			vm.layouts = data;
-		});
+		// let vm = this;
+		// console.log(vm.url);
+		// this.$http.get(vm.url)
+		//     .then(function(response){
+		// 	    let data = response.data;
+		// 	    console.log("data", data);
+		// 	    vm.layouts = data;
+		//     });
+
+		this.tableEvent = ["object:selected", "object:scaling", "object:moving", "object:rotating"];
+
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			var _loop = function _loop() {
+				var eventName = _step.value;
+
+				_this["broadcast-" + eventName] = function (table) {
+					console.log("broadcast-" + eventName + ": dispatch success");
+					this.$broadcast("table-" + eventName, table);
+				};
+			};
+
+			for (var _iterator = this.tableEvent[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				_loop();
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+
+		console.log(this);
 	}
 });
 
