@@ -21770,11 +21770,19 @@ exports.default = _vue2.default.extend({
 		//store ref
 		var vm = this;
 
+		console.log(this.layout);
+		console.log(abc);
+
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
 		var width = (0, _jquery2.default)(".canvas-container").width();
 		console.log(width);
+
+		//default value when width is 0
+		if (width == 0) {
+			width = 500;
+		}
 
 		canvas.setWidth(width);
 		canvas.setHeight(width);
@@ -21835,75 +21843,161 @@ exports.default = _vue2.default.extend({
 			};
 		},
 		relativePositionDeserialize: function relativePositionDeserialize(json, canvas) {
-			var canvasObj = JSON.parse(json);
+			var canvasObj = {};
 
-			var tables = canvasObj.objects;
+			if (typeof json == "string" || json instanceof String) {
+				canvasObj = JSON.parse(json);
 
-			var _iteratorNormalCompletion = true;
-			var _didIteratorError = false;
-			var _iteratorError = undefined;
+				var tables = canvasObj.objects;
 
-			try {
-				for (var _iterator = tables[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var table = _step.value;
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 
-					table.width = table.width * canvas.getWidth();
-					table.height = table.height * canvas.getHeight();
-					table.left = table.left * canvas.getWidth();
-					table.top = table.top * canvas.getHeight();
-					table.borderColor = 'gray';
-					table.cornerColor = 'black';
-					table.cornerSize = 8;
-					table.transparentCorners = true;
-					table.vailochua = "vailoroi";
-
-					var items = table.objects;
-
-					var _iteratorNormalCompletion2 = true;
-					var _didIteratorError2 = false;
-					var _iteratorError2 = undefined;
-
-					try {
-						for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-							var item = _step2.value;
-
-							item.width = item.width * canvas.getWidth();
-							item.height = item.height * canvas.getHeight();
-							item.left = item.left * canvas.getWidth();
-							item.top = item.top * canvas.getHeight();
-							console.log(item);
-						}
-					} catch (err) {
-						_didIteratorError2 = true;
-						_iteratorError2 = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion2 && _iterator2.return) {
-								_iterator2.return();
-							}
-						} finally {
-							if (_didIteratorError2) {
-								throw _iteratorError2;
-							}
-						}
-					}
-				}
-			} catch (err) {
-				_didIteratorError = true;
-				_iteratorError = err;
-			} finally {
 				try {
-					if (!_iteratorNormalCompletion && _iterator.return) {
-						_iterator.return();
+					for (var _iterator = tables[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var table = _step.value;
+
+						table.width = table.width * canvas.getWidth();
+						table.height = table.height * canvas.getHeight();
+						table.left = table.left * canvas.getWidth();
+						table.top = table.top * canvas.getHeight();
+						table.borderColor = 'gray';
+						table.cornerColor = 'black';
+						table.cornerSize = 8;
+						table.transparentCorners = true;
+						table.vailochua = "vailoroi";
+
+						var items = table.objects;
+
+						var _iteratorNormalCompletion2 = true;
+						var _didIteratorError2 = false;
+						var _iteratorError2 = undefined;
+
+						try {
+							for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+								var item = _step2.value;
+
+								item.width = item.width * canvas.getWidth();
+								item.height = item.height * canvas.getHeight();
+								item.left = item.left * canvas.getWidth();
+								item.top = item.top * canvas.getHeight();
+								console.log(item);
+							}
+						} catch (err) {
+							_didIteratorError2 = true;
+							_iteratorError2 = err;
+						} finally {
+							try {
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
+								}
+							} finally {
+								if (_didIteratorError2) {
+									throw _iteratorError2;
+								}
+							}
+						}
 					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
 				} finally {
-					if (_didIteratorError) {
-						throw _iteratorError;
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
 					}
 				}
+
+				console.log(canvasObj);
 			}
 
-			console.log(canvasObj);
+			if (Array.isArray(json)) {
+				console.log("json", json);
+				//json image
+				// [
+				// 		{
+				// 			name: "1",
+				// 			max_pax: "4",
+				// 			shape: "0",
+				// 			rotation: "-4.93",
+				// 			top: "0.47",
+				// 			left: "0.08",
+				// 			height: "0.27",
+				// 			width: "0.19"
+				// 		},
+				// ]
+				var canvasTemp = new fabric.Canvas();
+
+				var _iteratorNormalCompletion3 = true;
+				var _didIteratorError3 = false;
+				var _iteratorError3 = undefined;
+
+				try {
+					for (var _iterator3 = json[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+						var tableInfo = _step3.value;
+
+
+						var text = new fabric.Text("" + tableInfo.name, {
+							fontSize: 30,
+							originX: "center",
+							originY: "center"
+						});
+
+						var rect = new fabric.Rect({
+							fill: "#E5E5E5",
+							stroke: "#555E65",
+							strokeWidth: 4,
+							width: Math.floor(tableInfo.width * canvas.getWidth()),
+							height: Math.floor(tableInfo.height * canvas.getHeight()),
+							originX: "center",
+							originY: "center"
+						});
+
+						var _table = new fabric.Group([rect, text], {
+							borderColor: 'gray',
+							cornerColor: 'black',
+							cornerSize: 8,
+							transparentCorners: true,
+							top: Math.floor(tableInfo.top * canvas.getHeight()),
+							left: Math.floor(tableInfo.left * canvas.getWidth())
+						});
+
+						canvasTemp.add(_table);
+					}
+
+					//to ensure toObject is normal
+					//redefine it
+				} catch (err) {
+					_didIteratorError3 = true;
+					_iteratorError3 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion3 && _iterator3.return) {
+							_iterator3.return();
+						}
+					} finally {
+						if (_didIteratorError3) {
+							throw _iteratorError3;
+						}
+					}
+				}
+
+				fabric.Object.prototype.toObject = function (toObject) {
+					return function () {
+						return fabric.util.object.extend(toObject.call(this), {});
+					};
+				}(fabric.Object.prototype.toObject);
+
+				canvasObj = canvasTemp.toObject();
+			}
+
+			console.log("canvasObj", JSON.stringify(canvasObj));
 
 			return canvasObj;
 		}
@@ -22229,11 +22323,9 @@ new _vue2.default({
 		console.log(vm.url);
 		this.$http.get(vm.url).then(function (response) {
 			var data = response.data;
-			console.log(data);
+			console.log("data", data);
 			vm.layouts = data;
 		});
-
-		vm.url = "http://128.199.237.219/fabric-table-layout/json.php";
 	}
 });
 

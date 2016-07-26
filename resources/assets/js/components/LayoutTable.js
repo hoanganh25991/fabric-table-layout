@@ -48,11 +48,19 @@ export default Vue.extend({
 		//store ref
 		let vm = this;
 
+		console.log(this.layout);
+		console.log(abc);
+
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
 		let width = $(".canvas-container").width();
 		console.log(width);
+
+		//default value when width is 0
+		if(width == 0){
+			width = 500;
+		}
 
 		canvas.setWidth(width);
 		canvas.setHeight(width);
@@ -112,33 +120,98 @@ export default Vue.extend({
 			}
 		},
 		relativePositionDeserialize(json, canvas){
-			let canvasObj = JSON.parse(json);
+			let canvasObj = {};
 
-			let tables = canvasObj.objects;
+			if(typeof json == "string" || json instanceof String){
+				canvasObj = JSON.parse(json);
 
-			for(let table of tables){
-				table.width = table.width * canvas.getWidth();
-				table.height = table.height * canvas.getHeight();
-				table.left = table.left * canvas.getWidth();
-				table.top = table.top * canvas.getHeight();
-				table.borderColor = 'gray';
-				table.cornerColor = 'black';
-				table.cornerSize = 8;
-				table.transparentCorners = true;
-				table.vailochua = "vailoroi";
+				let tables = canvasObj.objects;
 
-				let items = table.objects;
+				for(let table of tables){
+					table.width = table.width * canvas.getWidth();
+					table.height = table.height * canvas.getHeight();
+					table.left = table.left * canvas.getWidth();
+					table.top = table.top * canvas.getHeight();
+					table.borderColor = 'gray';
+					table.cornerColor = 'black';
+					table.cornerSize = 8;
+					table.transparentCorners = true;
+					table.vailochua = "vailoroi";
 
-				for(let item of items){
-					item.width = item.width * canvas.getWidth();
-					item.height = item.height * canvas.getHeight();
-					item.left = item.left * canvas.getWidth();
-					item.top = item.top * canvas.getHeight();
-					console.log(item);
+					let items = table.objects;
+
+					for(let item of items){
+						item.width = item.width * canvas.getWidth();
+						item.height = item.height * canvas.getHeight();
+						item.left = item.left * canvas.getWidth();
+						item.top = item.top * canvas.getHeight();
+						console.log(item);
+					}
 				}
+
+				console.log(canvasObj);
 			}
 
-			console.log(canvasObj);
+			if(Array.isArray(json)){
+				console.log("json", json);
+				//json image
+				// [
+				// 		{
+				// 			name: "1",
+				// 			max_pax: "4",
+				// 			shape: "0",
+				// 			rotation: "-4.93",
+				// 			top: "0.47",
+				// 			left: "0.08",
+				// 			height: "0.27",
+				// 			width: "0.19"
+				// 		},
+				// ]
+				let canvasTemp = new fabric.Canvas();
+
+				for(let tableInfo of json){
+
+					let text = new fabric.Text(`${tableInfo.name}`, {
+						fontSize: 30,
+						originX: "center",
+						originY: "center"
+					});
+
+					let rect = new fabric.Rect({
+						fill: "#E5E5E5",
+						stroke: "#555E65",
+						strokeWidth: 4,
+						width: Math.floor(tableInfo.width * canvas.getWidth()),
+						height: Math.floor(tableInfo.height * canvas.getHeight()),
+						originX: "center",
+						originY: "center"
+					});
+
+					let table = new fabric.Group([rect, text], {
+						borderColor: 'gray',
+						cornerColor: 'black',
+						cornerSize: 8,
+						transparentCorners: true,
+						top: Math.floor(tableInfo.top * canvas.getHeight()),
+						left: Math.floor(tableInfo.left * canvas.getWidth())
+					});
+					
+					canvasTemp.add(table);
+				}
+
+				//to ensure toObject is normal
+				//redefine it
+				fabric.Object.prototype.toObject = (function(toObject){
+					return function(){
+						return fabric.util.object.extend(toObject.call(this), {});
+					};
+				})(fabric.Object.prototype.toObject);
+
+				canvasObj = canvasTemp.toObject();
+
+			}
+
+			console.log("canvasObj", JSON.stringify(canvasObj));
 
 			return canvasObj;
 		}

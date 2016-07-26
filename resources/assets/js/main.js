@@ -110,10 +110,8 @@ new Vue({
 		this.$http.get(vm.url)
 		    .then(function(response){
 			    let data = response.data;
-			    console.log(data);
+			    console.log("data", data);
 			    vm.layouts = data;
 		    });
-
-		vm.url = "http://128.199.237.219/fabric-table-layout/json.php";
 	}
 });

@@ -30,6 +30,10 @@ try{
 
         unset($layout["id"]);
 
+        $milisecond = explode(" ", microtime())[1];
+
+        $layout["canvasId"] = $milisecond;
+
         $layout["canvas"] = $tables;
     }
     
