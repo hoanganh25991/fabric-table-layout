@@ -1,4 +1,5 @@
 import Vue from "vue";
+import $ from "jquery";
 
 export default Vue.extend({
 	template: "#layout-table-template",
@@ -49,8 +50,12 @@ export default Vue.extend({
 
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
-		canvas.setWidth(500);
-		canvas.setHeight(500);
+		//set width height of canvas
+		let width = $(".canvas-container").width();
+		console.log(width);
+
+		canvas.setWidth(width);
+		canvas.setHeight(width);
 
 		if(this.layout.canvas){
 			let canvasObj = vm.relativePositionDeserialize(this.layout.canvas, canvas);

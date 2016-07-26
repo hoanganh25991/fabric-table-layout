@@ -21717,6 +21717,10 @@ var _vue = require("vue");
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _jquery = require("jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
@@ -21768,8 +21772,12 @@ exports.default = _vue2.default.extend({
 
 		var canvas = new fabric.Canvas(this.$els.canvas.id);
 
-		canvas.setWidth(500);
-		canvas.setHeight(500);
+		//set width height of canvas
+		var width = (0, _jquery2.default)(".canvas-container").width();
+		console.log(width);
+
+		canvas.setWidth(width);
+		canvas.setHeight(width);
 
 		if (this.layout.canvas) {
 			var canvasObj = vm.relativePositionDeserialize(this.layout.canvas, canvas);
@@ -21987,7 +21995,7 @@ exports.default = _vue2.default.extend({
 	}
 });
 
-},{"vue":4}],7:[function(require,module,exports){
+},{"jquery":1,"vue":4}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

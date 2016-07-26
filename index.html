@@ -4,6 +4,11 @@
     <title>fabric</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="public/css/style.css">
+    <style>
+        .canvas-container {
+            width: 700px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -155,7 +160,7 @@
     </template>
 
     <template id="layout-table-template">
-        <div v-show="active">
+        <div v-show="active" class="canvas-container">
             <h1>{{ name }}</h1>
             <canvas id="{{ id }}" v-el:canvas class="layout-table-active"></canvas>
         </div>
