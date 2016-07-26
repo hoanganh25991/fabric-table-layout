@@ -4,11 +4,10 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#layout-table-template",
 
-	props: ["layouts", "layout", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
+	props: ["layouts", "layout", "selectedLayout", "selectedTable", "tableEvent", "newTableName"],
 
 	data(){
-		return {
-		}
+		return {}
 	},
 
 	computed: {
@@ -39,6 +38,14 @@ export default Vue.extend({
 
 			return (this.layout.name == this.selectedLayout.name);
 		}
+	},
+
+	watch: {
+		"newTableName": function(val){
+			if(val){
+				this.createTable(val);
+			}
+		},
 	},
 
 	ready(){
@@ -161,9 +168,9 @@ export default Vue.extend({
 						top: Math.floor(tableInfo.top * canvas.getHeight()),
 						left: Math.floor(tableInfo.left * canvas.getWidth())
 					});
-					
+
 					table.rotate(tableInfo.rotation);
-					
+
 					canvasTemp.add(table);
 				}
 
@@ -189,7 +196,7 @@ export default Vue.extend({
 			if(typeof eventName == "string" || eventName instanceof String){
 				//eventName = "object:moving"
 				this.layout.canvas.on(eventName, function(options){
-					vm.selectedTable =Object.create(options.target);
+					vm.selectedTable = Object.create(options.target);
 					console.log(`${eventName}`);
 				});
 			}
@@ -200,11 +207,74 @@ export default Vue.extend({
 				}
 			}
 
+		},
+
+		createTable(tableName){
+			console.log(`layout-table hanlde create-table ${tableName}`);
+			//when parent broadcase, ONLY LayouTable has
+			// selecteLayout.name === layout.name (layout of LayoutTable)
+			//handle create table in this layout
+			if(this.layout.name == this.selectedLayout.name){
+
+				console.log(`layout-table: ${this.layout.name} add new table`);
+
+				//hold canvas as ref to this.layout.canvase
+				//this is ambiguous
+				let canvas = this.layout.canvas;
+
+				let text = new fabric.Text(`${tableName}`, {
+					fontSize: 30,
+					originX: "center",
+					originY: "center"
+				});
+
+				let rect = new fabric.Rect({
+					fill: "#E5E5E5",
+					stroke: "#555E65",
+					strokeWidth: 4,
+					width: 100,
+					height: 100,
+					originX: "center",
+					originY: "center"
+				});
+
+				let table = new fabric.Group([rect, text], {
+					borderColor: 'gray',
+					cornerColor: 'black',
+					cornerSize: 8,
+					transparentCorners: true,
+					top: 0,
+					left: 0
+				});
+
+				//define how to serialize for 'Group' as table here
+
+				//hold ref to vm
+				let vm = this;
+
+
+				table.toObject = (function(toObject){
+					return function(){
+						//compute width, height, top, left as relative
+						let position = {};
+						position.borderColor = 'gray';
+						position.cornerColor = 'black';
+						position.cornerSize = 8;
+						position.transparentCorners = true;
+						position.vailochua = "vailoroi";
+						return fabric.util.object.extend(toObject.call(this), position);
+					};
+				})(table.toObject);
+
+				this.layout.canvas.add(table);
+
+				console.log(this.layout.canvas.toObject());
+			}
 		}
 	},
 
 	events: {
-		"create-table": function(tableName){
+		"new-table": function(tableName){
 			console.log(`layout-table hanlde create-table ${tableName}`);
 
 			//when parent broadcase, ONLY LayouTable has
@@ -247,7 +317,6 @@ export default Vue.extend({
 
 				//hold ref to vm
 				let vm = this;
-
 
 
 				table.toObject = (function(toObject){

@@ -39,6 +39,9 @@ new Vue({
 					"object:rotating"
 				];
 			}
+		},
+		newTableName: {
+			default: ""
 		}
 	},
 
@@ -77,48 +80,17 @@ new Vue({
 
 		},
 
-		handleNewTableName: function(tableName){
-			console.log(`parent handle [new table name]: ${tableName}`);
-			console.log(`parent broadcast [create-table] to children,
-			layout-table hanlde this event`);
-			this.$broadcast("create-table", tableName);
-		},
+		exportLayouts: function(){
+			console.log(JSON.stringify(this.layouts));
+			localStorage.setItem("dump-data", JSON.stringify(this.layouts));
+			this.$broadcast("export-layouts-complete");
+			this.url = "http://128.199.237.219/fabric-table-layout/json.php";
+			this.$http.post(this.url, JSON.stringify(this.layouts))
+			    .then(function(response){
+				    let data = response.data;
+				    console.log(data);
+			    });
 
-		broadcastTableSelected: function(table){
-			console.log("parent broadcast [table-selected]");
-			this.$broadcast("table-selected", table);
-		},
-
-		broadcastTableOnScaling: function(table){
-			console.log("parent broadcast [table-on-scaling]");
-			this.$broadcast("table-on-scaling", table);
-		},
-
-		broadcastTableOnRotating: function(table){
-			console.log("parent broadcast [table-on-rotating]");
-			this.$broadcast("table-on-rotating", table);
-		},
-
-		broadcastExportLayouts: function(){
-			console.log("parent broadcast [export-layouts]");
-			this.exportLayoutsCount = 0;
-			this.$broadcast("export-layouts");
-		},
-
-		handleLayoutExportSuccess: function(){
-			this.exportLayoutsCount++;
-			if(this.exportLayoutsCount == this.layouts.length){
-				this.$broadcast("export-layouts-complete");
-				console.log(JSON.stringify(this.layouts));
-				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
-				this.url = "http://128.199.237.219/fabric-table-layout/json.php";
-				this.$http.post(this.url, JSON.stringify(this.layouts))
-				    .then(function(response){
-					    let data = response.data;
-					    console.log(data);
-					    // vm.layouts = data;
-				    });
-			}
 		}
 	},
 

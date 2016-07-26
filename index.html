@@ -4,6 +4,7 @@
     <title>fabric</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="public/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <style>
         .canvas-container {
             width: 500px;
@@ -19,11 +20,10 @@
             <table-info
                     :selected-layout.sync="selectedLayout"
                     :selected-table.sync="selectedTable"
-                    :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
                     :table-event="tableEvent"
-                    @new-table-name="handleNewTableName"
-                    @broadcast-export-layouts="broadcastExportLayouts"
+                    :new-table-name.sync="newTableName"
+                    @export-layouts="exportLayouts"
             >
             </table-info>
         </div>
@@ -50,13 +50,9 @@
                     :selected-layout.sync="selectedLayout"
                     :selected-table.sync="selectedTable"
                     :layout="layout" v-for="layout in layouts"
-                    :export-layouts-count.sync="exportLayoutsCount"
                     :layouts="layouts"
                     :table-event="tableEvent"
-                    @broadcast-table-on-scaling="broadcastTableOnScaling"
-                    @broadcast-table-selected="broadcastTableSelected"
-                    @broadcast-table-on-rotating="broadcastTableOnRotating"
-                    @layout-export-success="handleLayoutExportSuccess"
+                    :new-table-name.sync="newTableName"
             >
             </layout-table>
         </div>
@@ -141,15 +137,15 @@
                 </div>
             </div>
         </div>
-        <button @click="askTableName">+ add table</button>
+        <button @click="askTableNameDivShowed = !askTableNameDivShowed">+ add table</button>
         <button>return</button>
         <div v-show="askTableNameDivShowed">
-            <input type="text" name="newTableName" autofocus @keyup.enter="getTableName">
-            <button @click="getTableName">ok</button>
+            <input v-model="inputNewTableName" @keyup.enter="setNewTableName">
+            <button @click="setNewTableName">ok</button>
         </div>
-        <button @click="exportLayouts">share</button>
+        <button @click="dispatchExportLayouts">share</button>
         <div v-show="exportLayoutsDivShowed">
-            <p>{{ exportLayoutsCount }} / {{ layoutsCount }}</p>
+            <p>hoang anh ne</p>
         </div>
     </template>
 

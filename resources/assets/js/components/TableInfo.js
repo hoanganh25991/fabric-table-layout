@@ -4,27 +4,24 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#table-info-template",
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "tableEvent"],
+	props: ["layouts", "selectedLayout", "selectedTable", "tableEvent", "newTableName"],
 
 	data(){
 		return {
 			askTableNameDivShowed: false,
+			inputNewTableName: "",
 			width: "-",
 			height: "-",
 			top: "-",
 			left: "-",
 			rotation: "-",
 			exportLayoutsDivShowed: false,
+
 		}
 	},
 
 	computed: {
-		layoutsCount: function(){
-			if(this.layouts){
-				return this.layouts.length;
-			}
-			return 0;
-		},
+
 	},
 
 	watch: {
@@ -34,40 +31,24 @@ export default Vue.extend({
 	},
 
 	methods: {
-		askTableName: function(){
-			this.askTableNameDivShowed = true;
-		},
-
-		getTableName: function(){
-			console.log(this.selectedTable);
-			let inputNewTableName = $("input[name='newTableName']");
-			let newTableName = inputNewTableName.val();
-			console.log(`create table: ${newTableName}`);
-
-			//fire a event
-			this.$dispatch("new-table-name", newTableName);
-
-			//hide
+		setNewTableName: function(){
 			this.askTableNameDivShowed = false;
-			inputNewTableName.val("");
+			this.newTableName = this.inputNewTableName;
+			this.inputNewTableName = "";
 		},
 
 		updateTableInfo: function(table){
 			this.width = table.width * table.scaleX;
 			this.height = table.height * table.scaleY;
 			this.top = table.top;
-			this.left =  table.left;
+			this.left = table.left;
 			this.rotation = table.angle;
-		},
-		
-		round(props){
-			
+			_f.round(["width", "height", "top", "left", "rotation"], this);
 		},
 
-		exportLayouts: function(){
+		dispatchExportLayouts: function(){
 			this.exportLayoutsDivShowed = true;
-			// this.$dispatch("broadcast-export-layouts");
-			console.log(JSON.stringify(this.layouts));
+			this.$dispatch("export-layouts");
 		}
 	},
 
@@ -78,7 +59,7 @@ export default Vue.extend({
 
 		},
 	},
-	
+
 	ready(){
 	}
 });
