@@ -1,4 +1,7 @@
 <?php
+header('content-type: application/json; charset=utf-8');
+header("Access-Control-Allow-Origin: *");
+
 $servername = "localhost";
 $username = "root";
 $password = "ifrc";
@@ -133,8 +136,6 @@ try{
 
     $layouts = [$layout];
 
-    header('content-type: application/json; charset=utf-8');
-    header("Access-Control-Allow-Origin: *");
 
     echo json_encode($layouts);
 

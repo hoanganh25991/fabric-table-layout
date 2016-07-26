@@ -22216,24 +22216,24 @@ new _vue2.default({
 
 		var vm = this;
 		console.log(vm.url);
+		this.$http.get(vm.url).then(function (response) {
+			var data = response.data;
+			console.log(data);
+			vm.layouts = data;
+		});
+
+		vm.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
 		// this.$http.get(vm.url)
 		//     .then(function(response){
 		// 	    let data = response.data;
 		// 	    console.log(data);
-		// 	    vm.layouts = data;
+		// 	    if(data){
+		// 		    vm.layouts = data;
+		// 		    console.log(vm.layouts);
+		// 	    }else{
+		// 		    vm.layouts = [];
+		// 	    }
 		//     });
-
-		vm.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
-		this.$http.get(vm.url).then(function (response) {
-			var data = response.data;
-			console.log(data);
-			if (data) {
-				vm.layouts = data;
-				console.log(vm.layouts);
-			} else {
-				vm.layouts = [];
-			}
-		});
 	}
 });
 
