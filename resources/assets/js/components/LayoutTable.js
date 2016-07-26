@@ -57,7 +57,7 @@ export default Vue.extend({
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
-		let width = $(".canvas-container").width();
+		let width = Math.floor($(".canvas-container").width());
 		console.log(width);
 
 		//default value when width is 0
@@ -83,14 +83,7 @@ export default Vue.extend({
 	},
 
 	methods: {
-		relativePositionSerialize(table, canvas){
-			return {
-				width: Number((table.width / canvas.getWidth()).toFixed(2)),
-				height: Number((table.height / canvas.getHeight()).toFixed(2)),
-				left: Number((table.left / canvas.getWidth()).toFixed(2)),
-				top: Number((table.top / canvas.getHeight()).toFixed(2))
-			}
-		},
+		
 		relativePositionDeserialize(json, canvas){
 			let canvasObj = {};
 
@@ -176,11 +169,11 @@ export default Vue.extend({
 
 				//to ensure toObject is normal
 				//redefine it
-				fabric.Object.prototype.toObject = (function(toObject){
-					return function(){
-						return fabric.util.object.extend(toObject.call(this), {});
-					};
-				})(fabric.Object.prototype.toObject);
+				// fabric.Object.prototype.toObject = (function(toObject){
+				// 	return function(){
+				// 		return fabric.util.object.extend(toObject.call(this), {});
+				// 	};
+				// })(fabric.Object.prototype.toObject);
 
 				canvasObj = canvasTemp.toObject();
 
@@ -216,12 +209,13 @@ export default Vue.extend({
 			//handle create table in this layout
 			if(this.layout.name == this.selectedLayout.name){
 
+
+
+
 				console.log(`layout-table: ${this.layout.name} add new table`);
 
 				//hold canvas as ref to this.layout.canvase
 				//this is ambiguous
-				let canvas = this.layout.canvas;
-
 				let text = new fabric.Text(`${tableName}`, {
 					fontSize: 30,
 					originX: "center",
@@ -253,110 +247,19 @@ export default Vue.extend({
 				let vm = this;
 
 
-				table.toObject = (function(toObject){
-					return function(){
-						//compute width, height, top, left as relative
-						let position = {};
-						position.borderColor = 'gray';
-						position.cornerColor = 'black';
-						position.cornerSize = 8;
-						position.transparentCorners = true;
-						position.vailochua = "vailoroi";
-						return fabric.util.object.extend(toObject.call(this), position);
-					};
-				})(table.toObject);
+				let tableProps = {};
+				tableProps.borderColor = 'gray';
+				tableProps.cornerColor = 'black';
+				tableProps.cornerSize = 8;
+				tableProps.transparentCorners = true;
+				tableProps.vailochua = "vailoroi";
+				table.toObject(tableProps);
 
 				this.layout.canvas.add(table);
-
-				console.log(this.layout.canvas.toObject());
 			}
 		}
 	},
 
 	events: {
-		"new-table": function(tableName){
-			console.log(`layout-table hanlde create-table ${tableName}`);
-
-			//when parent broadcase, ONLY LayouTable has
-			// selecteLayout.name === layout.name (layout of LayoutTable)
-			//handle create table in this layout
-			if(this.layout.name == this.selectedLayout.name){
-
-				console.log(`layout-table: ${this.layout.name} add new table`);
-
-				//hold canvas as ref to this.layout.canvase
-				//this is ambiguous
-				let canvas = this.layout.canvas;
-
-				let text = new fabric.Text(`${tableName}`, {
-					fontSize: 30,
-					originX: "center",
-					originY: "center"
-				});
-
-				let rect = new fabric.Rect({
-					fill: "#E5E5E5",
-					stroke: "#555E65",
-					strokeWidth: 4,
-					width: 100,
-					height: 100,
-					originX: "center",
-					originY: "center"
-				});
-
-				let table = new fabric.Group([rect, text], {
-					borderColor: 'gray',
-					cornerColor: 'black',
-					cornerSize: 8,
-					transparentCorners: true,
-					top: 0,
-					left: 0
-				});
-
-				//define how to serialize for 'Group' as table here
-
-				//hold ref to vm
-				let vm = this;
-
-
-				table.toObject = (function(toObject){
-					return function(){
-						//compute width, height, top, left as relative
-						let position = {};
-						position.borderColor = 'gray';
-						position.cornerColor = 'black';
-						position.cornerSize = 8;
-						position.transparentCorners = true;
-						position.vailochua = "vailoroi";
-						return fabric.util.object.extend(toObject.call(this), position);
-					};
-				})(table.toObject);
-
-				this.layout.canvas.add(table);
-
-				console.log(this.layout.canvas.toObject());
-			}
-		},
-		"export-layouts": function(){
-			console.log("layout-table handle [export-layouts]");
-			let vm = this;
-			let canvas = this.layout.canvas;
-			//load customize on fabric
-			fabric.Object.prototype.toObject = (function(toObject){
-				return function(){
-					let position = vm.relativePositionSerialize(this, canvas);
-					return fabric.util.object.extend(toObject.call(this), position);
-				};
-			})(fabric.Object.prototype.toObject);
-
-			console.log(JSON.stringify(this.layout.canvas.toObject()));
-			this.layout.canvas = JSON.stringify(this.layout.canvas.toObject());
-			this.$dispatch("layout-export-success");
-			// let vm = this;
-			// setTimeout(function(){
-			// 	vm.$dispatch("layout-export-success");
-			// }, 1000);
-
-		}
 	}
 });
