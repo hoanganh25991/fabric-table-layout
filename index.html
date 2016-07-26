@@ -7,8 +7,10 @@
 </head>
 <body>
 <div class="container">
-    <div id="tinker" class="row" url="http://128.199.237.219/fabric-table-layout/abc.php">
+    <div id="tinker" class="row">
         <div class="col-md-4">
+            <h4>load table from server url</h4>
+            <input v-model="url" style="width: 100%">
             <table-info
                     :selected-layout.sync="selectedLayout"
                     :selected-table.sync="selectedTable"

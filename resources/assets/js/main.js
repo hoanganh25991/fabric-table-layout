@@ -13,10 +13,11 @@ new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "url"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data: {
 		askLayoutNameDivShowed: false,
+		url : "http://128.199.237.219/fabric-table-layout/save-json.php",
 	},
 
 	convertToSlug(Text){

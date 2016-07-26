@@ -22129,10 +22129,11 @@ new _vue2.default({
 	el: "#tinker",
 	components: { LayoutInfo: _LayoutInfo2.default, LayoutTable: _LayoutTable2.default, TableInfo: _TableInfo2.default },
 
-	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount", "url"],
+	props: ["layouts", "selectedLayout", "selectedTable", "exportLayoutsCount"],
 
 	data: {
-		askLayoutNameDivShowed: false
+		askLayoutNameDivShowed: false,
+		url: "http://128.199.237.219/fabric-table-layout/save-json.php"
 	},
 
 	convertToSlug: function convertToSlug(Text) {
