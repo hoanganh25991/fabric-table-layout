@@ -17,7 +17,7 @@ new Vue({
 
 	data: {
 		askLayoutNameDivShowed: false,
-		url : "http://128.199.237.219/fabric-table-layout/save-json.php",
+		url : "http://128.199.237.219/fabric-table-layout/json.php",
 	},
 
 	convertToSlug(Text){
@@ -84,7 +84,7 @@ new Vue({
 				this.$broadcast("export-layouts-complete");
 				console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
-				this.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
+				this.url = "http://128.199.237.219/fabric-table-layout/json.php";
 				this.$http.post(this.url, JSON.stringify(this.layouts))
 				    .then(function(response){
 					    let data = response.data;
@@ -114,17 +114,6 @@ new Vue({
 			    vm.layouts = data;
 		    });
 
-		vm.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
-		// this.$http.get(vm.url)
-		//     .then(function(response){
-		// 	    let data = response.data;
-		// 	    console.log(data);
-		// 	    if(data){
-		// 		    vm.layouts = data;
-		// 		    console.log(vm.layouts);
-		// 	    }else{
-		// 		    vm.layouts = [];
-		// 	    }
-		//     });
+		vm.url = "http://128.199.237.219/fabric-table-layout/json.php";
 	}
 });

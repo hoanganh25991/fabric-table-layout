@@ -21762,13 +21762,6 @@ exports.default = _vue2.default.extend({
 	},
 
 	ready: function ready() {
-		//load customize on fabric
-		fabric.Object.prototype.toObject = function (toObject) {
-			return function () {
-				var position = vm.relativePositionSerialize(this, canvas);
-				return fabric.util.object.extend(toObject.call(this), position);
-			};
-		}(fabric.Object.prototype.toObject);
 
 		//store ref
 		var vm = this;
@@ -21921,7 +21914,7 @@ exports.default = _vue2.default.extend({
 
 				//hold canvas as ref to this.canvase
 				//this is ambiguous
-				var _canvas = this.canvas;
+				var canvas = this.canvas;
 
 				var text = new fabric.Text("" + tableName, {
 					fontSize: 30,
@@ -21951,7 +21944,7 @@ exports.default = _vue2.default.extend({
 				//define how to serialize for 'Group' as table here
 
 				//hold ref to vm
-				var _vm = this;
+				var vm = this;
 
 				table.toObject = function (toObject) {
 					return function () {
@@ -21973,6 +21966,15 @@ exports.default = _vue2.default.extend({
 		},
 		"export-layouts": function exportLayouts() {
 			console.log("layout-table handle [export-layouts]");
+			var vm = this;
+			var canvas = this.canvas;
+			//load customize on fabric
+			fabric.Object.prototype.toObject = function (toObject) {
+				return function () {
+					var position = vm.relativePositionSerialize(this, canvas);
+					return fabric.util.object.extend(toObject.call(this), position);
+				};
+			}(fabric.Object.prototype.toObject);
 
 			console.log(JSON.stringify(this.canvas.toObject()));
 			this.layout.canvas = JSON.stringify(this.canvas.toObject());
@@ -22133,7 +22135,7 @@ new _vue2.default({
 
 	data: {
 		askLayoutNameDivShowed: false,
-		url: "http://128.199.237.219/fabric-table-layout/save-json.php"
+		url: "http://128.199.237.219/fabric-table-layout/json.php"
 	},
 
 	convertToSlug: function convertToSlug(Text) {
@@ -22195,7 +22197,7 @@ new _vue2.default({
 				this.$broadcast("export-layouts-complete");
 				console.log(JSON.stringify(this.layouts));
 				localStorage.setItem("dump-data", JSON.stringify(this.layouts));
-				this.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
+				this.url = "http://128.199.237.219/fabric-table-layout/json.php";
 				this.$http.post(this.url, JSON.stringify(this.layouts)).then(function (response) {
 					var data = response.data;
 					console.log(data);
@@ -22223,18 +22225,7 @@ new _vue2.default({
 			vm.layouts = data;
 		});
 
-		vm.url = "http://128.199.237.219/fabric-table-layout/save-json.php";
-		// this.$http.get(vm.url)
-		//     .then(function(response){
-		// 	    let data = response.data;
-		// 	    console.log(data);
-		// 	    if(data){
-		// 		    vm.layouts = data;
-		// 		    console.log(vm.layouts);
-		// 	    }else{
-		// 		    vm.layouts = [];
-		// 	    }
-		//     });
+		vm.url = "http://128.199.237.219/fabric-table-layout/json.php";
 	}
 });
 

@@ -42,13 +42,7 @@ export default Vue.extend({
 	},
 
 	ready(){
-		//load customize on fabric
-		fabric.Object.prototype.toObject = (function(toObject){
-			return function(){
-				let position = vm.relativePositionSerialize(this, canvas);
-				return fabric.util.object.extend(toObject.call(this), position);
-			};
-		})(fabric.Object.prototype.toObject);
+
 
 		//store ref
 		let vm = this;
@@ -212,6 +206,15 @@ export default Vue.extend({
 		},
 		"export-layouts": function(){
 			console.log("layout-table handle [export-layouts]");
+			let vm = this;
+			let canvas = this.canvas;
+			//load customize on fabric
+			fabric.Object.prototype.toObject = (function(toObject){
+				return function(){
+					let position = vm.relativePositionSerialize(this, canvas);
+					return fabric.util.object.extend(toObject.call(this), position);
+				};
+			})(fabric.Object.prototype.toObject);
 
 			console.log(JSON.stringify(this.canvas.toObject()));
 			this.layout.canvas = JSON.stringify(this.canvas.toObject());
