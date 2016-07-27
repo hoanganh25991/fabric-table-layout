@@ -7,37 +7,21 @@ export default Vue.extend({
 	props: ["layouts", "layout", "selectedLayout", "selectedTable", "tableEvent", "newTableName"],
 
 	data(){
-		return {}
+		return {
+			tableSizeDefault: {
+				max_pax: "4",
+				shape: "0",
+				rotation: "0.00",
+				top: "0.00",
+				left: "0.00",
+				height: "0.20",
+				width: "0.20"
+			}
+		}
 	},
 
 	computed: {
-		name: function(){
-			if(this.layout){
-				return this.layout.name;
-			}
-
-			return "";
-		},
-
-		id: function(){
-			if(this.layout){
-				return this.layout.canvasId;
-			}
-
-			return "";
-		},
-
-		active: function(){
-			if(!this.layout){
-				return false;
-			}
-
-			if(!this.selectedLayout){
-				return false;
-			}
-
-			return (this.layout.name == this.selectedLayout.name);
-		}
+		
 	},
 
 	watch: {
@@ -49,14 +33,13 @@ export default Vue.extend({
 	},
 
 	ready(){
-
-
 		//store ref
 		let vm = this;
 
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
+		// let width = Math.floor($(".canvas-container").width());
 		let width = Math.floor($(".canvas-container").width());
 		console.log(width);
 
@@ -79,101 +62,133 @@ export default Vue.extend({
 		this.layout.canvas = canvas;
 		this.selectedLayout = this.layout;
 
+		//bind table event, update selectedTable
+		//table-info update based on selectedTable
 		this.notifyTableEvent(this.tableEvent);
 	},
 
 	methods: {
-		
 		relativePositionDeserialize(json, canvas){
+			//define custom toObject on ANY shape inherit from fabric.Object
+			// //(rect, text, group,...)
+			// fabric.Object.prototype.toObject = (function(fToObject){
+			// 	return function(fCalculate){
+			// 		let positions = {};
+			// 		let objType = this.get('type');
+			// 		if(typeof fCalculate == "function" && objType != 'text'){
+			// 			positions = fCalculate.call(this);
+			// 			console.log(positions);
+			// 		}
+			// 		return fabric.util.object.extend(fToObject.call(this), positions);
+			// 	};
+			// })(fabric.Object.prototype.toObject);
+
+			let vm = this;
+
 			let canvasObj = {};
 
-			if(typeof json == "string" || json instanceof String){
-				canvasObj = JSON.parse(json);
+			if(_f.isString(json)){
+				let canvasTemp = new fabric.Canvas();
 
-				let tables = canvasObj.objects;
+				let canvasSize = {
+					getWidth(){
+						return canvas.getWidth();
+					},
+					getHeight(){
+						return canvas.getHeight();
+					}
+				};
+				fabric.Object.prototype.toObject = (function(fToObject){
+					return function(fCalculate){
+						let positions = {};
+						let objType = this.get('type');
+						if(typeof fCalculate == "function" && objType != 'text'){
+						// if(typeof fCalculate == "function"){
+							positions = fCalculate.call(this);
+							console.log(positions);
+						}
 
-				for(let table of tables){
-					table.width = table.width * canvas.getWidth();
-					table.height = table.height * canvas.getHeight();
-					table.left = table.left * canvas.getWidth();
-					table.top = table.top * canvas.getHeight();
+						if(typeof fCalculate == "function" && objType == 'text'){
+							positions = fCalculate.call(this);
+							delete positions["width"];
+							delete positions["height"];
+							console.log("text computed positions", positions);
+						}
+						return fabric.util.object.extend(fToObject.call(this), positions);
+					};
+				})(fabric.Object.prototype.toObject);
+
+				canvasTemp.loadFromJSON(json, function(){
+					canvasObj = canvasTemp.toObject(function(){
+						let position = {
+							width: this.width * canvasSize.getWidth(),
+							left: this.left * canvasSize.getWidth(),
+							height: this.height * canvasSize.getHeight(),
+							top: this.top * canvasSize.getHeight()
+						};
+						_f.round(["width", "left", "height", "top"], position);
+						return position;
+					});
+					console.log(canvasObj);
+				});
+
+
+
+
+				// fabric.util.extend(a, );
+				// console.log(fabric.Text.prototype.includeDefaultValues);
+				// fabric.Text.prototype.includeDefaultValues = false;
+
+
+				for(let table of canvasObj.objects){
+				// 	table.width = table.width * canvas.getWidth();
+				// 	table.height = table.height * canvas.getHeight();
+				// 	table.left = table.left * canvas.getWidth();
+				// 	table.top = table.top * canvas.getHeight();
 					table.borderColor = 'gray';
 					table.cornerColor = 'black';
 					table.cornerSize = 8;
 					table.transparentCorners = true;
 					table.vailochua = "vailoroi";
-
-					let items = table.objects;
-
-					for(let item of items){
-						item.width = item.width * canvas.getWidth();
-						item.height = item.height * canvas.getHeight();
-						item.left = item.left * canvas.getWidth();
-						item.top = item.top * canvas.getHeight();
-						console.log(item);
-					}
+				//
+				// 	let items = table.objects;
+				//
+				// 	for(let item of items){
+				// 		item.width = item.width * canvas.getWidth();
+				// 		item.height = item.height * canvas.getHeight();
+				// 		item.left = item.left * canvas.getWidth();
+				// 		item.top = item.top * canvas.getHeight();
+				// 		console.log(item);
+				// 	}
 				}
+
+				console.log("canvasObj", canvasObj);
 			}
 
+			//json, array case
+			// [
+			// 		{
+			// 			name: "1",
+			// 			max_pax: "4",
+			// 			shape: "0",
+			// 			rotation: "-4.93",
+			// 			top: "0.47",
+			// 			left: "0.08",
+			// 			height: "0.27",
+			// 			width: "0.19"
+			// 		},
+			// ]
 			if(Array.isArray(json)){
 				console.log("json", json);
-				//json image
-				// [
-				// 		{
-				// 			name: "1",
-				// 			max_pax: "4",
-				// 			shape: "0",
-				// 			rotation: "-4.93",
-				// 			top: "0.47",
-				// 			left: "0.08",
-				// 			height: "0.27",
-				// 			width: "0.19"
-				// 		},
-				// ]
+
 				let canvasTemp = new fabric.Canvas();
 
 				for(let tableInfo of json){
 
-					let text = new fabric.Text(`${tableInfo.name}`, {
-						fontSize: 30,
-						originX: "center",
-						originY: "center"
-					});
-
-					let rect = new fabric.Rect({
-						fill: "#E5E5E5",
-						stroke: "#555E65",
-						strokeWidth: 4,
-						width: Math.floor(tableInfo.width * canvas.getWidth()),
-						height: Math.floor(tableInfo.height * canvas.getHeight()),
-						originX: "center",
-						originY: "center"
-					});
-
-					console.log(tableInfo.rotation);
-
-					let table = new fabric.Group([rect, text], {
-						rotation: tableInfo.rotation,
-						borderColor: 'gray',
-						cornerColor: 'black',
-						cornerSize: 8,
-						transparentCorners: true,
-						top: Math.floor(tableInfo.top * canvas.getHeight()),
-						left: Math.floor(tableInfo.left * canvas.getWidth())
-					});
-
-					table.rotate(tableInfo.rotation);
+					let table = this.createTable2(tableInfo);
 
 					canvasTemp.add(table);
 				}
-
-				//to ensure toObject is normal
-				//redefine it
-				// fabric.Object.prototype.toObject = (function(toObject){
-				// 	return function(){
-				// 		return fabric.util.object.extend(toObject.call(this), {});
-				// 	};
-				// })(fabric.Object.prototype.toObject);
 
 				canvasObj = canvasTemp.toObject();
 
@@ -183,10 +198,24 @@ export default Vue.extend({
 
 			return canvasObj;
 		},
+
+		relativePosition(canvasSize){
+			return function(canvasSize){
+				let position = {
+					width: this.width * canvasSize.getWidth(),
+					left: this.width * canvasSize.getWidth(),
+					height: this.height * canvasSize.getHeight(),
+					top: this.top * canvasSize.getHeight()
+				};
+				_f.round(["width", "left", "height", "top"], position);
+				return position;
+			}
+		},
+
 		notifyTableEvent(eventName){
 			let vm = this;
 
-			if(typeof eventName == "string" || eventName instanceof String){
+			if(_f.isString(eventName)){
 				//eventName = "object:moving"
 				this.layout.canvas.on(eventName, function(options){
 					vm.selectedTable = Object.create(options.target);
@@ -194,7 +223,7 @@ export default Vue.extend({
 				});
 			}
 
-			if(Array.isArray(eventName)){
+			if(_f.isArray(eventName)){
 				for(let singleEventName of eventName){
 					vm.notifyTableEvent(singleEventName);
 				}
@@ -208,55 +237,61 @@ export default Vue.extend({
 			// selecteLayout.name === layout.name (layout of LayoutTable)
 			//handle create table in this layout
 			if(this.layout.name == this.selectedLayout.name){
-
-
-
-
 				console.log(`layout-table: ${this.layout.name} add new table`);
 
-				//hold canvas as ref to this.layout.canvase
-				//this is ambiguous
-				let text = new fabric.Text(`${tableName}`, {
-					fontSize: 30,
-					originX: "center",
-					originY: "center"
-				});
+				this.tableSizeDefault.name = tableName;
 
-				let rect = new fabric.Rect({
-					fill: "#E5E5E5",
-					stroke: "#555E65",
-					strokeWidth: 4,
-					width: 100,
-					height: 100,
-					originX: "center",
-					originY: "center"
-				});
-
-				let table = new fabric.Group([rect, text], {
-					borderColor: 'gray',
-					cornerColor: 'black',
-					cornerSize: 8,
-					transparentCorners: true,
-					top: 0,
-					left: 0
-				});
-
-				//define how to serialize for 'Group' as table here
-
-				//hold ref to vm
-				let vm = this;
-
-
-				let tableProps = {};
-				tableProps.borderColor = 'gray';
-				tableProps.cornerColor = 'black';
-				tableProps.cornerSize = 8;
-				tableProps.transparentCorners = true;
-				tableProps.vailochua = "vailoroi";
-				table.toObject(tableProps);
+				let table = this.createTable2(this.tableSizeDefault);
 
 				this.layout.canvas.add(table);
 			}
+		},
+
+		//tableInfo
+		// {
+		// 		name: "1",
+		// 			max_pax: "4",
+		// 		shape: "0",
+		// 		rotation: "0.00",
+		// 		top: "0.77",
+		// 		left: "0.41",
+		// 		height: "0.20",
+		// 		width: "0.20"
+		// },
+		createTable2(tableInfo){
+			// fabric.Text.prototype.setFontSize(30);
+			//text
+			let text = new fabric.Text(`${tableInfo.name}`, {
+				fontSize: 30,
+				originX: "center",
+				originY: "center"
+			});
+
+			//rect
+			let rect = new fabric.Rect({
+				fill: "#E5E5E5",
+				stroke: "#555E65",
+				strokeWidth: 4,
+				width: Math.floor(tableInfo.width * 500),
+				height: Math.floor(tableInfo.height * 500),
+				originX: "center",
+				originY: "center"
+			});
+
+			//table
+			let table = new fabric.Group([rect, text], {
+				rotation: tableInfo.rotation,
+				borderColor: 'gray',
+				cornerColor: 'black',
+				cornerSize: 8,
+				transparentCorners: true,
+				top: Math.floor(tableInfo.top * 500),
+				left: Math.floor(tableInfo.left * 500)
+			});
+
+			table.rotate(tableInfo.rotation);
+
+			return table;
 		}
 	},
 

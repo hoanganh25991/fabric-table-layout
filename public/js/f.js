@@ -38,3 +38,63 @@ _f.round = function(props, obj){
 		}
 	}
 };
+_f.convertToSlug = function(Text){
+	return Text
+		.toLowerCase()
+		.replace(/[^\w ]+/g, '')
+		.replace(/ +/g, '-')
+		;
+};
+
+//define custom toObject on ANY shape inherit from fabric.Object
+//(rect, text, group,...)
+//(rect, text, group,...)
+fabric.Object.prototype.toObject = (function(fToObject){
+	return function(fCalculate){
+		let positions = {};
+		// let objType = this.get('type');
+		// if(typeof fCalculate == "function" && objType != 'text'){
+		if(typeof fCalculate == "function"){
+			positions = fCalculate.call(this);
+			console.log(positions);
+		}
+		return fabric.util.object.extend(fToObject.call(this), positions);
+	};
+})(fabric.Object.prototype.toObject);
+
+
+//for the sake of simple
+//iterate through output object from canvas
+//rather than modify toObject
+// let can
+_f.serialize = function(canvasObj, canvasSize){
+	let obj = canvasObj;
+	//change width, height on itself
+	if(obj.width){
+		// console.log(obj.width);
+		// console.log(canvasSize.width);
+		obj.width = obj.width * canvasSize.width;
+		// console.dir(canvasObj);
+	}
+	
+	if(obj.height){
+		obj.height = obj.height * canvasSize.height;
+	}
+	
+	if(obj.left){
+		obj.left = obj.left * canvasSize.width;
+	}
+
+	if(obj.top){
+		obj.top = obj.top * canvasSize.height;
+	}
+	
+	_f.round(["width", "height", "top", "left"], obj);
+	
+	if(obj.objects){
+		for(let aObj of obj.objects){
+			_f.serialize(aObj, canvasSize);
+		}
+	}
+
+};

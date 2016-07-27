@@ -9,7 +9,6 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
-
 new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
@@ -50,14 +49,6 @@ new Vue({
 		url: "http://128.199.237.219/fabric-table-layout/sql.php",
 	},
 
-	convertToSlug(Text){
-		return Text
-			.toLowerCase()
-			.replace(/[^\w ]+/g, '')
-			.replace(/ +/g, '-')
-			;
-	},
-
 	methods: {
 		askLayoutName: function(){
 			this.askLayoutNameDivShowed = true;
@@ -77,7 +68,6 @@ new Vue({
 			this.askLayoutNameDivShowed = false;
 			//clear
 			inputLayoutName.val("");
-
 		},
 
 		exportLayouts: function(){
@@ -93,29 +83,23 @@ new Vue({
 				layouts.push(copyLayout);
 			}
 
-			console.log(this.layouts);
-			console.log(layouts);
 
-			localStorage.setItem("dump-data", JSON.stringify(layouts));
 
-			this.$broadcast("export-layouts-complete");
-
-			this.url = "http://128.199.237.219/fabric-table-layout/json.php";
+			//define custom toObject on ANY shape inherit from fabric.Object
+			//(rect, text, group,...)
+			// fabric.Object.prototype.toObject = (function(fToObject){
+			// 	return function(fCalculate){
+			// 		let positions = {};
+			// 		let objType = this.get('type');
+			// 		if(typeof fCalculate == "function" && objType != 'text'){
+			// 			positions = fCalculate.call(this);
+			// 			console.log(positions);
+			// 		}
+			// 		return fabric.util.object.extend(fToObject.call(this), positions);
+			// 	};
+			// })(fabric.Object.prototype.toObject);
 
 			for(let layout of layouts){
-				//define custom toObject on ANY shape inherit from fabric.Object
-				//(rect, text, group,...)
-				fabric.Object.prototype.toObject = (function(fToObject){
-					return function(fCalculate){
-						let positions = {};
-						if(typeof fCalculate == "function"){
-							positions = fCalculate.call(this);
-							console.log(positions);
-						}
-						return fabric.util.object.extend(fToObject.call(this), positions);
-					};
-				})(fabric.Object.prototype.toObject);
-
 				//store canvas inform of string
 				let canvasSize = {
 					getWidth(){
@@ -125,23 +109,18 @@ new Vue({
 						return layout.canvas.getHeight();
 					}
 				};
-				let canvasObj = layout.canvas.toObject(this.relativePositionSerialize(canvasSize));
+				let canvasObj = layout.canvas.toObject(this.relativePosition(canvasSize));
 				console.log(canvasObj);
 				layout.canvas = JSON.stringify(canvasObj);
-				// let canvasObj = layout.canvas.toObject({vailocahu: "HOANG ANH ANHANAHNAH"});
-				// let object = layout.canvas.item(0);
-				// let props = [];
-				// props["name"] = "FUCK";
-				// console.log(props);
-				// let a = object.toObject(props);
-				// console.log(a);
-				// fabric.util.object.extend(canvasObj, {name: "HOANG ANH"});
-
-				// console.log(canvasObj);
 			}
+
+			localStorage.setItem("dump-data", JSON.stringify(layouts));
 
 			let data = JSON.stringify(layouts);
 			// console.log(data);
+			this.$broadcast("export-layouts-complete");
+
+			this.url = "http://128.199.237.219/fabric-table-layout/json.php";
 			this.$http.post(this.url, data)
 			    .then(function(response){
 				    let data = response.data;
@@ -154,7 +133,7 @@ new Vue({
 
 		},
 
-		relativePositionSerialize(canvasSize){
+		relativePosition(canvasSize){
 			return function(){
 				return {
 					width: Number((this.width / canvasSize.getWidth()).toFixed(2)),
@@ -176,12 +155,39 @@ new Vue({
 		//set default value
 		this.layouts = [];
 
-		// let layoutsData = localStorage.getItem("dump-data");
-		// // console.log(layoutsData);
-		// if(layoutsData){
-		// 	this.layouts = JSON.parse(layoutsData);
-		// }
+		let layoutsData = localStorage.getItem("dump-data");
+		// console.log(layoutsData);
+		if(layoutsData){
+			this.layouts = JSON.parse(layoutsData);
+		}
 
+		let fakeObj = {objects: [
+			{
+				width: 100,
+				height: 100,
+				top: 100,
+				left: 100,
+				objects: [
+					{
+						width: 65,
+						height: 65,
+						top: 65,
+						left: 65
+					}
+				]
+			},
+			{
+				width: 54,
+				height: 54,
+				top: 54,
+				left: 54
+			}
+		]};
+		
+		let canvasSize = {
+			width: 99.5,
+			height: 95.9
+		};
 		// console.log(vm.url);
 		// this.$http.get(vm.url)
 		//     .then(function(response){

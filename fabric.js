@@ -658,6 +658,7 @@ fabric.Collection = {
      */
     enlivenObjects: function(objects, callback, namespace, reviver) {
       objects = objects || [ ];
+      console.log("enlivenObjects", objects);
 
       function onLoaded() {
         if (++numLoadedObjects === numTotalObjects) {
@@ -691,7 +692,9 @@ fabric.Collection = {
           });
         }
         else {
+          console.log("klass.fromObject(o)", o);
           enlivenedObjects[index] = klass.fromObject(o);
+          console.log("enlivenedObjects[index]", enlivenedObjects[index]);
           reviver && reviver(o, enlivenedObjects[index]);
           onLoaded();
         }
@@ -11066,6 +11069,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
    * @param {Function} [reviver]
    */
   _enlivenObjects: function (objects, callback, reviver) {
+    console.log("_enlivenObjects", objects);
     var _this = this;
 
     if (!objects || objects.length === 0) {
@@ -21464,6 +21468,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
    * @return {fabric.Text} Instance of fabric.Text
    */
   fabric.Text.fromObject = function(object) {
+    console.log("fabric.Text.fromObject", object.text);
     return new fabric.Text(object.text, clone(object));
   };
 

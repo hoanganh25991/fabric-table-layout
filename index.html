@@ -158,14 +158,14 @@
     </template>
 
     <template id="layout-table-template">
-        <div v-show="active" class="canvas-container">
-            <h1>{{ name }}</h1>
-            <canvas id="{{ id }}" v-el:canvas class="layout-table-active"></canvas>
+        <div v-show="layout.name == selectedLayout.name" class="canvas-container">
+            <h1>{{ layout.name }}</h1>
+            <canvas id="{{ layout.canvasId }}" v-el:canvas class="layout-table-active"></canvas>
         </div>
     </template>
 
 </div>
-<script src="public/js/fabric.min.js"></script>
+<script src="fabric.js"></script>
 <script src="public/js/f.js"></script>
 <script src="public/js/main.js"></script>
 </body>
