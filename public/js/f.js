@@ -94,8 +94,8 @@ _f.longPressOnTable = function(canvas, callback){
 			mouseEvent = e;
 		}
 		// console.log(`object:moving`);
-		canceled = Math.pow(mouseEvent.e.x - e.e.x, 2) > 2500 ||
-			Math.pow(mouseEvent.e.y - e.e.y, 2) > 2500;
+		canceled = Math.pow(mouseEvent.e.x - e.e.x, 2) > 1 ||
+			Math.pow(mouseEvent.e.y - e.e.y, 2) > 1;
 		// console.log(`mouse move`);
 	});
 
