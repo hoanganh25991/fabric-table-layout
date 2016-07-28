@@ -110,22 +110,24 @@ new Vue({
 					}
 				};
 				let canvasObj = layout.canvas.toObject(this.relativePosition(canvasSize));
-				console.log(canvasObj);
+				console.log(`export relative canvasObj|layout : ${layout.name}`, canvasObj);
 				layout.canvas = JSON.stringify(canvasObj);
 			}
 
-			localStorage.setItem("dump-data", JSON.stringify(layouts));
-
 			let data = JSON.stringify(layouts);
-			// console.log(data);
-			this.$broadcast("export-layouts-complete");
 
+			//store offline
+			localStorage.setItem("dump-data", data);
+			this.$broadcast(`store in localStorage : complete`);
+			console.log(`layouts data`, data);
+			
+			//push to server
 			this.url = "http://128.199.237.219/fabric-table-layout/json.php";
 			this.$http.post(this.url, data)
 			    .then(function(response){
 				    let data = response.data;
 				    console.log(data);
-				    vm.$broadcast("push-to-server-complete");
+				    vm.$broadcast("push to server : complete");
 			    })
 				.catch(function(res){
 					console.log(res);
@@ -161,33 +163,6 @@ new Vue({
 			this.layouts = JSON.parse(layoutsData);
 		}
 
-		let fakeObj = {objects: [
-			{
-				width: 100,
-				height: 100,
-				top: 100,
-				left: 100,
-				objects: [
-					{
-						width: 65,
-						height: 65,
-						top: 65,
-						left: 65
-					}
-				]
-			},
-			{
-				width: 54,
-				height: 54,
-				top: 54,
-				left: 54
-			}
-		]};
-		
-		// let canvasSize = {
-		// 	width: 99.5,
-		// 	height: 95.9
-		// };
 		// console.log(vm.url);
 		// this.$http.get(vm.url)
 		//     .then(function(response){

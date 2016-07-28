@@ -54,44 +54,7 @@ _f.convertToSlug = function(Text){
 fabric.Object.prototype.toObject = (function(fToObject){
 	return function(fCalculate){
 		let relativePosition = fCalculate.call(this);
-		console.log(`fCalculate ${this.type}, positions:  ${relativePosition}`);
+		console.log(`fCalculate on : ${this.type}\nrelativePosition:  `, relativePosition);
 		return fabric.util.object.extend(fToObject.call(this), relativePosition);
 	};
 })(fabric.Object.prototype.toObject);
-
-
-//for the sake of simple
-//iterate through output object from canvas
-//rather than modify toObject
-// let can
-_f.serialize = function(canvasObj, canvasSize){
-	let obj = canvasObj;
-	//change width, height on itself
-	if(obj.width){
-		// console.log(obj.width);
-		// console.log(canvasSize.width);
-		obj.width = obj.width * canvasSize.width;
-		// console.dir(canvasObj);
-	}
-	
-	if(obj.height){
-		obj.height = obj.height * canvasSize.height;
-	}
-	
-	if(obj.left){
-		obj.left = obj.left * canvasSize.width;
-	}
-
-	if(obj.top){
-		obj.top = obj.top * canvasSize.height;
-	}
-	
-	_f.round(["width", "height", "top", "left"], obj);
-	
-	if(obj.objects){
-		for(let aObj of obj.objects){
-			_f.serialize(aObj, canvasSize);
-		}
-	}
-
-};
