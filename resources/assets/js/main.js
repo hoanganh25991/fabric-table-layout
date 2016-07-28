@@ -184,10 +184,10 @@ new Vue({
 			}
 		]};
 		
-		let canvasSize = {
-			width: 99.5,
-			height: 95.9
-		};
+		// let canvasSize = {
+		// 	width: 99.5,
+		// 	height: 95.9
+		// };
 		// console.log(vm.url);
 		// this.$http.get(vm.url)
 		//     .then(function(response){

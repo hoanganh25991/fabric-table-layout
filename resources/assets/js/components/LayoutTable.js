@@ -8,6 +8,10 @@ export default Vue.extend({
 
 	data(){
 		return {
+			canvasSize: {
+				width: 0,
+				height: 0
+			},
 			tableSizeDefault: {
 				max_pax: "4",
 				shape: "0",
@@ -20,9 +24,7 @@ export default Vue.extend({
 		}
 	},
 
-	computed: {
-		
-	},
+	computed: {},
 
 	watch: {
 		"newTableName": function(val){
@@ -41,19 +43,27 @@ export default Vue.extend({
 		//set width height of canvas
 		// let width = Math.floor($(".canvas-container").width());
 		let width = Math.floor($(".canvas-container").width());
-		console.log(width);
+		let height = Math.floor($(".canvas-container").height());
+		console.log(width, height);
 
-		//default value when width is 0
-		if(width == 0){
-			width = 500;
-		}
+		width = width == 0 ? 500 : width;
+		height = height == 0 ? 500 : height;
 
 		canvas.setWidth(width);
-		canvas.setHeight(width);
+		canvas.setHeight(height);
 
+		this.canvasSize = {
+			width: canvas.getWidth(),
+			height: canvas.getHeight()
+		};
+
+		//load table in canvas
+		//if exist
 		if(this.layout.canvas){
-			let canvasObj = vm.relativePositionDeserialize(this.layout.canvas, canvas);
+			let canvasObj = vm.getCanvasObj(this.layout.canvas);
+
 			canvas.loadFromJSON(canvasObj, function(){
+				//re-render when load finished
 				canvas.renderAll();
 			});
 		}
@@ -68,101 +78,33 @@ export default Vue.extend({
 	},
 
 	methods: {
-		relativePositionDeserialize(json, canvas){
-			//define custom toObject on ANY shape inherit from fabric.Object
-			// //(rect, text, group,...)
-			// fabric.Object.prototype.toObject = (function(fToObject){
-			// 	return function(fCalculate){
-			// 		let positions = {};
-			// 		let objType = this.get('type');
-			// 		if(typeof fCalculate == "function" && objType != 'text'){
-			// 			positions = fCalculate.call(this);
-			// 			console.log(positions);
-			// 		}
-			// 		return fabric.util.object.extend(fToObject.call(this), positions);
-			// 	};
-			// })(fabric.Object.prototype.toObject);
-
+		getCanvasObj(json){
 			let vm = this;
 
 			let canvasObj = {};
 
 			if(_f.isString(json)){
+				//load json by a canvas
+				//canvasTemp
 				let canvasTemp = new fabric.Canvas();
 
-				let canvasSize = {
-					getWidth(){
-						return canvas.getWidth();
-					},
-					getHeight(){
-						return canvas.getHeight();
-					}
-				};
-				fabric.Object.prototype.toObject = (function(fToObject){
-					return function(fCalculate){
-						let positions = {};
-						let objType = this.get('type');
-						if(typeof fCalculate == "function" && objType != 'text'){
-						// if(typeof fCalculate == "function"){
-							positions = fCalculate.call(this);
-							console.log(positions);
-						}
-
-						if(typeof fCalculate == "function" && objType == 'text'){
-							positions = fCalculate.call(this);
-							delete positions["width"];
-							delete positions["height"];
-							console.log("text computed positions", positions);
-						}
-						return fabric.util.object.extend(fToObject.call(this), positions);
-					};
-				})(fabric.Object.prototype.toObject);
-
+				//relativePosition, reverse width, height in percent 0.02, 0.04
+				//into real pixel 200px, 400px
 				canvasTemp.loadFromJSON(json, function(){
-					canvasObj = canvasTemp.toObject(function(){
-						let position = {
-							width: this.width * canvasSize.getWidth(),
-							left: this.left * canvasSize.getWidth(),
-							height: this.height * canvasSize.getHeight(),
-							top: this.top * canvasSize.getHeight()
-						};
-						_f.round(["width", "left", "height", "top"], position);
-						return position;
-					});
-					console.log(canvasObj);
+					//store back into canvasObj
+					canvasObj = canvasTemp.toObject(vm.relativePosition());
 				});
 
-
-
-
-				// fabric.util.extend(a, );
-				// console.log(fabric.Text.prototype.includeDefaultValues);
-				// fabric.Text.prototype.includeDefaultValues = false;
-
-
+				//loop through canvasObj
+				//give table back style format
 				for(let table of canvasObj.objects){
-				// 	table.width = table.width * canvas.getWidth();
-				// 	table.height = table.height * canvas.getHeight();
-				// 	table.left = table.left * canvas.getWidth();
-				// 	table.top = table.top * canvas.getHeight();
 					table.borderColor = 'gray';
 					table.cornerColor = 'black';
 					table.cornerSize = 8;
 					table.transparentCorners = true;
 					table.vailochua = "vailoroi";
-				//
-				// 	let items = table.objects;
-				//
-				// 	for(let item of items){
-				// 		item.width = item.width * canvas.getWidth();
-				// 		item.height = item.height * canvas.getHeight();
-				// 		item.left = item.left * canvas.getWidth();
-				// 		item.top = item.top * canvas.getHeight();
-				// 		console.log(item);
-				// 	}
 				}
-
-				console.log("canvasObj", canvasObj);
+				console.log("canvasObj from json", canvasObj);
 			}
 
 			//json, array case
@@ -179,35 +121,43 @@ export default Vue.extend({
 			// 		},
 			// ]
 			if(Array.isArray(json)){
-				console.log("json", json);
-
 				let canvasTemp = new fabric.Canvas();
 
 				for(let tableInfo of json){
 
-					let table = this.createTable2(tableInfo);
+					let table = this.createFabricTable(tableInfo);
 
 					canvasTemp.add(table);
 				}
 
 				canvasObj = canvasTemp.toObject();
 
+				console.log("canvasObj from array", canvasObj);
 			}
-
-			console.log("canvasObj", JSON.stringify(canvasObj));
 
 			return canvasObj;
 		},
 
-		relativePosition(canvasSize){
-			return function(canvasSize){
+		relativePosition(){
+			let canvasSize = this.canvasSize;
+
+			return function(){
 				let position = {
-					width: this.width * canvasSize.getWidth(),
-					left: this.width * canvasSize.getWidth(),
-					height: this.height * canvasSize.getHeight(),
-					top: this.top * canvasSize.getHeight()
+					width: this.width * canvasSize.width,
+					left: this.left * canvasSize.width,
+
+					height: this.height * canvasSize.height,
+					top: this.top * canvasSize.height
 				};
+
+				//if fabric is `text`, remove width|height
+				if(this.type && this.type == "text"){
+					delete this.width;
+					delete this.height;
+				}
+
 				_f.round(["width", "left", "height", "top"], position);
+
 				return position;
 			}
 		},
@@ -218,7 +168,7 @@ export default Vue.extend({
 			if(_f.isString(eventName)){
 				//eventName = "object:moving"
 				this.layout.canvas.on(eventName, function(options){
-					vm.selectedTable = Object.create(options.target);
+					vm.selectedTable = Object.assign({}, options.target);
 					console.log(`${eventName}`);
 				});
 			}
@@ -241,7 +191,7 @@ export default Vue.extend({
 
 				this.tableSizeDefault.name = tableName;
 
-				let table = this.createTable2(this.tableSizeDefault);
+				let table = this.createFabricTable(this.tableSizeDefault);
 
 				this.layout.canvas.add(table);
 			}
@@ -250,7 +200,7 @@ export default Vue.extend({
 		//tableInfo
 		// {
 		// 		name: "1",
-		// 			max_pax: "4",
+		// 		max_pax: "4",
 		// 		shape: "0",
 		// 		rotation: "0.00",
 		// 		top: "0.77",
@@ -258,8 +208,10 @@ export default Vue.extend({
 		// 		height: "0.20",
 		// 		width: "0.20"
 		// },
-		createTable2(tableInfo){
-			// fabric.Text.prototype.setFontSize(30);
+		createFabricTable(tableInfo){
+			//store ref
+			let vm = this;
+			let canvasSize = vm.canvasSize;
 			//text
 			let text = new fabric.Text(`${tableInfo.name}`, {
 				fontSize: 30,
@@ -268,26 +220,31 @@ export default Vue.extend({
 			});
 
 			//rect
-			let rect = new fabric.Rect({
+			let rectOptions = {
 				fill: "#E5E5E5",
 				stroke: "#555E65",
 				strokeWidth: 4,
-				width: Math.floor(tableInfo.width * 500),
-				height: Math.floor(tableInfo.height * 500),
+				width: tableInfo.width * canvasSize.width,
+				height: tableInfo.height * canvasSize.height,
 				originX: "center",
 				originY: "center"
-			});
+			};
+			_f.round(["width", "height"], rectOptions);
 
-			//table
-			let table = new fabric.Group([rect, text], {
-				rotation: tableInfo.rotation,
+			let rect = new fabric.Rect(rectOptions);
+
+			let tableOptions = {
 				borderColor: 'gray',
 				cornerColor: 'black',
 				cornerSize: 8,
 				transparentCorners: true,
-				top: Math.floor(tableInfo.top * 500),
-				left: Math.floor(tableInfo.left * 500)
-			});
+				top: tableInfo.top * canvasSize.height,
+				left: tableInfo.left * canvasSize.width
+			};
+			_f.round(["top", "left"], tableOptions);
+
+			//table
+			let table = new fabric.Group([rect, text], tableOptions);
 
 			table.rotate(tableInfo.rotation);
 
@@ -295,6 +252,5 @@ export default Vue.extend({
 		}
 	},
 
-	events: {
-	}
+	events: {}
 });

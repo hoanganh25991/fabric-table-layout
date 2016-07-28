@@ -29,7 +29,9 @@ _f.isArray = function(val){
 _f.round = function(props, obj){
 	if(_f.isString(props)){
 		let prop = props;
-		obj[prop] = Math.floor(obj[prop]);
+		if(obj[prop]){
+			obj[prop] = Math.floor(obj[prop]);
+		}
 	}
 
 	if(_f.isArray(props)){
@@ -51,14 +53,9 @@ _f.convertToSlug = function(Text){
 //(rect, text, group,...)
 fabric.Object.prototype.toObject = (function(fToObject){
 	return function(fCalculate){
-		let positions = {};
-		// let objType = this.get('type');
-		// if(typeof fCalculate == "function" && objType != 'text'){
-		if(typeof fCalculate == "function"){
-			positions = fCalculate.call(this);
-			console.log(positions);
-		}
-		return fabric.util.object.extend(fToObject.call(this), positions);
+		let relativePosition = fCalculate.call(this);
+		console.log(`fCalculate ${this.type}, positions:  ${relativePosition}`);
+		return fabric.util.object.extend(fToObject.call(this), relativePosition);
 	};
 })(fabric.Object.prototype.toObject);
 
