@@ -8,10 +8,6 @@ export default Vue.extend({
 
 	data(){
 		return {
-			canvasSize: {
-				width: 0,
-				height: 0
-			},
 			tableSizeDefault: {
 				max_pax: "4",
 				shape: "0",
@@ -20,18 +16,31 @@ export default Vue.extend({
 				left: "0.00",
 				height: "0.20",
 				width: "0.20"
+			},
+			canvasSize: {
+				width: 0,
+				height: 0,
 			}
 		}
 	},
 
-	computed: {},
+	// computed: {
+	// 	canvasSize: function(){
+	// 		return this.layout.canvasSize;
+	// 	}
+	// },
 
 	watch: {
-		"newTableName": function(val){
+		"newTableName": function(val, oldVal){
 			if(val){
 				this.createTable(val);
 			}
 		},
+		// "canvasSize": function(val, oldVal){
+		// 	console.log(`canvasSize changed`, val, oldVal);
+		// 	this.layout.canvas.setWidth(val.width);
+		// 	this.layout.canvas.setHeight(val.height);
+		// }
 	},
 
 	ready(){
@@ -42,20 +51,23 @@ export default Vue.extend({
 
 		//set width height of canvas
 		// let width = Math.floor($(".canvas-container").width());
-		let width = Math.floor($(".canvas-container").width());
-		let height = Math.floor($(".canvas-container").height());
-		console.log(width, height);
-
+		let canvasContainer = $('.canvas-container');
+		let width = Math.floor(canvasContainer.width());
+		let height = Math.floor(canvasContainer.height());
+		
 		width = width == 0 ? 500 : width;
 		height = height == 0 ? 500 : height;
 
-		canvas.setWidth(width);
-		canvas.setHeight(height);
+		console.log(`canvas container width|height : ${width}|${height}`);
 
-		this.canvasSize = {
-			width: canvas.getWidth(),
-			height: canvas.getHeight()
+		this.layout.canvasSize = {
+			width: width,
+			height: height
 		};
+
+		canvas.setWidth(this.layout.canvasSize.width);
+		canvas.setHeight(this.layout.canvasSize.height);
+
 
 		//load table in canvas
 		//if exist
@@ -139,7 +151,7 @@ export default Vue.extend({
 		},
 
 		relativePosition(){
-			let canvasSize = this.canvasSize;
+			let canvasSize = this.layout.canvasSize;
 
 			return function(){
 				let position = {
@@ -211,7 +223,7 @@ export default Vue.extend({
 		createFabricTable(tableInfo){
 			//store ref
 			let vm = this;
-			let canvasSize = vm.canvasSize;
+			let canvasSize = vm.layout.canvasSize;
 			//text
 			let text = new fabric.Text(`${tableInfo.name}`, {
 				fontSize: 30,

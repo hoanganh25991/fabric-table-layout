@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <style>
         .canvas-container {
-            width: 400px;
+            width: 500px;
             height: 500px;
         }
     </style>
@@ -47,15 +47,17 @@
                 <input type="text" name="newLayoutName" autofocus @keyup.enter="getLayoutName">
                 <button @click="getLayoutName">ok</button>
             </div>
-            <layout-table
-                    :selected-layout.sync="selectedLayout"
-                    :selected-table.sync="selectedTable"
-                    :layout="layout" v-for="layout in layouts"
-                    :layouts="layouts"
-                    :table-event="tableEvent"
-                    :new-table-name.sync="newTableName"
-            >
-            </layout-table>
+            <div class="canvas-container">
+                <layout-table
+                        :selected-layout.sync="selectedLayout"
+                        :selected-table.sync="selectedTable"
+                        :layout="layout" v-for="layout in layouts"
+                        :layouts="layouts"
+                        :table-event="tableEvent"
+                        :new-table-name.sync="newTableName"
+                >
+                </layout-table>
+            </div>
         </div>
     </div>
 
@@ -159,9 +161,9 @@
     </template>
 
     <template id="layout-table-template">
-        <div v-show="layout.name == selectedLayout.name" class="canvas-container">
+        <div v-show="layout.name == selectedLayout.name">
             <h1>{{ layout.name }}</h1>
-            <canvas id="{{ layout.canvasId }}" v-el:canvas class="layout-table-active"></canvas>
+            <canvas id="{{ layout.canvasId }}" v-el:canvas class="canvas-shadow"></canvas>
         </div>
     </template>
 

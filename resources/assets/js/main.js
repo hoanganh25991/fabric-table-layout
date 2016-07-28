@@ -9,7 +9,8 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
-new Vue({
+// var vm = new Vue({
+let vm = new Vue({
 	el: "#tinker",
 	components: {LayoutInfo, LayoutTable, TableInfo},
 
@@ -57,8 +58,19 @@ new Vue({
 		getLayoutName: function(){
 			let inputLayoutName = $("input[name='newLayoutName']");
 			let newLayoutName = inputLayoutName.val();
-			console.log(newLayoutName);
-			let layout = {name: newLayoutName, canvasId: Date.now()};
+			console.log(newLayoutName)
+
+			//compute canvasSize for layout-table
+			// let canvasContainer = $('.canvas-container');
+			// let width = Math.floor(canvasContainer.width());
+			// let height = Math.floor(canvasContainer.height());
+			//
+			// width = width == 0 ? 500 : width;
+			// height = height == 0 ? 500 : height;
+			//
+			// console.log(`canvas container width|height : ${width}|${height}`);
+			
+			let layout = {name: newLayoutName, canvasId: Date.now(), canvasSize: {}};
 
 			this.layouts.push(layout);
 
@@ -109,7 +121,7 @@ new Vue({
 						return layout.canvas.getHeight();
 					}
 				};
-				let canvasObj = layout.canvas.toObject(this.relativePosition(canvasSize));
+				let canvasObj = layout.canvas.toObject([], this.relativePosition(canvasSize));
 				console.log(`export relative canvasObj|layout : ${layout.name}`, canvasObj);
 				layout.canvas = JSON.stringify(canvasObj);
 			}
@@ -157,18 +169,22 @@ new Vue({
 		//set default value
 		this.layouts = [];
 
-		let layoutsData = localStorage.getItem("dump-data");
-		// console.log(layoutsData);
-		if(layoutsData){
-			this.layouts = JSON.parse(layoutsData);
-		}
+		// let layoutsData = localStorage.getItem("dump-data");
+		// // console.log(layoutsData);
+		// if(layoutsData){
+		// 	this.layouts = JSON.parse(layoutsData);
+		// }
 
-		// console.log(vm.url);
-		// this.$http.get(vm.url)
-		//     .then(function(response){
-		// 	    let data = response.data;
-		// 	    console.log("data", data);
-		// 	    vm.layouts = data;
-		//     });
+		console.log(vm.url);
+		this.$http.get(vm.url)
+		    .then(function(response){
+			    let data = response.data;
+			    console.log("data", data);
+			    vm.layouts = data;
+		    });
 	}
 });
+//export to global
+window.vm = vm;
+// we can use var instead of let to push global
+// let is better for scope

@@ -53,8 +53,16 @@ _f.convertToSlug = function(Text){
 //(rect, text, group,...)
 fabric.Object.prototype.toObject = (function(fToObject){
 	return function(fCalculate){
-		let relativePosition = fCalculate.call(this);
-		console.log(`fCalculate on : ${this.type}\nrelativePosition:  `, relativePosition);
-		return fabric.util.object.extend(fToObject.call(this), relativePosition);
+		let relativePosition = {};
+		if(typeof fCalculate == "function"){
+			relativePosition = fCalculate.call(this);
+			console.log(`fCalculate on : ${this.type}\nrelativePosition:  `, relativePosition);
+		}
+		return fabric.util.object.extend(fToObject.call(this, [
+			"borderColor",
+			"cornerColor",
+			"cornerSize",
+			"transparentCorners"
+		]), relativePosition);
 	};
 })(fabric.Object.prototype.toObject);
