@@ -54,9 +54,11 @@ export default Vue.extend({
 
 	events: {
 		"export-layouts-complete": function(){
+			let vm = this;
 			console.log("export-layouts-complete, remove info");
-			this.exportLayoutsDivShowed = false;
-
+			setTimeout(function(){
+				vm.exportLayoutsDivShowed = false;
+			}, 1500);
 		},
 	},
 

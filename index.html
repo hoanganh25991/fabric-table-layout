@@ -171,8 +171,14 @@
             <button @click="setNewTableName">ok</button>
         </div>
         <button @click="dispatchExportLayouts">share</button>
-        <div v-show="exportLayoutsDivShowed">
-            <p>shared</p>
+        <div v-show="exportLayoutsDivShowed"
+             transition="bounce" class="animated"
+             style="background-color: #99C93D;
+                    color: white;
+                    padding: 5px;
+                    font-weight: bold"
+        >
+            <p>saved in localStorage</p>
         </div>
     </template>
 

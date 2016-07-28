@@ -9,6 +9,11 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
+Vue.transition('bounce', {
+	enterClass: 'bounceInLeft',
+	leaveClass: 'fadeOutRight'
+});
+
 // var vm = new Vue({
 let vm = new Vue({
 	el: "#tinker",
