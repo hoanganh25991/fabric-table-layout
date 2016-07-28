@@ -33,7 +33,7 @@ let vm = new Vue({
 		tableEvent: {
 			default: function(){
 				return [
-					"object:selected",
+					// "object:selected",
 					"object:scaling",
 					"object:moving",
 					"object:rotating"
@@ -121,7 +121,7 @@ let vm = new Vue({
 						return layout.canvas.getHeight();
 					}
 				};
-				let canvasObj = layout.canvas.toObject([], this.relativePosition(canvasSize));
+				let canvasObj = layout.canvas.toObject(this.relativePosition(canvasSize));
 				console.log(`export relative canvasObj|layout : ${layout.name}`, canvasObj);
 				layout.canvas = JSON.stringify(canvasObj);
 			}
@@ -169,22 +169,23 @@ let vm = new Vue({
 		//set default value
 		this.layouts = [];
 
-		// let layoutsData = localStorage.getItem("dump-data");
-		// // console.log(layoutsData);
-		// if(layoutsData){
-		// 	this.layouts = JSON.parse(layoutsData);
-		// }
+		let layoutsData = localStorage.getItem("dump-data");
+		// console.log(layoutsData);
+		if(layoutsData){
+			this.layouts = JSON.parse(layoutsData);
+		}
 
-		console.log(vm.url);
-		this.$http.get(vm.url)
-		    .then(function(response){
-			    let data = response.data;
-			    console.log("data", data);
-			    vm.layouts = data;
-		    });
+		// console.log(vm.url);
+		// this.$http.get(vm.url)
+		//     .then(function(response){
+		// 	    let data = response.data;
+		// 	    console.log("data", data);
+		// 	    vm.layouts = data;
+		//     });
 	}
 });
 //export to global
 window.vm = vm;
 // we can use var instead of let to push global
 // let is better for scope
+window.cc = $('.canvas-container');

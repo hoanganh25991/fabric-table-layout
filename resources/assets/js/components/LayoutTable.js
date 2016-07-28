@@ -87,6 +87,13 @@ export default Vue.extend({
 		//bind table event, update selectedTable
 		//table-info update based on selectedTable
 		this.notifyTableEvent(this.tableEvent);
+		_f.longPressOnTable(this.layout.canvas, function(e){
+			console.log(`long press on table`);
+			if(e){
+				console.log(e.toObject());
+			}
+			console.log(e);
+		});
 	},
 
 	methods: {
@@ -107,15 +114,6 @@ export default Vue.extend({
 					canvasObj = canvasTemp.toObject(vm.relativePosition());
 				});
 
-				//loop through canvasObj
-				//give table back style format
-				for(let table of canvasObj.objects){
-					table.borderColor = 'gray';
-					table.cornerColor = 'black';
-					table.cornerSize = 8;
-					table.transparentCorners = true;
-					table.vailochua = "vailoroi";
-				}
 				console.log("canvasObj from json", canvasObj);
 			}
 
@@ -245,6 +243,8 @@ export default Vue.extend({
 
 			let rect = new fabric.Rect(rectOptions);
 
+			// rect.on('selected', function(){console.log(`table listen to event, selected`);});
+
 			let tableOptions = {
 				borderColor: 'gray',
 				cornerColor: 'black',
@@ -259,6 +259,9 @@ export default Vue.extend({
 			let table = new fabric.Group([rect, text], tableOptions);
 
 			table.rotate(tableInfo.rotation);
+
+			// _f.longPressOnTable(table, function(){console.log(`long press on table`);});
+			
 
 			return table;
 		}

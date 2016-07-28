@@ -143,7 +143,7 @@
         <button @click="askTableNameDivShowed = !askTableNameDivShowed">+ add table</button>
         <button>return</button>
         <div v-show="askTableNameDivShowed">
-            <input v-model="inputNewTableName" @keyup.enter="setNewTableName">
+            <input v-model="inputNewTableName" @keyup.enter="setNewTableName" autofocus>
             <button @click="setNewTableName">ok</button>
         </div>
         <button @click="dispatchExportLayouts">share</button>
