@@ -38,18 +38,12 @@ export default Vue.extend({
 		console.log(vm.$els.vailo);
 		Hammer(vm.$els.vailo).on('press', function(e){
 			console.log(e);
+			vm.selectedLayout = vm.layout;
 			vm.layoutInfoActionDiv = true;
 		})
 	},
 	
 	methods: {
-		setSelectedLayout(){
-			this.selectedLayout = this.layout;
-		},
-		longPressDetect(){
-			console.log(`what do you mean?`);
-			console.log($('layout-info'));
-		},
 		deleteLayout(){
 			let vm = this;
 			let index = this.layouts.indexOf(vm.layout);
@@ -61,7 +55,13 @@ export default Vue.extend({
 					closestLayout = index - 1;
 				}
 				console.log(closestLayout);
-				this.selectedLayout = this.layouts[closestLayout];
+				if(typeof this.layouts[closestLayout] !== 'undefined') {
+					this.selectedLayout = this.layouts[closestLayout];
+					return true;
+				}
+
+				this.selectedLayout = {name: ""};
+				return false;
 			}
 			this.layoutInfoActionDiv = false;
 			console.log(`delete layout`);

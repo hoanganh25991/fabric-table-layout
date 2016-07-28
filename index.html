@@ -185,7 +185,7 @@
     <template id="layout-info-template">
 		<span
                 :class='{"layout-info-active": active}'
-                @click="setSelectedLayout"
+                @click="selectedLayout = layout"
                 v-el:vailo
         >{{ layout.name }}
 		</span>
