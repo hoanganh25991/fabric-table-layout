@@ -54,7 +54,7 @@ export default Vue.extend({
 
 	events: {
 		"export-layouts-complete": function(){
-			console.log("export-layouts-complete");
+			console.log("export-layouts-complete, remove info");
 			this.exportLayoutsDivShowed = false;
 
 		},

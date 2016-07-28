@@ -33,7 +33,7 @@ let vm = new Vue({
 		tableEvent: {
 			default: function(){
 				return [
-					// "object:selected",
+					"object:selected",
 					"object:scaling",
 					"object:moving",
 					"object:rotating"
@@ -132,6 +132,8 @@ let vm = new Vue({
 			localStorage.setItem("dump-data", data);
 			this.$broadcast(`store in localStorage : complete`);
 			console.log(`layouts data`, data);
+
+			this.$broadcast(`export-layouts-complete`);
 			
 			//push to server
 			this.url = "http://128.199.237.219/fabric-table-layout/json.php";

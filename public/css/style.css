@@ -3,6 +3,6 @@
     background-color: #ddffff!important;
 }
 
-.canvas-shadow {
+.canvas-container {
     box-shadow: rgba(0,0,0,0.5) 0 0 5px;
 }

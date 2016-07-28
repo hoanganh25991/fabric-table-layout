@@ -6,9 +6,33 @@
     <link rel="stylesheet" type="text/css" href="public/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <style>
+        .layout-container {
+            width: 500px;
+            /*border: 1px solid black;*/
+        }
         .canvas-container {
+            position: relative;
             width: 500px;
             height: 500px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ti-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(58, 19, 56, 0.8);
+        }
+
+        .ti-modal-child{
+            top: 200px;
+            background-color: rgba(253, 253, 254, 0.8);
         }
     </style>
 </head>
@@ -47,7 +71,7 @@
                 <input type="text" name="newLayoutName" autofocus @keyup.enter="getLayoutName">
                 <button @click="getLayoutName">ok</button>
             </div>
-            <div class="canvas-container">
+            <div class="layout-container">
                 <layout-table
                         :selected-layout.sync="selectedLayout"
                         :selected-table.sync="selectedTable"
@@ -148,7 +172,7 @@
         </div>
         <button @click="dispatchExportLayouts">share</button>
         <div v-show="exportLayoutsDivShowed">
-            <p>hoang anh ne</p>
+            <p>shared</p>
         </div>
     </template>
 
@@ -156,14 +180,71 @@
 		<span
                 :class='{"layout-info-active": active}'
                 @click="setSelectedLayout"
-        >{{ name }}
+                v-el:vailo
+        >{{ layout.name }}
 		</span>
+        <div v-show="layoutInfoActionDiv" class="ti-modal" style="width: 700px; height: 600px; z-index: 100">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 ti-modal-child">
+                    <div class="row">
+                        <button @click="inputRenameLayoutDiv = !inputRenameLayoutDiv"
+                                v-show="!inputRenameLayoutDiv"
+                        >
+                            rename
+                        </button>
+                    </div>
+
+                    <div class="row" v-show="inputRenameLayoutDiv">
+                        <input v-model="layoutNewName" autofocus @keyup.enter="renameLayout">
+                        <button @click="renameLayout">rename</button>
+                    </div>
+
+                    <div class="row">
+                        <button @click="deleteLayout">delete layout</button>
+                    </div>
+
+                    <div class="row">
+                        <button @click="layoutInfoActionDiv = false">cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 
     <template id="layout-table-template">
         <div v-show="layout.name == selectedLayout.name">
             <h1>{{ layout.name }}</h1>
-            <canvas id="{{ layout.canvasId }}" v-el:canvas class="canvas-shadow"></canvas>
+            <div class="canvas-container">
+                <canvas id="{{ layout.canvasId }}" v-el:canvas></canvas>
+            </div>
+            <div v-show="tableActionDiv" class="ti-modal">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 ti-modal-child">
+                        <div class="row">
+                            <div class="row">
+                                <button @click="inputRenameTableDiv = !inputRenameTableDiv"
+                                        v-show="!inputRenameTableDiv"
+                                >
+                                    rename
+                                </button>
+                           </div>
+
+                            <div class="row" v-show="inputRenameTableDiv">
+                                <input v-model="tableNewName" autofocus @keyup.enter="renameTable">
+                                <button @click="renameTable">rename</button>
+                            </div>
+
+                            <div class="row">
+                                <button @click="deleteTable">delete table</button>
+                            </div>
+
+                            <div class="row">
+                                <button @click="tableActionDiv = false">cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
 

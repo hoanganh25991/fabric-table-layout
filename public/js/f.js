@@ -77,18 +77,25 @@ _f.longPressOnTable = function(canvas, callback){
 	let start;
 
 	//check object:moving <-> cancle long press
-	let canceled = false;
+	let canceled;
+	let mouseEvent;
 
 	// canvas.on('selected', function(){console.log(`table listen to event, selected`);});
 
 	canvas.on('mouse:down', function(e){
+		mouseEvent = e;
 		start = Date.now();
+		canceled = false;
 		console.log(`canvas listen to event, mouse:down`);
 	});
 
-	canvas.on('object:moving', function(e){
+	canvas.on('mouse:move', function(e){
+		if(!mouseEvent){
+			mouseEvent = e;
+		}
 		// console.log(`object:moving`);
-		canceled = true;
+		canceled = Math.pow(mouseEvent.e.x - e.e.x, 2) > 2500 ||
+			Math.pow(mouseEvent.e.y - e.e.y, 2) > 2500;
 		// console.log(`mouse move`);
 	});
 
@@ -103,11 +110,17 @@ _f.longPressOnTable = function(canvas, callback){
 
 
 		if(!canceled && longEnough && isPressOnTable){
-			// canvas.fire("object:longpress", e.target);
-			console.log(`long press!`);
+			console.log(`long press on table!`);
+			canvas.fire("object:longpress", e);
 			return true;
 		}
-		console.log(`short press!`);
+
+		if(!canceled && longEnough){
+			console.log(`long press on NOTHING!`);
+			return false;
+		}
+
+		console.log(`not a long press!`);
 		// if(Date.now()>= (start + longpress)){
 		// 	callback(e.target);
 		// }else{

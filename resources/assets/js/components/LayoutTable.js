@@ -17,10 +17,14 @@ export default Vue.extend({
 				height: "0.20",
 				width: "0.20"
 			},
-			canvasSize: {
-				width: 0,
-				height: 0,
-			}
+			// canvasSize: {
+			// 	width: 0,
+			// 	height: 0,
+			// },
+			tableActionDiv: false,
+			inputRenameTableDiv: false,
+			tableNewName: "",
+			currentTable: {}
 		}
 	},
 
@@ -47,13 +51,15 @@ export default Vue.extend({
 		//store ref
 		let vm = this;
 
+		let canvasId = this.$els.canvas.id;
+		
 		let canvas = new fabric.Canvas(this.$els.canvas.id);
 
 		//set width height of canvas
 		// let width = Math.floor($(".canvas-container").width());
-		let canvasContainer = $('.canvas-container');
-		let width = Math.floor(canvasContainer.width());
-		let height = Math.floor(canvasContainer.height());
+		let canvasDiv = $(`.canvas-container`);
+		let width = Math.floor(canvasDiv.width());
+		let height = Math.floor(canvasDiv.height());
 		
 		width = width == 0 ? 500 : width;
 		height = height == 0 ? 500 : height;
@@ -87,12 +93,15 @@ export default Vue.extend({
 		//bind table event, update selectedTable
 		//table-info update based on selectedTable
 		this.notifyTableEvent(this.tableEvent);
-		_f.longPressOnTable(this.layout.canvas, function(e){
-			console.log(`long press on table`);
-			if(e){
-				console.log(e.toObject());
-			}
-			console.log(e);
+		
+		_f.longPressOnTable(this.layout.canvas, null);
+
+		canvas.on('object:longpress', function(e){
+			let table = e.target;
+			let tableName = table.item(1).text;
+			// let tableName = table.getName();
+			console.log(`long press on table-${tableName}`);
+			vm.tableActionDiv = true;
 		});
 	},
 
@@ -179,6 +188,7 @@ export default Vue.extend({
 				//eventName = "object:moving"
 				this.layout.canvas.on(eventName, function(options){
 					vm.selectedTable = Object.assign({}, options.target);
+					vm.currentTable = options.target;
 					console.log(`${eventName}`);
 				});
 			}
@@ -264,7 +274,22 @@ export default Vue.extend({
 			
 
 			return table;
-		}
+		},
+		deleteTable(){
+			let vm = this;
+			this.layout.canvas.remove(vm.currentTable);
+			this.tableActionDiv = false;
+			console.log(`delete table`);
+		},
+		renameTable(){
+			this.currentTable.item(1).text = this.tableNewName;
+			this.layout.canvas.renderAll();
+			//reverse back
+			this.inputRenameTableDiv= false;
+			this.tableActionDiv = false;
+			this.tableNewName = "";
+			console.log(`rename table`);
+		},
 	},
 
 	events: {}
