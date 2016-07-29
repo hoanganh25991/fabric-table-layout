@@ -16,7 +16,6 @@ export default Vue.extend({
 			left: "-",
 			rotation: "-",
 			exportLayoutsDivShowed: false,
-
 		}
 	},
 
@@ -25,9 +24,9 @@ export default Vue.extend({
 	},
 
 	watch: {
-		'selectedTable': function(val){
-			this.updateTableInfo(val);
-		}
+		// 'selectedTable': function(val){
+		// 	this.updateTableInfo(val);
+		// }
 	},
 
 	methods: {
@@ -60,6 +59,10 @@ export default Vue.extend({
 				vm.exportLayoutsDivShowed = false;
 			}, 1500);
 		},
+		'update-table-info': function(){
+			console.log('table-info update table info');
+			this.updateTableInfo(this.selectedTable);
+		}
 	},
 
 	ready(){

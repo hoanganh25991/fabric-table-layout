@@ -24,7 +24,6 @@ export default Vue.extend({
 			tableActionDiv: false,
 			inputRenameTableDiv: false,
 			tableNewName: "",
-			currentTable: {}
 		}
 	},
 
@@ -187,9 +186,9 @@ export default Vue.extend({
 			if(_f.isString(eventName)){
 				//eventName = "object:moving"
 				this.layout.canvas.on(eventName, function(options){
-					vm.selectedTable = Object.assign({}, options.target);
-					vm.currentTable = options.target;
+					vm.selectedTable = options.target;
 					console.log(`${eventName}`);
+					vm.$dispatch('broadcast-update-table-info');
 				});
 			}
 
@@ -277,12 +276,12 @@ export default Vue.extend({
 		},
 		deleteTable(){
 			let vm = this;
-			this.layout.canvas.remove(vm.currentTable);
+			this.layout.canvas.remove(vm.selectedTable);
 			this.tableActionDiv = false;
 			console.log(`delete table`);
 		},
 		renameTable(){
-			this.currentTable.item(1).text = this.tableNewName;
+			this.selectedTable.item(1).text = this.tableNewName;
 			this.layout.canvas.renderAll();
 			//reverse back
 			this.inputRenameTableDiv= false;

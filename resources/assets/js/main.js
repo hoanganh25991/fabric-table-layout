@@ -164,10 +164,14 @@ let vm = new Vue({
 				}
 			};
 		},
+		broadcastUpdateTableInfo(){
+			this.$broadcast('update-table-info');
+			console.log('fire update-table-info event');
+		}
 	},
 
 	events: {
-
+		
 	},
 
 	ready(){

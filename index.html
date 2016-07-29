@@ -79,6 +79,7 @@
                         :layouts="layouts"
                         :table-event="tableEvent"
                         :new-table-name.sync="newTableName"
+                        @broadcast-update-table-info="broadcastUpdateTableInfo"
                 >
                 </layout-table>
             </div>
