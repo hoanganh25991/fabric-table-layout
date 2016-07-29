@@ -88,28 +88,15 @@
         <p>{{ selectedLayout.name }}</p>
         <div class="row">
             <div class="col-md-4">Rotation</div>
-            <div class="col-md-8"  v-el:tablecontroldiv>
+            <div class="col-md-8">
                 <div class="row"v>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'rotation',
-                            action: 'minus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'rotation',
-                            action: 'minus'
-                         }"
-                    >-</div>
+                         v-ti-gesture
+                         modify-table-info='{"prop":"rotation","action":"minus"}'>-</div>
                     <div class="col-md-4 tex text-center">{{ rotation }}</div>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'rotation',
-                            action: 'plus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'rotation',
-                            action: 'plus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"rotation","action":"plus"}'
                     >+</div>
                 </div>
             </div>
@@ -119,25 +106,13 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'top',
-                            action: 'minus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'top',
-                            action: 'minus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"top","action":"minus"}'
                     >-</div>
                     <div class="col-md-4 text-center">{{ top }}</div>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'top',
-                            action: 'plus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'top',
-                            action: 'plus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"top","action":"plus"}'
                     >+</div>
                 </div>
             </div>
@@ -147,25 +122,13 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'left',
-                            action: 'minus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'left',
-                            action: 'minus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"left","action":"minus"}'
                     >-</div>
                     <div class="col-md-4 text-center">{{ left }}</div>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'left',
-                            action: 'plus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'left',
-                            action: 'plus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"left","action":"plus"}'
                     >+</div>
                 </div>
             </div>
@@ -175,25 +138,13 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-4 btn btn-sm"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'width',
-                            action: 'minus'
-                         }"
-                         @click="modifyTableInfo = {
-                            prop: 'width',
-                            action: 'minus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"width","action":"minus"}'
                     >-</div>
                     <div class="col-md-4 text-center">{{ width }}</div>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'width',
-                            action: 'plus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'width',
-                            action: 'plus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"width","action":"plus"}'
                     >+</div>
                 </div>
             </div>
@@ -203,25 +154,13 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'height',
-                            action: 'minus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'height',
-                            action: 'minus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"height","action":"minus"}'
                     >-</div>
                     <div class="col-md-4 text-center">{{ height }}</div>
                     <div class="col-md-4 btn btn-sm"
-                         @click="modifyTableInfo = {
-                            prop: 'height',
-                            action: 'plus'
-                         }"
-                         @mousedown="modifyTableInfo = {
-                            prop: 'height',
-                            action: 'plus'
-                         }"
+                         v-ti-gesture
+                         modify-table-info='{"prop":"height","action":"plus"}'
                     >+</div>
                 </div>
             </div>

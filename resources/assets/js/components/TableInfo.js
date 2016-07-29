@@ -17,7 +17,7 @@ export default Vue.extend({
 			left: "-",
 			rotation: "-",
 			exportLayoutsDivShowed: false,
-			modifyTableInfo: {} //{action: '', type: ''}
+			modifyTableInfo: {}
 		}
 	},
 
@@ -127,15 +127,5 @@ export default Vue.extend({
 	},
 
 	ready(){
-		let vm = this;
-		console.log(vm);
-		console.log(vm.$els.tablecontroldiv);
-
-		setInterval(function(){});
-
-		Hammer(vm.$els.tablecontroldiv).on('press', function(e){
-			console.log(e);
-		});
-		// console.log(fuck);
 	}
 });

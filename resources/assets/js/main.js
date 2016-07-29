@@ -6,12 +6,53 @@ import TableInfo from "./components/TableInfo";
 import $ from "jquery";
 
 import VueResource from 'vue-resource';
+import Hammer from 'hammerjs';
 
 Vue.use(VueResource);
 
 Vue.transition('bounce', {
 	enterClass: 'bounceInLeft',
 	leaveClass: 'fadeOutRight'
+});
+
+Vue.directive('ti-gesture', {
+	params: [
+		'modify-table-info'
+	],
+	bind(){},
+	update(){
+		console.log(this);
+		console.log(this.el);
+
+		let updateTable = {};
+
+		let vd = this;
+
+		let modifyTableInfo = JSON.parse(vd.params.modifyTableInfo);
+
+		Hammer(this.el).on('press', function(e){
+			updateTable = setInterval(() => {
+				console.log(vd.params);
+				console.log(vd.vm.modifyTableInfo);
+				vd.vm.modifyTableInfo = Object.assign({}, modifyTableInfo);
+			}, 50);
+		});
+
+
+
+		this.el.addEventListener('mouseup', function(e){
+			console.log(e);
+			clearInterval(updateTable);
+		});
+
+		this.el.addEventListener('click', function(e){
+			console.log(e);
+			vd.vm.modifyTableInfo = Object.assign({}, modifyTableInfo);
+		});
+
+		console.log(this.params);
+		console.log(vd.vm.modifyTableInfo);
+	}
 });
 
 // var vm = new Vue({
