@@ -4,7 +4,7 @@ import $ from "jquery";
 export default Vue.extend({
 	template: "#layout-table-template",
 
-	props: ["layouts", "layout", "selectedLayout", "selectedTable", "tableEvent", "newTableName"],
+	props: ["layouts", "layout", "selectedLayout", "tableEvent", "newTableName"],
 
 	data(){
 		return {
@@ -165,7 +165,8 @@ export default Vue.extend({
 					left: this.left * canvasSize.width,
 
 					height: this.height * canvasSize.height,
-					top: this.top * canvasSize.height
+					top: this.top * canvasSize.height,
+					// rotation: this.angle
 				};
 
 				//if fabric is `text`, remove width|height
@@ -185,9 +186,7 @@ export default Vue.extend({
 
 			if(_f.isString(eventName)){
 				//eventName = "object:moving"
-				this.layout.canvas.on(eventName, function(options){
-					vm.selectedTable = options.target;
-					console.log(`${eventName}`);
+				this.layout.canvas.on(eventName, function(){
 					vm.$dispatch('broadcast-update-table-info');
 				});
 			}

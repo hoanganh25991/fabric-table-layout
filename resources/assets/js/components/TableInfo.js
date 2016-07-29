@@ -1,10 +1,11 @@
 import Vue from "vue";
 import $ from "jquery";
+import Hammer from "hammerjs";
 
 export default Vue.extend({
 	template: "#table-info-template",
 
-	props: ["layouts", "selectedLayout", "selectedTable", "tableEvent", "newTableName"],
+	props: ["layouts", "selectedLayout", "tableEvent", "newTableName"],
 
 	data(){
 		return {
@@ -16,6 +17,7 @@ export default Vue.extend({
 			left: "-",
 			rotation: "-",
 			exportLayoutsDivShowed: false,
+			modifyTableInfo: {} //{action: '', type: ''}
 		}
 	},
 
@@ -24,9 +26,67 @@ export default Vue.extend({
 	},
 
 	watch: {
-		// 'selectedTable': function(val){
-		// 	this.updateTableInfo(val);
-		// }
+		modifyTableInfo(val, oldVal){
+			let vm = this;
+			//only update when use press
+			//default on start run no thing
+			if(_f.isEmptyObj(val)){
+				return false;
+			}
+
+			//if no table selected
+			//return
+			let table = this.selectedLayout.canvas.getActiveObject();
+			if(_f.isEmptyObj(table)){
+				return false;
+			}
+
+			let tableProp = val.prop;
+
+			let mapActionVal = {
+				'plus': 1,
+				'minus': -1
+			};
+
+			this[tableProp] = this[tableProp] + Number(mapActionVal[val.action]);
+
+			let mapTableProp = {
+				width: {
+					scaleX: this[tableProp] / table.width
+				},
+				height: {
+					scaleY: this[tableProp] / table.height
+				},
+				top: {
+					top: this[tableProp]
+				},
+				left: {
+					left: this[tableProp]
+				},
+				rotation: {
+					angle: this[tableProp]
+				}
+			};
+			//manually rotate table
+			//rotate WHOLE GROUP together
+			//at the center a table
+			//angle use TOP-LEFT corner to rotate
+			if(tableProp == 'rotation'){
+				table.rotate(vm[tableProp]);
+			}
+
+			//scale or rotate table as what happen
+			// let newVal = {};
+			// newVal[tableProp] = this[tableProp];
+			let newVal = mapTableProp[tableProp];
+			console.log(newVal);
+			//update value
+			fabric.util.object.extend(table, newVal);
+
+
+			//refreash canvas
+			this.selectedLayout.canvas.renderAll();
+		},
 	},
 
 	methods: {
@@ -36,7 +96,8 @@ export default Vue.extend({
 			this.inputNewTableName = "";
 		},
 
-		updateTableInfo: function(table){
+		updateTableInfo: function(){
+			let table = this.selectedLayout.canvas.getActiveObject();
 			this.width = table.width * table.scaleX;
 			this.height = table.height * table.scaleY;
 			this.top = table.top;
@@ -61,10 +122,20 @@ export default Vue.extend({
 		},
 		'update-table-info': function(){
 			console.log('table-info update table info');
-			this.updateTableInfo(this.selectedTable);
+			this.updateTableInfo();
 		}
 	},
 
 	ready(){
+		let vm = this;
+		console.log(vm);
+		console.log(vm.$els.tablecontroldiv);
+
+		setInterval(function(){});
+
+		Hammer(vm.$els.tablecontroldiv).on('press', function(e){
+			console.log(e);
+		});
+		// console.log(fuck);
 	}
 });

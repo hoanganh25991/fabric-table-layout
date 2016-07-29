@@ -30,11 +30,6 @@ let vm = new Vue({
 				return {};
 			}
 		},
-		selectedTable: {
-			default: function(){
-				return {};
-			}
-		},
 		tableEvent: {
 			default: function(){
 				return [

@@ -2,9 +2,9 @@
 <html>
 <head>
     <title>fabric</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="public/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="public/css/animate.min.css">
     <style>
         .layout-container {
             width: 500px;
@@ -44,7 +44,6 @@
             <input v-model="url" style="width: 100%">
             <table-info
                     :selected-layout.sync="selectedLayout"
-                    :selected-table.sync="selectedTable"
                     :layouts="layouts"
                     :table-event="tableEvent"
                     :new-table-name.sync="newTableName"
@@ -74,7 +73,6 @@
             <div class="layout-container">
                 <layout-table
                         :selected-layout.sync="selectedLayout"
-                        :selected-table.sync="selectedTable"
                         :layout="layout" v-for="layout in layouts"
                         :layouts="layouts"
                         :table-event="tableEvent"
@@ -90,11 +88,29 @@
         <p>{{ selectedLayout.name }}</p>
         <div class="row">
             <div class="col-md-4">Rotation</div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-4">-</div>
-                    <div class="col-md-4">{{ rotation }}</div>
-                    <div class="col-md-4">+</div>
+            <div class="col-md-8"  v-el:tablecontroldiv>
+                <div class="row"v>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'rotation',
+                            action: 'minus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'rotation',
+                            action: 'minus'
+                         }"
+                    >-</div>
+                    <div class="col-md-4 tex text-center">{{ rotation }}</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'rotation',
+                            action: 'plus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'rotation',
+                            action: 'plus'
+                         }"
+                    >+</div>
                 </div>
             </div>
         </div>
@@ -102,9 +118,27 @@
             <div class="col-md-4">Top/Y</div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-4">-</div>
-                    <div class="col-md-4">{{ top }}</div>
-                    <div class="col-md-4">+</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'top',
+                            action: 'minus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'top',
+                            action: 'minus'
+                         }"
+                    >-</div>
+                    <div class="col-md-4 text-center">{{ top }}</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'top',
+                            action: 'plus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'top',
+                            action: 'plus'
+                         }"
+                    >+</div>
                 </div>
             </div>
         </div>
@@ -112,9 +146,27 @@
             <div class="col-md-4">Left/X</div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-4">-</div>
-                    <div class="col-md-4">{{ left }}</div>
-                    <div class="col-md-4">+</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'left',
+                            action: 'minus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'left',
+                            action: 'minus'
+                         }"
+                    >-</div>
+                    <div class="col-md-4 text-center">{{ left }}</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'left',
+                            action: 'plus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'left',
+                            action: 'plus'
+                         }"
+                    >+</div>
                 </div>
             </div>
         </div>
@@ -122,9 +174,27 @@
             <div class="col-md-4">Width</div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-4">-</div>
-                    <div class="col-md-4">{{ width }}</div>
-                    <div class="col-md-4">+</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'width',
+                            action: 'minus'
+                         }"
+                         @click="modifyTableInfo = {
+                            prop: 'width',
+                            action: 'minus'
+                         }"
+                    >-</div>
+                    <div class="col-md-4 text-center">{{ width }}</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'width',
+                            action: 'plus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'width',
+                            action: 'plus'
+                         }"
+                    >+</div>
                 </div>
             </div>
         </div>
@@ -132,9 +202,27 @@
             <div class="col-md-4">Height</div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-4">-</div>
-                    <div class="col-md-4">{{ height }}</div>
-                    <div class="col-md-4">+</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'height',
+                            action: 'minus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'height',
+                            action: 'minus'
+                         }"
+                    >-</div>
+                    <div class="col-md-4 text-center">{{ height }}</div>
+                    <div class="col-md-4 btn btn-sm"
+                         @click="modifyTableInfo = {
+                            prop: 'height',
+                            action: 'plus'
+                         }"
+                         @mousedown="modifyTableInfo = {
+                            prop: 'height',
+                            action: 'plus'
+                         }"
+                    >+</div>
                 </div>
             </div>
         </div>
