@@ -242,8 +242,8 @@ export default Vue.extend({
 				fill: "#E5E5E5",
 				stroke: "#555E65",
 				strokeWidth: 4,
-				width: tableInfo.width * canvasSize.width / 2,
-				height: tableInfo.height * canvasSize.height / 2,
+				width: tableInfo.width * canvasSize.width,
+				height: tableInfo.height * canvasSize.height,
 				originX: "center",
 				originY: "center",
 				selectale: false

@@ -10,7 +10,7 @@ $database = "table_management";
 if(isset($_GET['share'])){
     $payload = file_get_contents('php://input');
     $canvasObj = json_decode($payload, false);
-    echo $canvasObj;
+    echo json_encode($canvasObj);
     die;
 }
 

@@ -187,6 +187,7 @@ let vm = new Vue({
 			this.$http.post(this.url, data)
 			    .then(function(response){
 				    let data = response.data;
+				    console.log(response);
 				    console.log(data);
 				    vm.$broadcast("push to server : complete");
 			    })
