@@ -22,8 +22,12 @@ if(isset($_GET['share'])){
     foreach($layouts as &$layout){
         $listIds[] = $layout["canvasId"];
     }
+    
     $in = implode(",", $listIds);
     $whereIn = "where id in ({$in})";
+    if(count($listIds) == 0){
+        $whereIn =  ";DELETE FROM `outlet_table`;";
+    }
     $deleteQuery = "DELETE FROM `outlet_table_layout` {$whereIn}";
     $statement = $pdo->prepare($deleteQuery);
     $statement->execute();
@@ -43,7 +47,7 @@ if(isset($_GET['share'])){
         $deleteQuery = "DELETE FROM `outlet_table` {$whereIn}";
         $statement = $pdo->prepare($deleteQuery);
         $statement->execute();
-
+        $log = [];
         foreach($tables as $table){
 //            var_dump($table);
             $txt = $table["objects"][1];
@@ -53,11 +57,12 @@ if(isset($_GET['share'])){
             if($shape["type"] == "ellipse"){
                 $shape = 1;
             }
+            $log[] = $shape;
             $rotation = $table["angle"];
             $left = $table["left"];
             $top = $table["top"];
-            $width = $shape["width"] * $table["scaleX"];
-            $height = $shape["height"] * $table["scaleY"];
+            $width = $table["width"] * $table["scaleX"];
+            $height = $table["height"] * $table["scaleY"];
             $insertQuery =
                 "INSERT INTO `outlet_table` (`id`, `outlet_id`, `name`, `table_layout_id`, `created_timestamp`, `rotation`, `left_margin`, `top_margin`, `layout_height`, `layout_width`) VALUES ('{$tableId}', '1', '{$name}','{$layout["canvasId"]}', '{$created}', '{$rotation}','{$left}', '{$top}', '{$height}', '{$width}');";
             $statement = $pdo->prepare($insertQuery);
@@ -65,7 +70,7 @@ if(isset($_GET['share'])){
             $tableId++;
         }
     }
-    echo "success";
+    echo implode(",", $log);
     die;
 }
 

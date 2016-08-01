@@ -58,7 +58,20 @@ fabric.Object.prototype.toObject = (function(fToObject){
 			relativePosition = fCalculate.call(this);
 			console.log(`fCalculate on : ${this.type}\nrelativePosition:  `, relativePosition);
 		}
-		return fabric.util.object.extend(fToObject.call(this, [
+		
+		//include shape for server-side
+		if(this.type == "group"){
+			let shape = this.objects[0].type;
+			if(shape == "rect"){
+				relativePosition["shape"] = 0;
+			}
+			
+			if(shape == "ellipse"){
+				relativePosition["shape"] = 1;
+			}
+			
+		}
+		return fabric.util.object.extend(fToObject.call(this,[
 			"borderColor",
 			"cornerColor",
 			"cornerSize",
