@@ -223,19 +223,19 @@ let vm = new Vue({
 		//set default value
 		this.layouts = [];
 
-		let layoutsData = localStorage.getItem("dump-data");
-		// console.log(layoutsData);
-		if(layoutsData){
-			this.layouts = JSON.parse(layoutsData);
-		}
+		// let layoutsData = localStorage.getItem("dump-data");
+		// // console.log(layoutsData);
+		// if(layoutsData){
+		// 	this.layouts = JSON.parse(layoutsData);
+		// }
 
-		// console.log(vm.url);
-		// this.$http.get(vm.url)
-		//     .then(function(response){
-		// 	    let data = response.data;
-		// 	    console.log("data", data);
-		// 	    vm.layouts = data;
-		//     });
+		console.log(vm.url);
+		this.$http.get(vm.url)
+		    .then(function(response){
+			    let data = response.data;
+			    console.log("data", data);
+			    vm.layouts = data;
+		    });
 	}
 });
 //export to global
