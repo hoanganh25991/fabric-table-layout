@@ -47,24 +47,27 @@ if(isset($_GET['share'])){
         $deleteQuery = "DELETE FROM `outlet_table` {$whereIn}";
         $statement = $pdo->prepare($deleteQuery);
         $statement->execute();
-        $log = [];
+        $log = ['table-shape'];
         foreach($tables as $table){
 //            var_dump($table);
             $txt = $table["objects"][1];
-            $shape = $table["objects"][0];
             $name = $txt["text"];
             $shape = 0;
-            if($shape["type"] == "ellipse"){
+            if($table["shape"] == "rect"){
+                $shape = 0;
+            }
+            if($table["shape"] == "ellipse"){
                 $shape = 1;
             }
-            $log[] = $shape;
+//            $log[] = $shape;
+            $log[] = $table["shape"];
             $rotation = $table["angle"];
             $left = $table["left"];
             $top = $table["top"];
             $width = $table["width"] * $table["scaleX"];
             $height = $table["height"] * $table["scaleY"];
             $insertQuery =
-                "INSERT INTO `outlet_table` (`id`, `outlet_id`, `name`, `table_layout_id`, `created_timestamp`, `rotation`, `left_margin`, `top_margin`, `layout_height`, `layout_width`) VALUES ('{$tableId}', '1', '{$name}','{$layout["canvasId"]}', '{$created}', '{$rotation}','{$left}', '{$top}', '{$height}', '{$width}');";
+                "INSERT INTO `outlet_table` (`id`, `outlet_id`, `name`, `table_layout_id`, `created_timestamp`, `shape`, `rotation`, `left_margin`, `top_margin`, `layout_height`, `layout_width`) VALUES ('{$tableId}', '1', '{$name}','{$layout["canvasId"]}', '{$created}', '{$shape}','{$rotation}','{$left}', '{$top}', '{$height}', '{$width}');";
             $statement = $pdo->prepare($insertQuery);
             $statement->execute();
             $tableId++;

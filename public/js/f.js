@@ -61,7 +61,7 @@ fabric.Object.prototype.toObject = (function(fToObject){
 		
 		//include shape for server-side
 		if(this.type == "group"){
-			let shape = this.objects[0].type;
+			let shape = this._objects[0].type;
 			if(shape == "rect"){
 				relativePosition["shape"] = 0;
 			}

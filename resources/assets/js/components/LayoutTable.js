@@ -237,7 +237,7 @@ export default Vue.extend({
 				originY: "center"
 			});
 
-			let shape = {};
+			let shape = 0;
 			if(tableInfo.shape == "0"){
 				let rectOptions = {
 					fill: "#E5E5E5",
