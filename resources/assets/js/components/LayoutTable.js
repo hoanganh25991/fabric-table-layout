@@ -247,7 +247,6 @@ export default Vue.extend({
 					height: tableInfo.height * canvasSize.height,
 					originX: "center",
 					originY: "center",
-					selectale: false
 				};
 				_f.round(["width", "height"], rectOptions);
 
@@ -263,7 +262,6 @@ export default Vue.extend({
 					ry: tableInfo.height * canvasSize.height / 2,
 					originX: "center",
 					originY: "center",
-					selectale: false
 				};
 				_f.round(["rx", "ry"], ellipseOptions);
 
