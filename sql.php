@@ -7,6 +7,13 @@ $username = "root";
 $password = "ifrc";
 $database = "table_management";
 
+if(isset($_GET['share'])){
+    $payload = file_get_contents('php://input');
+    $canvasObj = json_decode($payload, false);
+    echo $canvasObj;
+    die;
+}
+
 try{
     $pdo = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
 

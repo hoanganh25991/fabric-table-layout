@@ -7,9 +7,10 @@ import $ from "jquery";
 
 import VueResource from 'vue-resource';
 import Hammer from 'hammerjs';
+// import Keen from 'keen-ui';
 
 Vue.use(VueResource);
-
+// Vue.use(Keen);
 Vue.transition('bounce', {
 	enterClass: 'bounceInLeft',
 	leaveClass: 'fadeOutRight'
@@ -182,7 +183,7 @@ let vm = new Vue({
 			this.$broadcast(`export-layouts-complete`);
 			
 			//push to server
-			this.url = "http://128.199.237.219/fabric-table-layout/json.php";
+			this.url = "http://128.199.237.219/fabric-table-layout/sql.php?share=true";
 			this.$http.post(this.url, data)
 			    .then(function(response){
 				    let data = response.data;

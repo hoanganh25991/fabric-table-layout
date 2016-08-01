@@ -2,11 +2,13 @@ import Vue from "vue";
 import $ from "jquery";
 import Hammer from "hammerjs";
 
+
+
 export default Vue.extend({
 	template: "#table-info-template",
 
 	props: ["layouts", "selectedLayout", "tableEvent", "newTableName"],
-
+	
 	data(){
 		return {
 			askTableNameDivShowed: false,
