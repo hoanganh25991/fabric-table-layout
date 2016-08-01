@@ -237,20 +237,39 @@ export default Vue.extend({
 				originY: "center"
 			});
 
-			//rect
-			let rectOptions = {
-				fill: "#E5E5E5",
-				stroke: "#555E65",
-				strokeWidth: 4,
-				width: tableInfo.width * canvasSize.width,
-				height: tableInfo.height * canvasSize.height,
-				originX: "center",
-				originY: "center",
-				selectale: false
-			};
-			_f.round(["width", "height"], rectOptions);
+			let shape = {};
+			if(tableInfo.shape == "0"){
+				let rectOptions = {
+					fill: "#E5E5E5",
+					stroke: "#555E65",
+					strokeWidth: 4,
+					width: tableInfo.width * canvasSize.width,
+					height: tableInfo.height * canvasSize.height,
+					originX: "center",
+					originY: "center",
+					selectale: false
+				};
+				_f.round(["width", "height"], rectOptions);
 
-			let rect = new fabric.Rect(rectOptions);
+				shape = new fabric.Rect(rectOptions);
+			}
+			
+			if(tableInfo.shape == "1"){
+				let ellipseOptions = {
+					fill: "#E5E5E5",
+					stroke: "#555E65",
+					strokeWidth: 4,
+					rx: tableInfo.width * canvasSize.width / 2,
+					ry: tableInfo.height * canvasSize.height / 2,
+					originX: "center",
+					originY: "center",
+					selectale: false
+				};
+				_f.round(["rx", "ry"], ellipseOptions);
+
+				shape = new fabric.Ellipse(ellipseOptions);
+			}
+			
 			// let rect = new fabric.Ellipse(rectOptions);
 
 			// rect.on('selected', function(){console.log(`table listen to event, selected`);});
@@ -266,7 +285,7 @@ export default Vue.extend({
 			_f.round(["top", "left"], tableOptions);
 
 			//table
-			let table = new fabric.Group([rect, text], tableOptions);
+			let table = new fabric.Group([shape, text], tableOptions);
 
 			table.rotate(tableInfo.rotation);
 
