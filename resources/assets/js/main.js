@@ -24,14 +24,14 @@ Vue.directive('ti-gesture', {
 		console.log(this);
 		console.log(this.el);
 
-		let updateTable = {};
+		let intervalUpdateTable = {};
 
 		let vd = this;
 
 		let modifyTableInfo = JSON.parse(vd.params.modifyTableInfo);
 
 		Hammer(this.el).on('press', function(e){
-			updateTable = setInterval(() => {
+			intervalUpdateTable = setInterval(() => {
 				console.log(vd.params);
 				console.log(vd.vm.modifyTableInfo);
 				vd.vm.modifyTableInfo = Object.assign({}, modifyTableInfo);
@@ -40,10 +40,15 @@ Vue.directive('ti-gesture', {
 
 
 
-		this.el.addEventListener('mouseup', function(e){
+		$(document).mouseup(function(e){
 			console.log(e);
-			clearInterval(updateTable);
+			clearInterval(intervalUpdateTable);
 		});
+
+		// this.el.addEventListener('mouseup', function(e){
+		// 	console.log(e);
+		// 	clearInterval(updateTable);
+		// });
 
 		this.el.addEventListener('click', function(e){
 			console.log(e);

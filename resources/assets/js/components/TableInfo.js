@@ -98,6 +98,11 @@ export default Vue.extend({
 
 		updateTableInfo: function(){
 			let table = this.selectedLayout.canvas.getActiveObject();
+			// let group =  this.selectedLayout.canvas.getActiveGroup();
+			if(!table){
+				return false;
+			}
+			console.log(table);
 			this.width = table.width * table.scaleX;
 			this.height = table.height * table.scaleY;
 			this.top = table.top;
