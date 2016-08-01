@@ -21,9 +21,7 @@ export default Vue.extend({
 		}
 	},
 
-	computed: {
-
-	},
+	computed: {},
 
 	watch: {
 		modifyTableInfo(val, oldVal){
@@ -42,6 +40,86 @@ export default Vue.extend({
 			}
 
 			let tableProp = val.prop;
+
+			if(tableProp == 'shape'){
+				let tableObj = table.toObject();
+				console.log(tableObj);
+				let shape = table.item(0);
+				let txt = table.item(1);
+				// let newShape = new fabric[val.action]({
+
+				let isSwap = true;
+				if(shape.type == val.action.toLowerCase()){
+					isSwap = false;
+					return isSwap;
+				}
+
+				let newShape = {};
+				if(val.action == 'ellipse'){
+					let options = {
+						rx: shape.width * table.scaleX / 2,
+						ry: shape.height * table.scaleY / 2,
+						fill: "#E5E5E5",
+						stroke: "#555E65",
+						strokeWidth: 4,
+						originX: "center",
+						originY: "center"
+					};
+					_f.round(['rx', 'ry'], options);
+					console.log(`options`, options);
+					newShape = new fabric.Ellipse(options);
+				}
+
+				if(val.action == 'rect'){
+					newShape = new fabric.Rect({
+						width: shape.width * table.scaleX,
+						height: shape.height * table.scaleY,
+						fill: "#E5E5E5",
+						stroke: "#555E65",
+						strokeWidth: 4,
+						originX: "center",
+						originY: "center"
+					});
+				}
+
+				let newTable = new fabric.Group([newShape, txt], {
+					borderColor: 'gray',
+					cornerColor: 'black',
+					cornerSize: 8,
+					transparentCorners: true,
+					top: table.top,
+					left: table.left
+				});
+				// swap them
+				// table = newTable;
+				this.selectedLayout.canvas.remove(table);
+				this.selectedLayout.canvas.add(newTable);
+				this.selectedLayout.canvas.setActiveObject(newTable);
+				this.selectedLayout.canvas.renderAll();
+				return true;
+			}
+
+			if(tableProp == 'selectable'){
+				let mapProp = {
+					'enable': true,
+					'disable': false
+				};
+
+				table.selectable = mapProp[val.action];
+				this.selectedLayout.canvas.renderAll();
+				return true;
+			}
+
+			if(tableProp == 'status'){
+				let mapProp = {
+					'enable': '#E5E5E5',
+					'disable': '#f2f2f2'
+				};
+
+				table.item(0).fill = mapProp[val.action];
+				this.selectedLayout.canvas.renderAll();
+				return true;
+			}
 
 			let mapActionVal = {
 				'plus': 1,

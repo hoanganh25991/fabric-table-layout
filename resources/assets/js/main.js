@@ -41,7 +41,6 @@ Vue.directive('ti-gesture', {
 
 
 		$(document).mouseup(function(e){
-			console.log(e);
 			clearInterval(intervalUpdateTable);
 		});
 
@@ -51,12 +50,13 @@ Vue.directive('ti-gesture', {
 		// });
 
 		this.el.addEventListener('click', function(e){
-			console.log(e);
+			console.log(vd.params);
+			console.log(modifyTableInfo);
 			vd.vm.modifyTableInfo = Object.assign({}, modifyTableInfo);
 		});
 
-		console.log(this.params);
-		console.log(vd.vm.modifyTableInfo);
+		// console.log(this.params);
+		// console.log(vd.vm.modifyTableInfo);
 	}
 });
 

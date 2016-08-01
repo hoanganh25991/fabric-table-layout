@@ -242,14 +242,16 @@ export default Vue.extend({
 				fill: "#E5E5E5",
 				stroke: "#555E65",
 				strokeWidth: 4,
-				width: tableInfo.width * canvasSize.width,
-				height: tableInfo.height * canvasSize.height,
+				width: tableInfo.width * canvasSize.width / 2,
+				height: tableInfo.height * canvasSize.height / 2,
 				originX: "center",
-				originY: "center"
+				originY: "center",
+				selectale: false
 			};
 			_f.round(["width", "height"], rectOptions);
 
 			let rect = new fabric.Rect(rectOptions);
+			// let rect = new fabric.Ellipse(rectOptions);
 
 			// rect.on('selected', function(){console.log(`table listen to event, selected`);});
 
@@ -275,12 +277,14 @@ export default Vue.extend({
 		},
 		deleteTable(){
 			let vm = this;
-			this.layout.canvas.remove(vm.selectedTable);
+			this.layout.canvas.remove(vm.selectedLayout.canvas.getActiveObject());
 			this.tableActionDiv = false;
 			console.log(`delete table`);
 		},
 		renameTable(){
-			this.selectedTable.item(1).text = this.tableNewName;
+			let table = this.selectedLayout.canvas.getActiveObject();
+			let txt = table.item(1);
+			txt.text = this.tableNewName;
 			this.layout.canvas.renderAll();
 			//reverse back
 			this.inputRenameTableDiv= false;
