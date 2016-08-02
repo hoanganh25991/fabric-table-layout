@@ -14,6 +14,10 @@ use App\TableLayout;
 use App\Table;
 use Illuminate\Http\Request;
 
+Route::get('why', function(){
+    return 'tell me why?';
+});
+
 Route::get('/', function (){
     return view('layout');
 });

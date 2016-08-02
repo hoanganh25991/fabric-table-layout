@@ -207,7 +207,7 @@ let vm = new Vue({
 		// }
 
 		//for real server
-		vm.url = 'localhost/layouts';
+		// vm.url = 'localhost/layouts';
 		console.log(vm.url);
 		this.$http.get(vm.url)
 		    .then(function(response){
