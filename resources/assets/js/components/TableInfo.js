@@ -96,6 +96,10 @@ export default Vue.extend({
 				// table = newTable;
 				//vai lo chua, cai ban moi roi moi ghe
 				newTable.id = table.id;
+				if(table.enable && table.enable == 0){
+					newTable.enable = table.enable;
+					newTable.item(0).fill = '#f2f2f2';
+				}
 				this.selectedLayout.canvas.remove(table);
 				this.selectedLayout.canvas.add(newTable);
 				this.selectedLayout.canvas.setActiveObject(newTable);
@@ -119,7 +123,9 @@ export default Vue.extend({
 					'enable': '#E5E5E5',
 					'disable': '#f2f2f2'
 				};
-
+				if( mapProp[val.action] == 'enable'){
+					table.enable = 1;
+				}
 				table.item(0).fill = mapProp[val.action];
 				this.selectedLayout.canvas.renderAll();
 				return true;
