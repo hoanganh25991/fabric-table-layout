@@ -143,21 +143,6 @@ let vm = new Vue({
 			}
 
 
-
-			//define custom toObject on ANY shape inherit from fabric.Object
-			//(rect, text, group,...)
-			// fabric.Object.prototype.toObject = (function(fToObject){
-			// 	return function(fCalculate){
-			// 		let positions = {};
-			// 		let objType = this.get('type');
-			// 		if(typeof fCalculate == "function" && objType != 'text'){
-			// 			positions = fCalculate.call(this);
-			// 			console.log(positions);
-			// 		}
-			// 		return fabric.util.object.extend(fToObject.call(this), positions);
-			// 	};
-			// })(fabric.Object.prototype.toObject);
-
 			for(let layout of layouts){
 				//store canvas inform of string
 				let canvasSize = {
@@ -169,7 +154,7 @@ let vm = new Vue({
 					}
 				};
 				let canvasObj = layout.canvas.toObject(this.relativePosition(canvasSize));
-				console.log(`export relative canvasObj|layout : ${layout.name}`, canvasObj);
+				// console.log(`export relative canvasObj|layout : ${layout.name}`, canvasObj);
 				layout.canvas = JSON.stringify(canvasObj);
 			}
 

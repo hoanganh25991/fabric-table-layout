@@ -52,13 +52,6 @@ if(isset($_GET['share'])){
 //            var_dump($table);
             $txt = $table["objects"][1];
             $name = $txt["text"];
-            $shape = 0;
-            if($table["shape"] == "rect"){
-                $shape = 0;
-            }
-            if($table["shape"] == "ellipse"){
-                $shape = 1;
-            }
 //            $log[] = $shape;
             $log[] = $table["shape"];
             $rotation = $table["angle"];
@@ -67,7 +60,7 @@ if(isset($_GET['share'])){
             $width = $table["width"] * $table["scaleX"];
             $height = $table["height"] * $table["scaleY"];
             $insertQuery =
-                "INSERT INTO `outlet_table` (`id`, `outlet_id`, `name`, `table_layout_id`, `created_timestamp`, `shape`, `rotation`, `left_margin`, `top_margin`, `layout_height`, `layout_width`) VALUES ('{$tableId}', '1', '{$name}','{$layout["canvasId"]}', '{$created}', '{$shape}','{$rotation}','{$left}', '{$top}', '{$height}', '{$width}');";
+                "INSERT INTO `outlet_table` (`id`, `outlet_id`, `name`, `table_layout_id`, `created_timestamp`, `shape`, `rotation`, `left_margin`, `top_margin`, `layout_height`, `layout_width`) VALUES ('{$tableId}', '1', '{$name}','{$layout["canvasId"]}', '{$created}', '{$table["shape"]}','{$rotation}','{$left}', '{$top}', '{$height}', '{$width}');";
             $statement = $pdo->prepare($insertQuery);
             $statement->execute();
             $tableId++;
@@ -94,11 +87,11 @@ try{
         $statement->execute();
         $tables = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+        $layout["canvasId"] = $layout["id"];
+
         unset($layout["id"]);
 
         $canvasId++;
-
-        $layout["canvasId"] = $canvasId;
 
         $layout["canvas"] = $tables;
     }
