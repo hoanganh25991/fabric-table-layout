@@ -1,0 +1,8 @@
+.layout-info-active {
+    border-bottom: 6px solid #2196F3!important;
+    background-color: #ddffff!important;
+}
+
+.canvas-container {
+    box-shadow: rgba(0,0,0,0.5) 0 0 5px;
+}

@@ -2,9 +2,9 @@
 <html>
 <head>
     <title>fabric</title>
-    <link rel="stylesheet" href="public/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="public/css/style.css">
-    <link rel="stylesheet" href="public/css/animate.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.min.css">
     <style>
         .layout-container {
             width: 500px;
@@ -78,7 +78,7 @@
                         :layouts="layouts"
                         :table-event="tableEvent"
                         :new-table-name.sync="newTableName"
-                        @broadcast-update-table-info="broadcastUpdateTableInfo"
+                @broadcast-update-table-info="broadcastUpdateTableInfo"
                 >
                 </layout-table>
             </div>
@@ -238,18 +238,18 @@
     <template id="layout-info-template">
 		<span
                 :class='{"layout-info-active": active}'
-                @click="selectedLayout = layout"
-                v-el:vailo
+        @click="selectedLayout = layout"
+        v-el:vailo
         >{{ layout.name }}
-		</span>
+        </span>
         <div v-show="layoutInfoActionDiv" class="ti-modal" style="width: 700px; height: 600px; z-index: 100">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 ti-modal-child">
                     <div class="row">
                         <button @click="inputRenameLayoutDiv = !inputRenameLayoutDiv"
-                                v-show="!inputRenameLayoutDiv"
+                        v-show="!inputRenameLayoutDiv"
                         >
-                            rename
+                        rename
                         </button>
                     </div>
 
@@ -282,9 +282,9 @@
                         <div class="row">
                             <div class="row">
                                 <button @click="inputRenameTableDiv = !inputRenameTableDiv"
-                                        v-show="!inputRenameTableDiv"
+                                v-show="!inputRenameTableDiv"
                                 >
-                                    rename
+                                rename
                                 </button>
                             </div>
 
