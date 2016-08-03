@@ -41,16 +41,12 @@ Route::post('save', function (Request $request){
     if(!is_array($layouts)){
         return false;
     }
-
+    $layoutId = explode(" ", microtime())[1];
+    DB::statement('DELETE FROM outlet_table_layout');
+    DB::statement('DELETE FROM outlet_table');
     foreach($layouts as &$layout){
-        //update $tableLayout if exist
-        $tableLayout = TableLayout::find($layout["canvasId"]);
-
-        if(!$tableLayout){
-            $tableLayout = new TableLayout([
-                "id" => $layout["canvasId"]
-            ]);
-        }
+        $tableLayout = new TableLayout();
+        $tableLayout->id = $layoutId;
 
         $tableLayout->layout_name = $layout["name"];
         $tableLayout->save();
@@ -66,17 +62,11 @@ Route::post('save', function (Request $request){
         foreach($tables as $tableInfo){
             //id
             $msg[] = $tableInfo["id"];
-            //find table > update
-            $table = Table::find($tableInfo["id"]);
-            //find ko thay > insert
-            if(!$table){
-                $table = new Table();
-                $table->id = $tableInfo["id"];
-            }
-//            var_dump($table);
-            //map
-            $table->table_layout_id = $layout["canvasId"];
-
+            $table = new Table();
+            $table->id = $tableInfo["id"];
+            $table->table_layout_id = $layoutId;
+//            $table->table_layout_id = $tableLayout->id;
+            //modify props
             $table->name = $tableInfo["objects"][1]["text"];
             $table->top_margin = $tableInfo["top"];
             $table->left_margin = $tableInfo["left"];
@@ -84,12 +74,11 @@ Route::post('save', function (Request $request){
             $table->layout_height = $tableInfo["height"];
             $table->rotation = $tableInfo["angle"];
             $table->shape = $tableInfo["shape"];
-            $tableEnable = isset($tableInfo["enable"])? $tableInfo["enable"] : 0;
-            $table->enable = $tableEnable;
 
             $table->save();
 
         }
+        $layoutId++;
     }
 //    $tableLayout = new TableLayout();
 
