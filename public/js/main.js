@@ -24753,7 +24753,8 @@ exports.default = _vue2.default.extend({
 				transparentCorners: true,
 				top: tableInfo.top * canvasSize.height,
 				left: tableInfo.left * canvasSize.width,
-				id: tableInfo.id
+				id: tableInfo.id,
+				angle: tableInfo.rotation
 			};
 			_f.round(["top", "left"], tableOptions);
 
