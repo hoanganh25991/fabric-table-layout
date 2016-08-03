@@ -25216,8 +25216,8 @@ var vm = new _vue2.default({
 		relativePosition: function relativePosition(canvasSize) {
 			return function () {
 				return {
-					width: Number((this.width / canvasSize.getWidth()).toFixed(2)),
-					height: Number((this.height / canvasSize.getHeight()).toFixed(2)),
+					width: Number((this.width * this.scaleX / canvasSize.getWidth()).toFixed(2)),
+					height: Number((this.height * this.scaleY / canvasSize.getHeight()).toFixed(2)),
 					left: Number((this.left / canvasSize.getWidth()).toFixed(2)),
 					top: Number((this.top / canvasSize.getHeight()).toFixed(2))
 				};

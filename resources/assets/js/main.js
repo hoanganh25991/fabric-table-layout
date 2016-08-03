@@ -20,7 +20,8 @@ Vue.directive('ti-gesture', {
 	params: [
 		'modify-table-info'
 	],
-	bind(){},
+	bind(){
+	},
 	update(){
 		console.log(this);
 		console.log(this.el);
@@ -32,13 +33,12 @@ Vue.directive('ti-gesture', {
 		let modifyTableInfo = JSON.parse(vd.params.modifyTableInfo);
 
 		Hammer(this.el).on('press', function(e){
-			intervalUpdateTable = setInterval(() => {
+			intervalUpdateTable = setInterval(() =>{
 				console.log(vd.params);
 				console.log(vd.vm.modifyTableInfo);
 				vd.vm.modifyTableInfo = Object.assign({}, modifyTableInfo);
 			}, 50);
 		});
-
 
 
 		$(document).mouseup(function(e){
@@ -123,7 +123,7 @@ let vm = new Vue({
 			let vm = this;
 
 			let layouts = [];
-			
+
 			for(let layout of this.layouts){
 				let copyLayout = {};
 				copyLayout.name = layout.name;
@@ -155,7 +155,6 @@ let vm = new Vue({
 			console.log(`layouts data`, data);
 
 
-			
 			//push to server
 			this.url = "save";
 			let formData = new FormData();
@@ -168,17 +167,17 @@ let vm = new Vue({
 				    vm.$broadcast(`export-layouts-complete`);
 				    // vm.$broadcast("push to server : complete");
 			    })
-				.catch(function(res){
-					console.log(res);
-				});
+			    .catch(function(res){
+				    console.log(res);
+			    });
 
 		},
 
 		relativePosition(canvasSize){
 			return function(){
 				return {
-					width: Number((this.width / canvasSize.getWidth()).toFixed(2)),
-					height: Number((this.height / canvasSize.getHeight()).toFixed(2)),
+					width: Number((this.width * this.scaleX / canvasSize.getWidth()).toFixed(2)),
+					height: Number((this.height * this.scaleY / canvasSize.getHeight()).toFixed(2)),
 					left: Number((this.left / canvasSize.getWidth()).toFixed(2)),
 					top: Number((this.top / canvasSize.getHeight()).toFixed(2))
 				}
@@ -190,9 +189,7 @@ let vm = new Vue({
 		}
 	},
 
-	events: {
-		
-	},
+	events: {},
 
 	ready(){
 		let vm = this;
