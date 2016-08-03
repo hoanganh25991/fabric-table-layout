@@ -74,7 +74,9 @@ Route::post('save', function (Request $request){
             $table->layout_height = $tableInfo["height"];
             $table->rotation = $tableInfo["angle"];
             $table->shape = $tableInfo["shape"];
-
+            if(isset($tableInfo["enabled"])){
+                $table->enabled = $tableInfo["enabled"];
+            }
             $table->save();
 
         }

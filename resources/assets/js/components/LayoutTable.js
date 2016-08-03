@@ -15,7 +15,8 @@ export default Vue.extend({
 				top: "0.00",
 				left: "0.00",
 				height: "0.20",
-				width: "0.20"
+				width: "0.20",
+				enabled: 1
 			},
 			// canvasSize: {
 			// 	width: 0,
@@ -236,11 +237,14 @@ export default Vue.extend({
 				originX: "center",
 				originY: "center"
 			});
-
+			let fill = '#E5E5E5';
+			if(tableInfo.enabled == 0){
+				fill = '#f2f2f2';
+			}
 			let shape = 0;
 			if(tableInfo.shape == "0"){
 				let rectOptions = {
-					fill: "#E5E5E5",
+					fill: fill,
 					stroke: "#555E65",
 					strokeWidth: 4,
 					width: tableInfo.width * canvasSize.width,
@@ -255,7 +259,7 @@ export default Vue.extend({
 			
 			if(tableInfo.shape == "1"){
 				let ellipseOptions = {
-					fill: "#E5E5E5",
+					fill: fill,
 					stroke: "#555E65",
 					strokeWidth: 4,
 					rx: tableInfo.width * canvasSize.width / 2,

@@ -76,7 +76,9 @@ fabric.Object.prototype.toObject = (function(fToObject){
 			"cornerColor",
 			"cornerSize",
 			"transparentCorners",
-			"id"
+			"id",
+			"shape",
+			"enabled"
 		]), relativePosition);
 	};
 })(fabric.Object.prototype.toObject);

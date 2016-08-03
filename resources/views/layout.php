@@ -199,11 +199,11 @@
                 <div class="row">
                     <div class="col-md-6 btn btn-sm"
                          v-ti-gesture
-                         modify-table-info='{"prop":"status","action":"enable"}'
+                         modify-table-info='{"prop":"status","action":"enabled"}'
                     >Enable</div>
                     <div class="col-md-6 btn btn-sm"
                          v-ti-gesture
-                         modify-table-info='{"prop":"status","action":"disable"}'
+                         modify-table-info='{"prop":"status","action":"disabled"}'
                     >Disable</div>
                 </div>
             </div>

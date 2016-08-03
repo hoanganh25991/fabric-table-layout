@@ -3,12 +3,11 @@ import $ from "jquery";
 import Hammer from "hammerjs";
 
 
-
 export default Vue.extend({
 	template: "#table-info-template",
 
 	props: ["layouts", "selectedLayout", "tableEvent", "newTableName"],
-	
+
 	data(){
 		return {
 			askTableNameDivShowed: false,
@@ -44,8 +43,6 @@ export default Vue.extend({
 			let tableProp = val.prop;
 
 			if(tableProp == 'shape'){
-				let tableObj = table.toObject();
-				console.log(tableObj);
 				let shape = table.item(0);
 				let txt = table.item(1);
 				// let newShape = new fabric[val.action]({
@@ -53,78 +50,32 @@ export default Vue.extend({
 				let isSwap = true;
 				if(shape.type == val.action.toLowerCase()){
 					isSwap = false;
-					return isSwap;
+					return false;
 				}
 
-				let newShape = {};
 				if(val.action == 'ellipse'){
-					let options = {
-						rx: shape.width * table.scaleX / 2,
-						ry: shape.height * table.scaleY / 2,
-						fill: "#E5E5E5",
-						stroke: "#555E65",
-						strokeWidth: 4,
-						originX: "center",
-						originY: "center"
-					};
-					_f.round(['rx', 'ry'], options);
-					console.log(`options`, options);
-					newShape = new fabric.Ellipse(options);
+					shape.rx = shape.width / 2;
+					shape.ry = shape.height / 2;
+					shape.type = 'ellipse';
+
 				}
 
 				if(val.action == 'rect'){
-					newShape = new fabric.Rect({
-						width: shape.width * table.scaleX,
-						height: shape.height * table.scaleY,
-						fill: "#E5E5E5",
-						stroke: "#555E65",
-						strokeWidth: 4,
-						originX: "center",
-						originY: "center"
-					});
+					delete shape.rx;
+					delete shape.ry;
+					shape.type = 'rect'
 				}
-
-				let newTable = new fabric.Group([newShape, txt], {
-					borderColor: 'gray',
-					cornerColor: 'black',
-					cornerSize: 8,
-					transparentCorners: true,
-					top: table.top,
-					left: table.left
-				});
-				// swap them
-				// table = newTable;
-				//vai lo chua, cai ban moi roi moi ghe
-				newTable.id = table.id;
-				if(table.enable && table.enable == 0){
-					newTable.enable = table.enable;
-					newTable.item(0).fill = '#f2f2f2';
-				}
-				this.selectedLayout.canvas.remove(table);
-				this.selectedLayout.canvas.add(newTable);
-				this.selectedLayout.canvas.setActiveObject(newTable);
-				this.selectedLayout.canvas.renderAll();
-				return true;
-			}
-
-			if(tableProp == 'selectable'){
-				let mapProp = {
-					'enable': true,
-					'disable': false
-				};
-
-				table.selectable = mapProp[val.action];
 				this.selectedLayout.canvas.renderAll();
 				return true;
 			}
 
 			if(tableProp == 'status'){
 				let mapProp = {
-					'enable': '#E5E5E5',
-					'disable': '#f2f2f2'
+					'enabled': '#E5E5E5',
+					'disabled': '#f2f2f2'
 				};
-				if( mapProp[val.action] == 'enable'){
-					table.enable = 1;
+				if(val.action == 'disabled'){
+					table.enabled = 0;
 				}
 				table.item(0).fill = mapProp[val.action];
 				this.selectedLayout.canvas.renderAll();
