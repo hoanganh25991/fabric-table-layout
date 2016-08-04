@@ -46,6 +46,7 @@ Route::post('save', function (Request $request){
         return false;
     }
     $layoutId = explode(" ", microtime())[1];
+    $tableId = $layoutId;
     DB::statement('DELETE FROM outlet_table_layout');
     DB::statement('DELETE FROM outlet_table');
     foreach($layouts as &$layout){
@@ -65,9 +66,9 @@ Route::post('save', function (Request $request){
         $msg[] = 'table-id';
         foreach($tables as $tableInfo){
             //id
-            $msg[] = $tableInfo["id"];
+            $msg[] = $tableId;
             $table = new Table();
-            $table->id = $tableInfo["id"];
+            $table->id = $tableId;
             $table->table_layout_id = $layoutId;
 //            $table->table_layout_id = $tableLayout->id;
             //modify props
@@ -82,7 +83,7 @@ Route::post('save', function (Request $request){
                 $table->enabled = $tableInfo["enabled"];
             }
             $table->save();
-
+            $tableId++;
         }
         $layoutId++;
     }
