@@ -35,6 +35,10 @@ Route::get('layouts', function (){
 Route::post('save', function (Request $request){
     $msg = [];
     $payload = $request->get('payload');
+    if(!$payload){
+        $payload = file_get_contents('php://input');
+    }
+
 
     $layouts = @json_decode($payload, true);
 
