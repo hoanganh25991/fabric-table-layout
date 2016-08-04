@@ -223,7 +223,7 @@
             <input v-model="inputNewTableName" @keyup.enter="setNewTableName" autofocus>
             <button @click="setNewTableName">ok</button>
         </div>
-        <button @click="dispatchExportLayouts">share</button>
+        <button @click="dispatchExportLayouts">save</button>
         <div v-show="exportLayoutsDivShowed"
              transition="bounce" class="animated"
              style="background-color: #99C93D;

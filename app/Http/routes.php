@@ -31,7 +31,9 @@ Route::get('layouts', function (){
     }
     return $tableLayouts;
 });
-
+Route::get('save', function(){
+    return "hello";
+});
 Route::post('save', function (Request $request){
     $msg = [];
     $payload = $request->get('payload');
@@ -66,6 +68,7 @@ Route::post('save', function (Request $request){
         $msg[] = 'table-id';
         foreach($tables as $tableInfo){
             //id
+            $shape = $tableInfo["objects"][0];
             $msg[] = $tableId;
             $table = new Table();
             $table->id = $tableId;
@@ -75,8 +78,8 @@ Route::post('save', function (Request $request){
             $table->name = $tableInfo["objects"][1]["text"];
             $table->top_margin = $tableInfo["top"];
             $table->left_margin = $tableInfo["left"];
-            $table->layout_width = $tableInfo["width"];
-            $table->layout_height = $tableInfo["height"];
+            $table->layout_width = $shape["width"];
+            $table->layout_height = $shape["height"];
             $table->rotation = $tableInfo["angle"];
             $table->shape = $tableInfo["shape"];
             if(isset($tableInfo["enabled"])){
